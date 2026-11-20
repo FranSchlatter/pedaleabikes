@@ -3,6 +3,8 @@
 Landing de **Pedalea Bikes** (bicicletería y taller, Mitre 4701, Santa Fe Capital).
 Solo frontend: sin base de datos, sin backend, sin pagos. Todo el contenido sale de archivos tipados en `src/data`.
 
+**Marca:** teal `#2C7D7B` del logo sobre negro, títulos en Rokkitt (slab). Ver `DECISIONS.md`.
+
 **Stack:** Next.js 16 (App Router, Cache Components) · TypeScript · Tailwind CSS 4 · Motion · react-hook-form + Zod.
 
 ## Cómo correrlo
@@ -14,15 +16,15 @@ npm install
 npm run dev          # http://localhost:3000
 ```
 
-| Script                        | Qué hace                                                                                                                                         |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `npm run dev`                 | Servidor de desarrollo                                                                                                                           |
-| `npm run build`               | Build de producción                                                                                                                              |
-| `npm start`                   | Sirve el build de producción                                                                                                                     |
-| `npm run lint`                | ESLint                                                                                                                                           |
-| `npm run typecheck`           | `tsc --noEmit`                                                                                                                                   |
-| `npm run format`              | Prettier (4 espacios)                                                                                                                            |
-| `npm run images:placeholders` | Regenera las imágenes placeholder (**pisa** las de `public/images`, `public/logo.png` y los íconos — no correrlo después de cargar fotos reales) |
+| Script                        | Qué hace                                                                                                                                                                                       |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                 | Servidor de desarrollo                                                                                                                                                                         |
+| `npm run build`               | Build de producción                                                                                                                                                                            |
+| `npm start`                   | Sirve el build de producción                                                                                                                                                                   |
+| `npm run lint`                | ESLint                                                                                                                                                                                         |
+| `npm run typecheck`           | `tsc --noEmit`                                                                                                                                                                                 |
+| `npm run format`              | Prettier (4 espacios)                                                                                                                                                                          |
+| `npm run images:placeholders` | Regenera las imágenes placeholder y los assets de marca (logo transparente, íconos, OG) desde `brand/logo-original.jpeg`. **Pisa** `public/images`: no correrlo después de cargar fotos reales |
 
 ## Editar contenido (`src/data`)
 
@@ -67,16 +69,16 @@ Todos los links salen de `buildWhatsAppLink(message)` en `src/lib/whatsapp.ts`. 
 
 Las imágenes placeholder tienen la etiqueta "FOTO PLACEHOLDER". Para reemplazarlas, **pisá el archivo con el mismo nombre** (o cambiá la ruta en `src/data`). `next/image` las optimiza solas (WebP/AVIF, tamaños responsive).
 
-| Qué                                    | Dónde                                                      | Tamaño recomendado                                                                                                        |
-| -------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| Logo                                   | `public/logo.png`                                          | PNG transparente, horizontal (~1400×400). Si cambia la proporción, ajustá `width`/`height` en `Header.tsx` y `Footer.tsx` |
-| Ícono / favicon                        | `src/app/icon.png`, `src/app/apple-icon.png`               | 512×512                                                                                                                   |
-| Imagen para compartir (WhatsApp/redes) | `src/app/opengraph-image.jpg`                              | 1200×630                                                                                                                  |
-| Hero (poster)                          | `public/images/hero-poster.jpg` / `hero-poster-mobile.jpg` | 1920×1080 / 1080×1920                                                                                                     |
-| Bicis                                  | `public/images/bikes/<slug>.jpg`                           | 4:3 (ej. 1200×900)                                                                                                        |
-| Accesorios                             | `public/images/accessories/<slug>.jpg`                     | 1:1 (ej. 900×900)                                                                                                         |
-| Nosotros                               | `public/images/about/*.jpg`                                | local 16:11, taller y equipo 4:5                                                                                          |
-| Posters de videos                      | `public/images/videos/*.jpg`                               | 9:16                                                                                                                      |
+| Qué                                    | Dónde                                                      | Tamaño recomendado                                                                                                                                                     |
+| -------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Logo                                   | `brand/logo-original.jpeg` → `npm run images:placeholders` | Se convierte a PNG transparente (`public/logo.png`) y regenera ícono y OG. Si cambia la proporción, ajustá `width`/`height` en `Header.tsx`, `Footer.tsx` y `Hero.tsx` |
+| Ícono / favicon                        | `src/app/icon.png`, `src/app/apple-icon.png`               | Se generan desde el logo (512×512)                                                                                                                                     |
+| Imagen para compartir (WhatsApp/redes) | `src/app/opengraph-image.jpg`                              | Se genera desde el logo (1200×630); se puede pisar con una propia                                                                                                      |
+| Hero (poster)                          | `public/images/hero-poster.jpg` / `hero-poster-mobile.jpg` | 1920×1080 / 1080×1920                                                                                                                                                  |
+| Bicis                                  | `public/images/bikes/<slug>.jpg`                           | 4:3 (ej. 1200×900)                                                                                                                                                     |
+| Accesorios                             | `public/images/accessories/<slug>.jpg`                     | 1:1 (ej. 900×900)                                                                                                                                                      |
+| Nosotros                               | `public/images/about/*.jpg`                                | local 16:11, taller y equipo 4:5                                                                                                                                       |
+| Posters de videos                      | `public/images/videos/*.jpg`                               | 9:16                                                                                                                                                                   |
 
 ### Videos
 
