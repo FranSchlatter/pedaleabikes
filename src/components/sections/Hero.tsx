@@ -12,7 +12,7 @@ type HeroProps = {
     schedule: DaySchedule[];
 };
 
-const BADGE_TEXT = "TALLER · BICIS · ACCESORIOS · SANTA FE · ";
+const BADGE_TEXT = "TALLER · BICIS · ACCESORIOS · SERVICE · ";
 
 function HeroPoster({ content }: { content: HeroContent }) {
     const common = { alt: "", sizes: "100vw", quality: 75 };
@@ -68,8 +68,10 @@ export function Hero({ content, schedule }: HeroProps) {
                             d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"
                         />
                     </defs>
-                    <text className="fill-chalk text-[17px] font-bold tracking-[0.32em]">
-                        <textPath href="#badge-circle">{BADGE_TEXT}</textPath>
+                    <text className="fill-chalk text-[15px] font-bold">
+                        <textPath href="#badge-circle" textLength="486" lengthAdjust="spacing">
+                            {BADGE_TEXT}
+                        </textPath>
                     </text>
                 </svg>
                 <span className="absolute inset-0 m-auto flex size-16 items-center justify-center rounded-full bg-accent text-ink">

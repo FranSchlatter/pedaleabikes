@@ -39,7 +39,7 @@ export function Videos({ videos, business }: VideosProps) {
                             <StaggerItem
                                 as="li"
                                 key={video.id}
-                                className={`relative aspect-[9/16] w-[78%] shrink-0 snap-center overflow-hidden rounded-3xl ring-1 ring-white/10 md:w-auto ${
+                                className={`relative aspect-[9/16] w-[78%] md:aspect-[3/4] shrink-0 snap-center overflow-hidden rounded-3xl ring-1 ring-white/10 md:w-auto ${
                                     index === 1 ? "md:translate-y-12" : ""
                                 }`}
                             >
@@ -68,7 +68,7 @@ export function Videos({ videos, business }: VideosProps) {
                                 <p className="text-xs font-bold uppercase tracking-[0.3em] text-chalk/90">
                                     Seguinos en Instagram
                                 </p>
-                                <p className="heading-display mt-1 text-4xl text-chalk md:text-6xl">
+                                <p className="heading-display mt-1 text-3xl break-all text-chalk sm:text-4xl md:text-6xl">
                                     {business.instagramHandle}
                                 </p>
                             </div>

@@ -6,6 +6,10 @@ import type { ReactNode } from "react";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
+// Margen en vez de `amount`: con un porcentaje, bloques más altos que la pantalla (el catálogo en
+// mobile) nunca llegan a cumplirlo y quedan invisibles.
+const VIEWPORT = { once: true, margin: "0px 0px -12% 0px" } as const;
+
 export const revealItem: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: EASE } },
@@ -30,7 +34,7 @@ export function Reveal({ children, className, delay = 0, y = 40 }: RevealProps) 
             className={className}
             initial={{ opacity: 0, y }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={VIEWPORT}
             transition={{ duration: 0.8, ease: EASE, delay }}
         >
             {children}
@@ -52,7 +56,7 @@ export function Stagger({ children, className, as = "div" }: StaggerProps) {
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.15 }}
+            viewport={VIEWPORT}
         >
             {children}
         </Component>

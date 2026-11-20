@@ -47,7 +47,7 @@ export function About({ about }: AboutProps) {
                             className="aspect-square rounded-full border-[6px] border-chalk shadow-xl"
                         />
                     </Reveal>
-                    <span className="absolute -left-2 top-6 rotate-[-8deg] rounded-full bg-lime px-4 py-2 text-xs font-bold uppercase tracking-wider text-ink shadow-lg lg:-left-24">
+                    <span className="absolute left-3 top-6 rotate-[-8deg] rounded-full bg-lime px-4 py-2 text-xs font-bold uppercase tracking-wider text-ink shadow-lg lg:-left-14">
                         Fotos placeholder
                     </span>
                 </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useNowMinute } from "@/hooks/useNow";
-import { formatRanges } from "@/lib/format";
 import { getZonedNow } from "@/lib/schedule";
 import type { DaySchedule } from "@/types";
 
@@ -50,7 +49,15 @@ export function ScheduleTable({ schedule }: ScheduleTableProps) {
                             <td
                                 className={`py-3.5 text-right tabular-nums ${closed ? "text-steel" : ""}`}
                             >
-                                {formatRanges(day.ranges)}
+                                {closed
+                                    ? "Cerrado"
+                                    : day.ranges.map(function (range) {
+                                          return (
+                                              <span key={range.open} className="block">
+                                                  {range.open} a {range.close}
+                                              </span>
+                                          );
+                                      })}
                             </td>
                         </tr>
                     );

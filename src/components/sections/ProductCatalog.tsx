@@ -92,7 +92,7 @@ export function ProductCatalog({ id, products, categories, tone, allLabel }: Pro
 
             <m.ul
                 layout
-                className="mt-8 grid gap-5 min-[520px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4"
+                className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-3 xl:grid-cols-4"
             >
                 <AnimatePresence mode="popLayout" initial={false}>
                     {visible.map(function (product) {

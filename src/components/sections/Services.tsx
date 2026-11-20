@@ -35,6 +35,16 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                 {service.description}
             </p>
 
+            {service.estimatedTime && (
+                <p
+                    className={`mt-4 inline-flex items-center gap-1.5 self-start rounded-full px-3 py-1 text-xs font-semibold ${
+                        dark ? "bg-white/10 text-chalk" : "bg-chalk text-graphite"
+                    }`}
+                >
+                    <ClockIcon className="size-3.5" />
+                    Listo en {service.estimatedTime}
+                </p>
+            )}
             <ul className="mb-8 mt-6 space-y-2.5 text-sm">
                 {service.includes.map(function (item) {
                     return (
@@ -49,7 +59,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
             </ul>
 
             <div className={`mt-auto border-t pt-6 ${dark ? "border-white/10" : "border-ink/10"}`}>
-                <div className="flex items-end justify-between gap-4">
+                <div>
                     <p>
                         <span
                             className={`block text-xs font-semibold uppercase tracking-wider ${dark ? "text-steel" : "text-graphite"}`}
@@ -62,14 +72,6 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                             {service.price === null ? "Consultar" : formatPrice(service.price)}
                         </span>
                     </p>
-                    {service.estimatedTime && (
-                        <span
-                            className={`inline-flex items-center gap-1.5 text-xs font-semibold ${dark ? "text-steel" : "text-graphite"}`}
-                        >
-                            <ClockIcon className="size-4" />
-                            {service.estimatedTime}
-                        </span>
-                    )}
                 </div>
                 <SelectServiceLink
                     serviceSlug={service.slug}

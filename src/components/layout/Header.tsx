@@ -48,7 +48,7 @@ export function Header({ navItems }: HeaderProps) {
                     <Image
                         src="/logo.png"
                         alt="Pedalea Bikes"
-                        width={1200}
+                        width={1400}
                         height={400}
                         preload
                         className="h-9 w-auto md:h-11"

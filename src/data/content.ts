@@ -40,8 +40,7 @@ export const stats: Stat[] = [
         id: "order",
         value: 2,
         prefix: "1-",
-        suffix: " días",
-        label: "para traer tu bici por encargo",
+        label: "días para traer tu bici por encargo",
     },
     { id: "budget", value: 100, suffix: "%", label: "presupuestos antes de arreglar" },
 ];

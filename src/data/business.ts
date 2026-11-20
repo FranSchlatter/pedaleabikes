@@ -12,7 +12,7 @@ export const business: BusinessInfo = {
         region: "Santa Fe",
         country: "Argentina",
         countryCode: "AR",
-        postalCode: "3000",
+        postalCode: "S3000AZQ",
     },
     // TODO: CONTENIDO — coordenadas aproximadas, confirmar con Google Maps (clic derecho sobre el local).
     geo: {

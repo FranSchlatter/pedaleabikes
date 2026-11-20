@@ -204,14 +204,11 @@ async function scenes() {
         ["videos/poster-local.jpg", "RECORRÉ EL LOCAL"],
         ["videos/poster-ruta.jpg", "SALIMOS A RODAR"],
     ];
-    for (const [file, title] of videos) {
+    for (const [file] of videos) {
         const svg = frame(
             1080,
             1920,
-            `${bikeArt(540, 900, 1.3, ACCENT, CHALK)}
-            <circle cx="540" cy="900" r="110" fill="${INK}" opacity="0.55"/>
-            <path d="M505 840 L505 960 L605 900 Z" fill="${CHALK}"/>
-            ${label(80, 1640, title, "VIDEO PLACEHOLDER", 80)}`,
+            `${bikeArt(540, 820, 1.3, ACCENT, CHALK)}${placeholderTag(800, 80)}`,
             "#24262C",
             INK,
         );
@@ -232,13 +229,13 @@ function wordmark(width, height, textColor) {
                 })
                 .join("")}
         </g>
-        <text x="${200 * s}" y="${118 * s}" font-family="${FONT}" font-weight="900" font-style="italic" font-size="${100 * s}" fill="${textColor}" letter-spacing="${2 * s}">PEDALEA</text>
+        <text x="${200 * s}" y="${118 * s}" font-family="${FONT}" font-weight="900" font-style="italic" font-size="${96 * s}" fill="${textColor}" letter-spacing="${1 * s}">PEDALEA</text>
         <text x="${206 * s}" y="${168 * s}" font-family="${FONT}" font-weight="700" font-size="${36 * s}" fill="${ACCENT}" letter-spacing="${18 * s}">BIKES</text>
     </svg>`;
 }
 
 async function brand() {
-    await write(wordmark(1200, 400, CHALK), "logo.png", "png");
+    await write(wordmark(1400, 400, CHALK), "logo.png", "png");
 
     const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
         <rect width="512" height="512" rx="112" fill="${INK}"/>

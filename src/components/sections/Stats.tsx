@@ -40,7 +40,7 @@ export function Stats({ stats }: StatsProps) {
                             </p>
                             <span
                                 aria-hidden
-                                className="absolute right-0 top-0 text-xs font-bold text-graphite"
+                                className="absolute right-0 top-0 hidden text-xs font-bold text-graphite md:block"
                             >
                                 0{index + 1}
                             </span>

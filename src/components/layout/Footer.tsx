@@ -17,7 +17,7 @@ export function Footer({ business, navItems }: FooterProps) {
                     <Image
                         src="/logo.png"
                         alt="Pedalea Bikes"
-                        width={1200}
+                        width={1400}
                         height={400}
                         className="h-12 w-auto"
                         sizes="180px"
