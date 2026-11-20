@@ -89,10 +89,11 @@ export function Hero({ content, schedule }: HeroProps) {
 
                 <HeroTitle lines={content.titleLines} />
 
+                {/* El subtítulo queda fuera del fade: suele ser el LCP en mobile y no debe arrancar invisible. */}
+                <p className="mt-6 max-w-xl text-lg leading-relaxed text-chalk/85 md:text-xl">
+                    {content.subtitle}
+                </p>
                 <HeroCta delay={0.75}>
-                    <p className="mt-6 max-w-xl text-lg leading-relaxed text-chalk/85 md:text-xl">
-                        {content.subtitle}
-                    </p>
                     <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                         <a
                             href="#bicis"
