@@ -1,4 +1,4 @@
-import { ArrowUpRightIcon, WhatsAppIcon } from "@/components/ui/Icons";
+import { ArrowUpRightIcon, InstagramIcon, WhatsAppIcon } from "@/components/ui/Icons";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
@@ -9,7 +9,43 @@ type BikesProps = {
     bikes: Bike[];
     categories: CategoryOption<BikeCategory>[];
     customOrderDays: string;
+    stockUrl: string;
 };
+
+// El stock cambia seguido y no hay base de datos: la destacada de IG es la fuente de verdad y la
+// grilla de abajo queda como catálogo de referencia.
+function StockCard({ url }: { url: string }) {
+    return (
+        <Reveal delay={0.15} className="w-full lg:max-w-sm">
+            <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative block overflow-hidden rounded-3xl bg-ink-3 p-6 ring-1 ring-white/10 transition-[transform,box-shadow] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_rgba(79,179,174,0.5)] hover:ring-accent/50"
+            >
+                <p className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.25em] text-mint">
+                    <span aria-hidden className="relative flex size-2.5">
+                        <span className="absolute inset-0 animate-ping-soft rounded-full bg-mint" />
+                        <span className="relative size-2.5 rounded-full bg-mint" />
+                    </span>
+                    Entrega inmediata
+                </p>
+                <p className="heading-display mt-3 text-2xl md:text-3xl">
+                    Stock de hoy, con precio
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-steel">
+                    Lo actualizamos en las destacadas de Instagram cada vez que entra o sale una
+                    bici.
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2.5 font-bold text-accent">
+                    <InstagramIcon className="size-5" />
+                    Ver stock en Instagram
+                    <ArrowUpRightIcon className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </span>
+            </a>
+        </Reveal>
+    );
+}
 
 function CustomOrderBanner({ days }: { days: string }) {
     return (
@@ -50,7 +86,7 @@ function CustomOrderBanner({ days }: { days: string }) {
     );
 }
 
-export function Bikes({ bikes, categories, customOrderDays }: BikesProps) {
+export function Bikes({ bikes, categories, customOrderDays, stockUrl }: BikesProps) {
     return (
         <section
             id="bicis"
@@ -69,8 +105,9 @@ export function Bikes({ bikes, categories, customOrderDays }: BikesProps) {
                                 Modelos <span className="text-accent">más pedidos</span>
                             </>
                         }
-                        description="Urbanas, MTB, ruta, infantiles y eléctricas. Consultanos precio y disponibilidad por WhatsApp."
+                        description="Urbanas, MTB, ruta, infantiles y eléctricas. Estos son los modelos que más salen; lo que hay hoy para llevarte está en Instagram."
                     />
+                    <StockCard url={stockUrl} />
                 </div>
                 <Reveal delay={0.1}>
                     <ProductCatalog

@@ -23,7 +23,10 @@ Todo lo marcado con `// TODO: CONTENIDO` en el código. Ver el README para tama�
 
 ## Textos y datos (`src/data`)
 
-- [ ] Precios, descripciones y "qué incluye" de cada service → `services.ts`
+- [x] Precios y "qué incluye" de los 3 services → `services.ts`
+- [ ] Tiempo de entrega de cada service (opcional, `estimatedTime`) → `services.ts`
+- [ ] Confirmar o sacar "Reparaciones puntuales" (no vino en la lista) → `services.ts`
+- [ ] Resto de las marcas que trabajan (hoy: Shimano y Venzo) y, si se quiere, logos SVG → `brands.ts`, `public/brands/`
 - [ ] Modelos reales de bicis (marca, modelo, rodado, descripción, proveedor) → `bikes.ts`
 - [ ] Accesorios reales → `accessories.ts`
 - [ ] Testimonios reales (Google / Instagram) → `testimonials.ts`

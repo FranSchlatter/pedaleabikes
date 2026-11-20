@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CheckIcon, ClockIcon } from "@/components/ui/Icons";
+import { ArrowRightIcon, CheckIcon, ClockIcon, InstagramIcon } from "@/components/ui/Icons";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { formatPrice } from "@/lib/format";
@@ -8,6 +8,13 @@ import { SelectServiceLink } from "./SelectServiceLink";
 type ServicesProps = {
     services: Service[];
 };
+
+// Todos los services comparten el mismo video, así que el link del encabezado usa el primero.
+function getSectionVideoUrl(services: Service[]) {
+    return services.find(function (service) {
+        return service.videoUrl;
+    })?.videoUrl;
+}
 
 function ServiceCard({ service, index }: { service: Service; index: number }) {
     const dark = service.highlighted;
@@ -24,12 +31,30 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                     Más elegido
                 </span>
             )}
-            <span
-                aria-hidden
-                className={`heading-display text-7xl leading-none ${dark ? "text-outline-chalk opacity-30" : "text-outline-ink opacity-15"}`}
-            >
-                0{index + 1}
-            </span>
+            <div className="flex items-end justify-between gap-4">
+                <span
+                    aria-hidden
+                    className={`heading-display text-7xl leading-none ${dark ? "text-outline-chalk opacity-30" : "text-outline-ink opacity-15"}`}
+                >
+                    0{index + 1}
+                </span>
+                {service.videoUrl && (
+                    <a
+                        href={service.videoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Ver en Instagram el video de qué incluye el ${service.name}`}
+                        title="¿Qué incluye? Mirá el video"
+                        className={`flex size-9 shrink-0 items-center justify-center rounded-full text-base font-bold transition-colors ${
+                            dark
+                                ? "bg-white/10 text-chalk hover:bg-accent hover:text-ink"
+                                : "bg-chalk text-ink hover:bg-ink hover:text-chalk"
+                        }`}
+                    >
+                        ?
+                    </a>
+                )}
+            </div>
             <h3 className="heading-display mt-4 text-2xl hyphens-auto md:text-3xl xl:text-[1.7rem]">
                 {service.name}
             </h3>
@@ -66,7 +91,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                         <span
                             className={`block text-xs font-semibold uppercase tracking-wider ${dark ? "text-steel" : "text-graphite"}`}
                         >
-                            {service.price === null ? "Precio" : "Desde"}
+                            Precio
                         </span>
                         <span
                             className={`heading-display text-3xl md:text-4xl ${dark ? "text-accent" : "text-ink"}`}
@@ -92,6 +117,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 }
 
 export function Services({ services }: ServicesProps) {
+    const videoUrl = getSectionVideoUrl(services);
     return (
         <section
             id="taller"
@@ -112,10 +138,24 @@ export function Services({ services }: ServicesProps) {
                         }
                         description="Elegí el service según cómo usás la bici. Siempre te pasamos el presupuesto por WhatsApp antes de arrancar."
                     />
-                    <p className="max-w-xs text-sm text-graphite lg:text-right">
-                        Precios de referencia. Los repuestos que haga falta cambiar se presupuestan
-                        aparte.
-                    </p>
+                    <div className="flex max-w-xs flex-col gap-4 lg:items-end lg:text-right">
+                        {videoUrl && (
+                            <a
+                                href={videoUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="group inline-flex items-center gap-3 self-start rounded-full bg-ink py-2 pl-2 pr-5 text-sm font-bold text-chalk transition-colors hover:bg-accent-ink lg:self-end"
+                            >
+                                <span className="flex size-8 items-center justify-center rounded-full bg-accent text-ink">
+                                    <InstagramIcon className="size-4" />
+                                </span>
+                                Mirá qué incluye cada service
+                            </a>
+                        )}
+                        <p className="text-sm text-graphite">
+                            Los repuestos que haga falta cambiar se presupuestan aparte.
+                        </p>
+                    </div>
                 </div>
 
                 <Stagger className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-4 xl:items-start">

@@ -1,52 +1,71 @@
 import type { Service, WorkshopStep } from "@/types";
 
-// TODO: CONTENIDO — descripciones, "incluye" y precios son de ejemplo. Reemplazar por los reales.
+// Video del IG donde explica qué incluye cada service; se linkea desde las cards.
+const SERVICES_VIDEO_URL = "https://www.instagram.com/p/Df7dbo7hp4e/";
+
+// TODO: CONTENIDO — el tiempo de entrega de cada service no lo pasaron; si lo confirman, va en
+// estimatedTime y se muestra como chip.
 export const services: Service[] = [
     {
         id: "svc-base",
         slug: "service-base",
         name: "Service Base",
-        description: "Puesta a punto para la bici que usás todos los días.",
+        description: "Puesta a punto completa para la bici que usás todos los días.",
         includes: [
-            "Regulación de frenos y cambios",
-            "Ajuste general de tornillería",
-            "Lubricación de cadena",
-            "Control y calibración de cubiertas",
+            "Limpieza completa",
+            "Calibración de cambios",
+            "Ajuste de frenos",
+            "Ajuste de conos y caja pedalera",
+            "Ajustes generales",
+            "Lubricación y engrasado",
         ],
-        price: 25000,
+        price: 45000,
         highlighted: false,
-        estimatedTime: "24 hs",
+        videoUrl: SERVICES_VIDEO_URL,
     },
     {
         id: "svc-intermedio",
         slug: "service-intermedio",
         name: "Service Intermedio",
-        description: "Limpieza a fondo de transmisión y ajuste fino para que vuelva a andar suave.",
+        description: "Limpieza al detalle y mantenimiento de mazas y pedalera con grasa nueva.",
         includes: [
-            "Todo lo del Service Base",
-            "Limpieza y desengrase de transmisión",
-            "Centrado de ruedas",
-            "Ajuste de dirección y pedalera",
+            "Limpieza al detalle",
+            "Calibración de cambios",
+            "Ajuste de frenos",
+            "Mantenimiento completo de mazas (incluye bolillas y grasa nueva)",
+            "Mantenimiento completo de caja pedalera (incluye bolillas y grasa nueva)",
+            "Lubricación y engrasado",
         ],
-        price: 45000,
+        price: 60000,
         highlighted: true,
-        estimatedTime: "24 a 48 hs",
+        videoUrl: SERVICES_VIDEO_URL,
     },
     {
         id: "svc-full",
         slug: "service-full",
         name: "Service Full",
-        description: "Desarme completo, limpieza y engrase de todos los rodamientos. Como nueva.",
+        description:
+            "Desarme integral, cada componente al detalle y cables nuevos. Sale como nueva.",
         includes: [
-            "Todo lo del Service Intermedio",
-            "Desarme y lavado completo",
-            "Engrase de rodamientos (masas, dirección, caja)",
-            "Revisión de cables y fundas",
+            "Desarme integral",
+            "Limpieza al detalle de cada componente",
+            "Armado completo",
+            "Calibración de cambios",
+            "Ajuste de frenos",
+            "Mantenimiento de mazas",
+            "Mantenimiento de caja pedalera",
+            "Mantenimiento del juego de dirección",
+            "Centrado de ruedas",
+            "Lubricación y engrasado con grasa premium Shimano y aceites a base de ceras",
+            "Lustrado y encerado del cuadro con ceras naturales",
+            "Incluye cambio de cables",
         ],
-        price: 70000,
+        price: 80000,
         highlighted: false,
-        estimatedTime: "48 a 72 hs",
+        videoUrl: SERVICES_VIDEO_URL,
     },
+    // TODO: CONTENIDO — no vino en la lista de services; se deja para que el turno tenga la opción
+    // de una reparación puntual. Confirmar ítems o sacarla.
     {
         id: "svc-reparaciones",
         slug: "reparaciones-puntuales",

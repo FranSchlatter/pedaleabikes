@@ -30,15 +30,16 @@ npm run dev          # http://localhost:3000
 
 Todo se edita en TypeScript, así el editor te avisa si falta un campo. Los tipos están en `src/types/index.ts`.
 
-| Archivo           | Qué tiene                                                                                           |
-| ----------------- | --------------------------------------------------------------------------------------------------- |
-| `business.ts`     | Nombre, dirección, coordenadas, WhatsApp, Instagram, **horarios**, medios de pago, días de encargo  |
-| `services.ts`     | **Servicios del taller** (nombre, descripción, qué incluye, precio, tiempo) y los 4 pasos del flujo |
-| `bikes.ts`        | **Bicis** y sus categorías                                                                          |
-| `accessories.ts`  | **Accesorios** y sus categorías                                                                     |
-| `testimonials.ts` | Testimonios                                                                                         |
-| `videos.ts`       | Videos del taller/local                                                                             |
-| `content.ts`      | Navegación, textos del hero, marquee, contadores y sección "Nosotros"                               |
+| Archivo           | Qué tiene                                                                                                               |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `business.ts`     | Nombre, dirección, coordenadas, WhatsApp, Instagram, **horarios**, medios de pago, días de encargo, link al stock en IG |
+| `services.ts`     | **Servicios del taller** (nombre, descripción, qué incluye, precio, tiempo) y los 4 pasos del flujo                     |
+| `bikes.ts`        | **Bicis** y sus categorías                                                                                              |
+| `accessories.ts`  | **Accesorios** y sus categorías                                                                                         |
+| `brands.ts`       | **Marcas** con las que trabajan (nombre, rubro y logo SVG opcional en `public/brands/`)                                 |
+| `testimonials.ts` | Testimonios                                                                                                             |
+| `videos.ts`       | Videos del taller/local                                                                                                 |
+| `content.ts`      | Navegación, textos del hero, marquee, contadores y sección "Nosotros"                                                   |
 
 ### Horarios
 
@@ -47,7 +48,7 @@ De ahí salen solos: el indicador "Abierto ahora / Cerrado", la tabla de horario
 
 ### Servicios y precios
 
-En `services.ts`. `price` es un número en pesos (se formatea solo, ej. `$ 45.000`) o `null` para mostrar "Consultar". `highlighted: true` marca la card destacada ("Más elegido").
+En `services.ts`. `price` es un número en pesos (se formatea solo, ej. `$ 45.000`) o `null` para mostrar "Consultar". `highlighted: true` marca la card destacada ("Más elegido"). `videoUrl` (opcional) muestra el botón "?" que lleva al video de Instagram.
 
 ### Productos (bicis y accesorios)
 

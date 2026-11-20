@@ -54,4 +54,5 @@ export const business: BusinessInfo = {
         { id: "credito", label: "Crédito" },
     ],
     customOrderDays: "1 a 2 días",
+    stockUrl: "https://www.instagram.com/stories/highlights/18100898954303009/",
 };

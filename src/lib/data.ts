@@ -4,6 +4,7 @@
 // para que la home siga siendo estática.
 import { accessories, accessoryCategories } from "@/data/accessories";
 import { bikeCategories, bikes } from "@/data/bikes";
+import { brands } from "@/data/brands";
 import { business } from "@/data/business";
 import { about, hero, marqueeItems, navItems, stats } from "@/data/content";
 import { services, workshopSteps } from "@/data/services";
@@ -81,4 +82,8 @@ export async function getMarqueeItems() {
 
 export async function getNavItems() {
     return navItems;
+}
+
+export async function getBrands() {
+    return brands;
 }

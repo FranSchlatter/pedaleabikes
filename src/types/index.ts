@@ -52,6 +52,8 @@ export type Service = {
     price: number | null;
     highlighted: boolean;
     estimatedTime?: string;
+    // Post/reel de Instagram que explica el service.
+    videoUrl?: string;
 };
 
 export type WorkshopStep = {
@@ -121,6 +123,18 @@ export type BusinessInfo = {
     schedule: DaySchedule[];
     paymentMethods: PaymentMethod[];
     customOrderDays: string;
+    // Destacada de IG con el stock para entrega inmediata: es la fuente de verdad del stock
+    // mientras no haya base de datos.
+    stockUrl: string;
+};
+
+export type Brand = {
+    id: string;
+    name: string;
+    // Qué se trabaja de la marca ("Componentes", "Bicis"...).
+    category: string;
+    // SVG en /public/brands; sin logo se muestra el nombre como wordmark.
+    logo?: string;
 };
 
 export type Stat = {

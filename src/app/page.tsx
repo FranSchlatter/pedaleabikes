@@ -5,6 +5,7 @@ import { About } from "@/components/sections/About";
 import { Accessories } from "@/components/sections/Accessories";
 import { Bikes } from "@/components/sections/Bikes";
 import { Booking } from "@/components/sections/Booking";
+import { Brands } from "@/components/sections/Brands";
 import { Hero } from "@/components/sections/Hero";
 import { Location } from "@/components/sections/Location";
 import { Marquee } from "@/components/sections/Marquee";
@@ -20,6 +21,7 @@ import {
     getAccessoryCategories,
     getBikeCategories,
     getBikes,
+    getBrands,
     getBusinessInfo,
     getHeroContent,
     getMarqueeItems,
@@ -47,6 +49,7 @@ export default async function Home() {
         videos,
         about,
         testimonials,
+        brands,
     ] = await Promise.all([
         getBusinessInfo(),
         getNavItems(),
@@ -62,6 +65,7 @@ export default async function Home() {
         getVideos(),
         getAboutContent(),
         getTestimonials(),
+        getBrands(),
     ]);
 
     return (
@@ -79,8 +83,10 @@ export default async function Home() {
                     bikes={bikes}
                     categories={bikeCategories}
                     customOrderDays={business.customOrderDays}
+                    stockUrl={business.stockUrl}
                 />
                 <Accessories accessories={accessories} categories={accessoryCategories} />
+                <Brands brands={brands} />
                 <Videos videos={videos} business={business} />
                 <About about={about} />
                 <Testimonials testimonials={testimonials} />

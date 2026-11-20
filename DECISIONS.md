@@ -17,8 +17,10 @@ Decisiones tomadas ante ambigüedades, para revisar.
 
 ## Contenido
 
-- **Precios de servicios** no vinieron: se cargaron $25.000 / $45.000 / $70.000 de ejemplo, marcados como TODO.
-- Se agregó un **"tiempo estimado"** opcional por servicio y una lista de "qué incluye".
+- **Services** con precios y "qué incluye" reales ($45.000 / $60.000 / $80.000). El "tiempo estimado" quedó opcional y sin cargar. "Reparaciones puntuales" se mantiene (precio "Consultar") para que el turno tenga esa opción.
+- Cada service linkea con un "?" al **video de Instagram** que explica qué incluye; no se embebe el post porque el embed de IG carga su script y pega en la performance.
+- **Stock de bicis**: sin base de datos, la fuente de verdad es la destacada de Instagram ("entrega inmediata", con precio). La sección Bicis la linkea con una card propia y la grilla queda como catálogo de referencia.
+- **Marcas** como wordmarks tipográficos (no se usan logos de terceros sin tener los archivos oficiales). La grilla usa `auto-fit`, así funciona con 2 o con 10 marcas.
 - Contadores: "+1.500 bicis reparadas" y "100% presupuestos antes de arreglar" son cifras de ejemplo.
 - El mensaje de consulta de **accesorios** es "Hola! Quería consultar por el accesorio: …" (el de bicis, "…por la [modelo]", no concuerda en género con muchos accesorios). Las bicis incluyen el rodado en el mensaje.
 - Rodado como texto (`"29"`, `"700c"`): mezcla pulgadas y medidas de ruta. Se muestra `R29` o `700C`.
