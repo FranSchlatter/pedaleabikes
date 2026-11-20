@@ -21,11 +21,11 @@ export function OpenStatus({ schedule, className = "" }: OpenStatusProps) {
         >
             <span aria-hidden className="relative flex size-2.5">
                 {isOpen && (
-                    <span className="absolute inset-0 animate-ping-soft rounded-full bg-lime" />
+                    <span className="absolute inset-0 animate-ping-soft rounded-full bg-mint" />
                 )}
                 <span
                     className={`relative size-2.5 rounded-full ${
-                        status ? (isOpen ? "bg-lime" : "bg-accent") : "bg-steel"
+                        status ? (isOpen ? "bg-mint" : "bg-accent") : "bg-steel"
                     }`}
                 />
             </span>

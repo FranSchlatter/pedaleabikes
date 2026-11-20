@@ -1,4 +1,5 @@
-// Genera las imágenes placeholder del sitio (productos, hero, nosotros, videos, OG, logo e íconos).
+// Genera las imágenes placeholder del sitio (productos, hero, nosotros, videos) y los assets de marca
+// (logo transparente, íconos y OG) a partir del logo original en brand/logo-original.jpeg.
 // Se generan como JPG/PNG reales (no SVG) para que next/image las optimice igual que a las fotos
 // definitivas: reemplazar una foto es pisar el archivo con el mismo nombre, sin tocar código.
 // Uso: npm run images:placeholders  (pisa los archivos existentes, no correrlo después de cargar fotos reales)
@@ -12,8 +13,11 @@ const PUBLIC = path.join(ROOT, "public");
 const INK = "#0E0F11";
 const INK_2 = "#1A1C21";
 const CHALK = "#F3F0E8";
-const ACCENT = "#FF5B1F";
-const LIME = "#D4FF3A";
+// Mismos valores que los tokens de src/app/globals.css.
+const BRAND = "#2C7D7B";
+const ACCENT = "#4FB3AE";
+const MINT = "#A6E3DD";
+const LOGO_SOURCE = path.join(ROOT, "brand", "logo-original.jpeg");
 const FONT = "Helvetica Neue, Helvetica, Arial, sans-serif";
 
 const BIKES = [
@@ -87,7 +91,7 @@ function accessoryArt(kind, cx, cy, s) {
             const a = (i * Math.PI) / 4;
             rays += `<path d="M${cx + Math.cos(a) * 120 * s} ${cy + Math.sin(a) * 120 * s} L${cx + Math.cos(a) * 170 * s} ${cy + Math.sin(a) * 170 * s}" stroke="${ACCENT}" stroke-width="${14 * s}" stroke-linecap="round"/>`;
         }
-        return `<circle cx="${cx}" cy="${cy}" r="${80 * s}" ${stroke}/><circle cx="${cx}" cy="${cy}" r="${30 * s}" fill="${LIME}"/>${rays}`;
+        return `<circle cx="${cx}" cy="${cy}" r="${80 * s}" ${stroke}/><circle cx="${cx}" cy="${cy}" r="${30 * s}" fill="${MINT}"/>${rays}`;
     }
     if (kind === "candado") {
         return `<path d="M${cx - 80 * s} ${cy - 10 * s} L${cx - 80 * s} ${cy - 90 * s} C${cx - 80 * s} ${cy - 200 * s} ${cx + 80 * s} ${cy - 200 * s} ${cx + 80 * s} ${cy - 90 * s} L${cx + 80 * s} ${cy - 10 * s}" ${stroke}/>
@@ -101,7 +105,7 @@ function accessoryArt(kind, cx, cy, s) {
 function label(x, y, title, subtitle, size) {
     return `
         <text x="${x}" y="${y}" font-family="${FONT}" font-weight="800" font-size="${size}" fill="${CHALK}" letter-spacing="1">${title}</text>
-        <text x="${x}" y="${y + size * 0.9}" font-family="${FONT}" font-weight="700" font-size="${size * 0.45}" fill="${LIME}" letter-spacing="4">${subtitle}</text>`;
+        <text x="${x}" y="${y + size * 0.9}" font-family="${FONT}" font-weight="700" font-size="${size * 0.45}" fill="${MINT}" letter-spacing="4">${subtitle}</text>`;
 }
 
 function placeholderTag(x, y) {
@@ -116,7 +120,7 @@ function frame(width, height, inner, from, to) {
                 <stop offset="0" stop-color="${from}"/><stop offset="1" stop-color="${to}"/>
             </linearGradient>
             <radialGradient id="glow" cx="0.7" cy="0.3" r="0.7">
-                <stop offset="0" stop-color="${ACCENT}" stop-opacity="0.35"/><stop offset="1" stop-color="${ACCENT}" stop-opacity="0"/>
+                <stop offset="0" stop-color="${BRAND}" stop-opacity="0.55"/><stop offset="1" stop-color="${BRAND}" stop-opacity="0"/>
             </radialGradient>
         </defs>
         <rect width="100%" height="100%" fill="url(#bg)"/>
@@ -216,55 +220,61 @@ async function scenes() {
     }
 }
 
-function wordmark(width, height, textColor) {
-    const s = height / 200;
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
-        <g transform="translate(${100 * s} ${100 * s})">
-            <circle r="${72 * s}" fill="none" stroke="${ACCENT}" stroke-width="${16 * s}"/>
-            <circle r="${18 * s}" fill="${ACCENT}"/>
-            ${[0, 60, 120, 180, 240, 300]
-                .map(function (a) {
-                    const rad = (a * Math.PI) / 180;
-                    return `<path d="M0 0 L${Math.cos(rad) * 64 * s} ${Math.sin(rad) * 64 * s}" stroke="${ACCENT}" stroke-width="${6 * s}" stroke-linecap="round"/>`;
-                })
-                .join("")}
-        </g>
-        <text x="${200 * s}" y="${118 * s}" font-family="${FONT}" font-weight="900" font-style="italic" font-size="${96 * s}" fill="${textColor}" letter-spacing="${1 * s}">PEDALEA</text>
-        <text x="${206 * s}" y="${168 * s}" font-family="${FONT}" font-weight="700" font-size="${36 * s}" fill="${ACCENT}" letter-spacing="${18 * s}">BIKES</text>
-    </svg>`;
+// El logo viene como JPEG teal sobre negro. Se convierte a PNG transparente usando el brillo como
+// alfa y pintando todo con el teal de marca: queda limpio sobre cualquier fondo, sin el cuadrado negro.
+async function transparentLogo() {
+    const { data, info } = await sharp(LOGO_SOURCE).raw().toBuffer({ resolveWithObject: true });
+    const out = Buffer.alloc(info.width * info.height * 4);
+    const [r, g, b] = [0x2c, 0x7d, 0x7b];
+    for (let i = 0, j = 0; i < data.length; i += info.channels, j += 4) {
+        const max = Math.max(data[i], data[i + 1], data[i + 2]);
+        out[j] = r;
+        out[j + 1] = g;
+        out[j + 2] = b;
+        out[j + 3] = Math.max(0, Math.min(255, Math.round(((max - 12) / (122 - 12)) * 255)));
+    }
+    return sharp(out, { raw: { width: info.width, height: info.height, channels: 4 } })
+        .trim({ threshold: 1 })
+        .png()
+        .toBuffer();
 }
 
 async function brand() {
-    await write(wordmark(1400, 400, CHALK), "logo.png", "png");
+    const logo = await transparentLogo();
+    await sharp(logo).toFile(path.join(PUBLIC, "logo.png"));
+    console.log("✓ logo.png");
 
-    const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-        <rect width="512" height="512" rx="112" fill="${INK}"/>
-        <g transform="translate(256 256)">
-            <circle r="150" fill="none" stroke="${ACCENT}" stroke-width="34"/>
-            <circle r="40" fill="${ACCENT}"/>
-            ${[0, 60, 120, 180, 240, 300]
-                .map(function (a) {
-                    const rad = (a * Math.PI) / 180;
-                    return `<path d="M0 0 L${Math.cos(rad) * 135} ${Math.sin(rad) * 135}" stroke="${ACCENT}" stroke-width="12" stroke-linecap="round"/>`;
-                })
-                .join("")}
-        </g>
-    </svg>`;
-    await write(icon, "../src/app/icon.png", "png");
-    await write(icon, "../src/app/apple-icon.png", "png");
+    const iconLogo = await sharp(logo)
+        .resize(400, 400, { fit: "contain", background: "#0000" })
+        .toBuffer();
+    const iconBase = Buffer.from(
+        `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><rect width="512" height="512" rx="112" fill="#000"/></svg>`,
+    );
+    for (const file of ["icon.png", "apple-icon.png"]) {
+        await sharp(iconBase)
+            .composite([{ input: iconLogo, gravity: "center" }])
+            .png()
+            .toFile(path.join(ROOT, "src", "app", file));
+        console.log("✓", file);
+    }
 
-    const og = frame(
+    const ogBase = frame(
         1200,
         630,
-        `${bikeArt(880, 400, 1.05, ACCENT, CHALK)}
-        <text x="70" y="250" font-family="${FONT}" font-weight="900" font-style="italic" font-size="120" fill="${CHALK}">PEDALEA</text>
-        <text x="76" y="310" font-family="${FONT}" font-weight="700" font-size="40" fill="${ACCENT}" letter-spacing="20">BIKES</text>
-        <text x="72" y="430" font-family="${FONT}" font-weight="700" font-size="34" fill="${CHALK}">Bicis, accesorios y taller</text>
-        <text x="72" y="480" font-family="${FONT}" font-weight="500" font-size="28" fill="${LIME}">Mitre 4701 · Santa Fe Capital</text>`,
-        "#16181C",
-        INK,
+        `<text x="70" y="270" font-family="${FONT}" font-weight="900" font-size="64" fill="${CHALK}">Bicicletería y taller</text>
+        <text x="72" y="340" font-family="${FONT}" font-weight="500" font-size="34" fill="${CHALK}" opacity="0.85">Bicis · Accesorios · Service</text>
+        <text x="72" y="420" font-family="${FONT}" font-weight="700" font-size="30" fill="${MINT}">Mitre 4701 · Santa Fe Capital</text>`,
+        "#0B1414",
+        "#000000",
     );
-    await write(og, "../src/app/opengraph-image.jpg");
+    const ogLogo = await sharp(logo)
+        .resize(420, 420, { fit: "contain", background: "#0000" })
+        .toBuffer();
+    await sharp(Buffer.from(ogBase))
+        .composite([{ input: ogLogo, top: 105, left: 720 }])
+        .jpeg({ quality: 86, mozjpeg: true })
+        .toFile(path.join(ROOT, "src", "app", "opengraph-image.jpg"));
+    console.log("✓ opengraph-image.jpg");
 }
 
 await bikes();

@@ -48,11 +48,10 @@ export function Header({ navItems }: HeaderProps) {
                     <Image
                         src="/logo.png"
                         alt="Pedalea Bikes"
-                        width={1400}
-                        height={400}
-                        preload
-                        className="h-9 w-auto md:h-11"
-                        sizes="160px"
+                        width={298}
+                        height={267}
+                        className="h-11 w-auto md:h-14"
+                        sizes="64px"
                     />
                 </a>
 
@@ -125,7 +124,7 @@ export function Header({ navItems }: HeaderProps) {
                                         <a
                                             href={item.href}
                                             onClick={closeMenu}
-                                            className="heading-display flex items-center justify-between border-b border-white/10 py-4 text-3xl text-chalk"
+                                            className="heading-display flex items-center justify-between border-b border-white/10 py-4 text-2xl text-chalk"
                                         >
                                             {item.label}
                                             <span aria-hidden className="text-base text-accent">

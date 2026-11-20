@@ -54,7 +54,7 @@ export function Videos({ videos, business }: VideosProps) {
                         href={business.instagramUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative flex flex-col gap-6 overflow-hidden rounded-[2rem] bg-[linear-gradient(120deg,#ff5b1f,#e1306c_55%,#833ab4)] p-8 md:flex-row md:items-center md:justify-between md:p-12"
+                        className="group relative flex flex-col gap-6 overflow-hidden rounded-[2rem] bg-[linear-gradient(120deg,#f58529,#dd2a7b_55%,#8134af)] p-8 md:flex-row md:items-center md:justify-between md:p-12"
                     >
                         <div
                             aria-hidden
@@ -68,7 +68,7 @@ export function Videos({ videos, business }: VideosProps) {
                                 <p className="text-xs font-bold uppercase tracking-[0.3em] text-chalk/90">
                                     Seguinos en Instagram
                                 </p>
-                                <p className="heading-display mt-1 text-3xl break-all text-chalk sm:text-4xl md:text-6xl">
+                                <p className="heading-display mt-1 text-2xl break-all text-chalk sm:text-3xl md:text-5xl">
                                     {business.instagramHandle}
                                 </p>
                             </div>

@@ -18,7 +18,7 @@ const TONES = {
         title: "text-ink",
         description: "text-graphite",
     },
-    dark: { eyebrow: "text-lime", bar: "bg-lime", title: "text-chalk", description: "text-steel" },
+    dark: { eyebrow: "text-mint", bar: "bg-mint", title: "text-chalk", description: "text-steel" },
     accent: { eyebrow: "text-ink", bar: "bg-ink", title: "text-ink", description: "text-ink/80" },
 };
 
@@ -46,7 +46,7 @@ export function SectionHeading({
             </p>
             <h2
                 id={id}
-                className={`heading-display text-5xl sm:text-6xl lg:text-7xl ${colors.title}`}
+                className={`heading-display text-4xl sm:text-5xl lg:text-6xl ${colors.title}`}
             >
                 {title}
             </h2>

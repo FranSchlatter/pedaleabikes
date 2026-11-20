@@ -4,10 +4,16 @@ Decisiones tomadas ante ambigüedades, para revisar.
 
 ## Identidad
 
-- **No vino logo ni paleta** (el repo estaba vacío). Se definió una paleta propia, deportiva/urbana: tinta `#0E0F11`, tiza `#F3F0E8`, naranja `#FF5B1F` (acento), lima `#D4FF3A` (secundario). Están como tokens en `src/app/globals.css` (`@theme`). Cuando llegue el logo real, ajustar esos valores.
-- `accent-ink` (`#B33A0C`) es el naranja oscurecido para texto sobre fondo claro: el naranja puro no llega a contraste AA sobre la tiza.
-- Se generó un **logo placeholder** (`public/logo.png`), ícono y OG image con `scripts/generate-placeholders.mjs`.
-- Tipografías: **Anton** (display condensada) + **Archivo** (texto), vía `next/font`.
+- **Paleta tomada del logo** (`brand/logo-original.jpeg`): teal `#2C7D7B` sobre negro. Ese teal da ~4:1 con negro y con blanco, así que no alcanza AA para texto chico. Por eso hay variantes, como tokens en `src/app/globals.css` (`@theme`):
+    - `brand` `#2C7D7B`: el teal exacto del logo, para el logo, superficies decorativas y textos gigantes de fondo.
+    - `accent` `#4FB3AE`: teal claro para botones (con texto negro, 7.6:1) y acentos sobre fondo oscuro.
+    - `accent-ink` `#1E5F5D`: teal oscuro para texto sobre fondo claro (6.6:1).
+    - `mint` `#A6E3DD`: resaltados chicos sobre oscuro (eyebrows, estrellas, "Más elegido").
+    - `ink` `#0A0C0C` y `chalk` `#F2F1EC` como base oscura y clara.
+- El logo vino como JPEG teal sobre negro (447×447). `scripts/generate-placeholders.mjs` lo convierte a **PNG transparente** usando el brillo como alfa (`public/logo.png`, 298×267 después del recorte), y arma desde ahí el ícono y la imagen OG. Es de baja resolución: alcanza para el header, el footer y el badge del hero, pero conviene pedir el original en vector o PNG grande.
+- Tipografías: **Rokkitt 800** (slab pesada, en la línea de la tipografía del logo) para títulos + **Archivo** para texto, vía `next/font`. Rokkitt es más ancha que la condensada anterior, así que se bajó un escalón el tamaño de todos los títulos display.
+- Los textos gigantes decorativos usan relleno con `background-clip: text` en vez de contorno: Rokkitt tiene trazos superpuestos y `text-stroke` los dejaba ver.
+- Instagram no expone colores ni estilo en su HTML; la fuente de verdad visual es el logo.
 
 ## Contenido
 
@@ -46,4 +52,4 @@ Decisiones tomadas ante ambigüedades, para revisar.
 
 ## Resultado Lighthouse (mobile, build local)
 
-Performance 92–94 · Accesibilidad 100 · Buenas prácticas 100 · SEO 100. El LCP (~3 s simulado) es el subtítulo del hero y lo domina la carga de fuentes; con fotos reales el poster probablemente pase a ser el LCP.
+Performance 92–93 · Accesibilidad 100 · Buenas prácticas 100 · SEO 100. El LCP (~3 s simulado) es el subtítulo del hero y lo domina la carga de fuentes; con fotos reales el poster probablemente pase a ser el LCP.

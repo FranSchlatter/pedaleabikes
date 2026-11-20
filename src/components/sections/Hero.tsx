@@ -1,4 +1,4 @@
-import { getImageProps } from "next/image";
+import Image, { getImageProps } from "next/image";
 import { ArrowRightIcon, WrenchIcon } from "@/components/ui/Icons";
 import { publicFileExists } from "@/lib/media";
 import type { DaySchedule, HeroContent } from "@/types";
@@ -74,14 +74,19 @@ export function Hero({ content, schedule }: HeroProps) {
                         </textPath>
                     </text>
                 </svg>
-                <span className="absolute inset-0 m-auto flex size-16 items-center justify-center rounded-full bg-accent text-ink">
-                    <WrenchIcon className="size-7" />
-                </span>
+                <Image
+                    src="/logo.png"
+                    alt=""
+                    width={298}
+                    height={267}
+                    sizes="96px"
+                    className="absolute inset-0 m-auto w-20 xl:w-24"
+                />
             </div>
 
             <div id="contenido" className="container-x relative pb-24 pt-32 md:pb-28">
                 <div className="mb-6 flex flex-wrap items-center gap-3">
-                    <span className="text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                    <span className="text-xs font-bold uppercase tracking-[0.3em] text-mint">
                         {content.eyebrow}
                     </span>
                     <OpenStatus schedule={schedule} />

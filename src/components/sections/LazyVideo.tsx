@@ -53,12 +53,12 @@ export function LazyVideo({ video, available }: LazyVideoProps) {
                 <PlayIcon className="ml-1 size-8" />
             </span>
             {!available && (
-                <span className="absolute right-4 top-4 rounded-full bg-ink/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-lime">
+                <span className="absolute right-4 top-4 rounded-full bg-ink/80 px-3 py-1 text-xs font-bold uppercase tracking-wider text-mint">
                     Próximamente
                 </span>
             )}
             <span className="absolute inset-x-0 bottom-0 p-6">
-                <span className="heading-display block text-3xl text-chalk">{video.title}</span>
+                <span className="heading-display block text-2xl text-chalk">{video.title}</span>
                 <span className="mt-1 block text-sm text-chalk/75">{video.description}</span>
             </span>
         </button>

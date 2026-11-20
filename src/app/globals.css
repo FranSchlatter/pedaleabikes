@@ -1,22 +1,27 @@
 @import "tailwindcss";
 
 /*
- * Paleta: no vino logo definitivo, así que se definió una propia (ver DECISIONS.md).
- * accent-ink es el naranja oscurecido para texto sobre fondo claro (el accent puro no llega a AA ahí).
+ * Paleta tomada del logo (teal #2C7D7B sobre negro). Ese teal da ~4:1 tanto con negro como con
+ * blanco, así que no alcanza AA para texto chico: se usa para superficies grandes y decoración,
+ * y para texto/botones se usan dos variantes:
+ *   accent     → teal claro, botones con texto negro y acentos sobre fondo oscuro (7.6:1 con ink)
+ *   accent-ink → teal oscuro para texto sobre fondo claro (6.6:1 con chalk)
+ *   mint       → resaltados chicos sobre oscuro (eyebrows, estrellas, estados)
  */
 @theme {
-    --color-ink: #0e0f11;
-    --color-ink-2: #17191d;
-    --color-ink-3: #24272d;
-    --color-chalk: #f3f0e8;
-    --color-chalk-2: #e6e1d4;
-    --color-accent: #ff5b1f;
-    --color-accent-ink: #b33a0c;
-    --color-lime: #d4ff3a;
-    --color-steel: #9aa0a8;
-    --color-graphite: #4f535a;
+    --color-ink: #0a0c0c;
+    --color-ink-2: #121616;
+    --color-ink-3: #1c2222;
+    --color-chalk: #f2f1ec;
+    --color-chalk-2: #e3e6e1;
+    --color-brand: #2c7d7b;
+    --color-accent: #4fb3ae;
+    --color-accent-ink: #1e5f5d;
+    --color-mint: #a6e3dd;
+    --color-steel: #9aa3a3;
+    --color-graphite: #4a5252;
 
-    --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+    --font-display: var(--font-rokkitt), "Rockwell", Georgia, serif;
     --font-sans: var(--font-archivo), system-ui, sans-serif;
 
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
@@ -105,9 +110,10 @@
 
     .heading-display {
         font-family: var(--font-display);
+        font-weight: 800;
         text-transform: uppercase;
-        line-height: 0.92;
-        letter-spacing: 0.005em;
+        line-height: 0.9;
+        letter-spacing: -0.01em;
     }
 
     /* Líneas de velocidad: fondo puramente decorativo, sin costo de animación. */

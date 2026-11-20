@@ -34,16 +34,16 @@ function Step({ step, index, total, progress }: StepProps) {
                 </div>
                 <m.div
                     style={{ opacity: active, scale }}
-                    className="absolute inset-0 flex items-center justify-center rounded-full bg-accent text-ink shadow-[0_0_0_8px_rgba(255,91,31,0.15)]"
+                    className="absolute inset-0 flex items-center justify-center rounded-full bg-accent text-ink shadow-[0_0_0_8px_rgba(79,179,174,0.15)]"
                 >
                     <Icon className="size-6" />
                 </m.div>
             </div>
             <div className="lg:mt-8 lg:text-center">
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                <p className="text-xs font-bold uppercase tracking-[0.3em] text-mint">
                     Paso 0{index + 1}
                 </p>
-                <h3 className="heading-display mt-2 text-3xl text-chalk md:text-4xl">
+                <h3 className="heading-display mt-2 text-2xl text-chalk md:text-3xl">
                     {step.title}
                 </h3>
                 <p className="mt-3 max-w-xs leading-relaxed text-steel lg:mx-auto">
@@ -74,12 +74,12 @@ export function Workflow({ steps }: WorkflowProps) {
             <div aria-hidden className="speed-lines absolute inset-0 text-chalk opacity-40" />
             <div className="container-x relative">
                 <div className="max-w-3xl">
-                    <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                    <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-mint">
                         Cómo trabajamos
                     </p>
                     <h2
                         id="flujo-title"
-                        className="heading-display text-5xl sm:text-6xl lg:text-7xl"
+                        className="heading-display text-4xl sm:text-5xl lg:text-6xl"
                     >
                         Del taller a la calle <span className="text-accent">en 4 pasos</span>
                     </h2>
@@ -99,7 +99,7 @@ export function Workflow({ steps }: WorkflowProps) {
                         <m.div style={{ y: travel }} className="absolute inset-0">
                             <m.span
                                 style={{ rotate: spin }}
-                                className="absolute -left-3 -top-3 block size-6 text-lime"
+                                className="absolute -left-3 -top-3 block size-6 text-mint"
                             >
                                 <WheelIcon className="size-6" />
                             </m.span>
@@ -119,7 +119,7 @@ export function Workflow({ steps }: WorkflowProps) {
                         <m.div style={{ x: travel }} className="absolute inset-0">
                             <m.span
                                 style={{ rotate: spin }}
-                                className="absolute -top-12 -left-4 block size-8 text-lime"
+                                className="absolute -top-12 -left-4 block size-8 text-mint"
                             >
                                 <WheelIcon className="size-8" />
                             </m.span>

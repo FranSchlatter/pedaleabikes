@@ -4,10 +4,9 @@ Todo lo marcado con `// TODO: CONTENIDO` en el código. Ver el README para tama�
 
 ## Marca
 
-- [ ] Logo definitivo → `public/logo.png` (hoy es un placeholder generado)
-- [ ] Ícono/favicon → `src/app/icon.png` y `src/app/apple-icon.png`
-- [ ] Imagen para compartir → `src/app/opengraph-image.jpg` (1200×630)
-- [ ] Colores definitivos según el logo → tokens en `src/app/globals.css`
+- [x] Logo de la marca aplicado (`brand/logo-original.jpeg` → `public/logo.png`)
+- [ ] Logo en alta resolución o vector (el actual es un JPEG de 447×447)
+- [x] Colores de marca tomados del logo → tokens en `src/app/globals.css`
 
 ## Fotos
 

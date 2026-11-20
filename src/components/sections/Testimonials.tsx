@@ -37,7 +37,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                                     className={`flex h-full flex-col rounded-3xl bg-ink p-7 text-chalk shadow-[0_30px_60px_-30px_rgba(14,15,17,0.7)] transition-transform duration-500 ease-out-expo hover:rotate-0 md:p-8 ${ROTATIONS[index % ROTATIONS.length]}`}
                                 >
                                     <div
-                                        className="flex gap-1 text-lime"
+                                        className="flex gap-1 text-mint"
                                         aria-label={`${testimonial.rating} de 5 estrellas`}
                                         role="img"
                                     >

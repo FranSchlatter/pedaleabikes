@@ -50,10 +50,10 @@ export function Location({ business }: LocationProps) {
                         className="flex flex-col gap-6 rounded-[2rem] bg-ink-2 p-7 ring-1 ring-white/10 md:p-9"
                     >
                         <div>
-                            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                            <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em] text-mint">
                                 <MapPinIcon className="size-4" /> Dirección
                             </p>
-                            <p className="heading-display mt-3 text-4xl md:text-5xl">
+                            <p className="heading-display mt-3 text-3xl md:text-4xl">
                                 {business.address.street}
                             </p>
                             <p className="mt-1 text-steel">
@@ -62,7 +62,7 @@ export function Location({ business }: LocationProps) {
                         </div>
                         <div>
                             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                                <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.3em] text-mint">
                                     <ClockIcon className="size-4" /> Horarios
                                 </p>
                                 <OpenStatus

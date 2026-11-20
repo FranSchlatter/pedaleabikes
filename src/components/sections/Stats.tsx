@@ -28,7 +28,7 @@ export function Stats({ stats }: StatsProps) {
                                 aria-hidden
                                 className="absolute -left-px top-0 h-10 w-0.5 bg-accent"
                             />
-                            <p className="heading-display text-6xl text-chalk md:text-7xl lg:text-8xl">
+                            <p className="heading-display text-5xl text-chalk md:text-6xl lg:text-7xl">
                                 <Counter
                                     value={stat.value}
                                     prefix={stat.prefix}

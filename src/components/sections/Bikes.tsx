@@ -18,14 +18,14 @@ function CustomOrderBanner({ days }: { days: string }) {
                 <div aria-hidden className="speed-lines absolute inset-0 text-ink opacity-60" />
                 <span
                     aria-hidden
-                    className="heading-display pointer-events-none absolute -bottom-10 -right-4 select-none text-[11rem] leading-none text-outline-ink opacity-25 transition-transform duration-700 ease-out-expo group-hover:-translate-x-6 md:text-[16rem]"
+                    className="heading-display pointer-events-none absolute -bottom-10 -right-4 select-none text-[8rem] leading-none bg-ink bg-clip-text text-transparent opacity-10 transition-transform duration-700 ease-out-expo group-hover:-translate-x-6 md:text-[12rem]"
                 >
                     {days}
                 </span>
                 <div className="relative flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
                     <div className="max-w-2xl">
                         <p className="text-xs font-bold uppercase tracking-[0.3em]">Por encargo</p>
-                        <p className="heading-display mt-3 text-4xl sm:text-5xl lg:text-6xl">
+                        <p className="heading-display mt-3 text-3xl sm:text-4xl lg:text-5xl">
                             ¿No está el modelo que buscás?
                         </p>
                         <p className="mt-3 text-lg font-medium md:text-xl">

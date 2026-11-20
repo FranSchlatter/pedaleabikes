@@ -15,12 +15,12 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
         <article
             className={`group relative flex h-full flex-col overflow-hidden rounded-3xl p-7 transition-[transform,box-shadow] duration-500 ease-out-expo hover:-translate-y-2 md:p-8 ${
                 dark
-                    ? "bg-ink text-chalk shadow-[0_30px_60px_-30px_rgba(14,15,17,0.8)] hover:shadow-[0_40px_80px_-30px_rgba(255,91,31,0.45)]"
+                    ? "bg-ink text-chalk shadow-[0_30px_60px_-30px_rgba(14,15,17,0.8)] hover:shadow-[0_40px_80px_-30px_rgba(79,179,174,0.45)]"
                     : "bg-white text-ink shadow-[0_20px_50px_-35px_rgba(14,15,17,0.5)] ring-1 ring-ink/5 hover:shadow-[0_35px_70px_-35px_rgba(14,15,17,0.55)]"
             }`}
         >
             {dark && (
-                <span className="absolute right-6 top-6 rounded-full bg-lime px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink">
+                <span className="absolute right-6 top-6 rounded-full bg-mint px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink">
                     Más elegido
                 </span>
             )}
@@ -30,7 +30,9 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
             >
                 0{index + 1}
             </span>
-            <h3 className="heading-display mt-4 text-3xl md:text-4xl">{service.name}</h3>
+            <h3 className="heading-display mt-4 text-2xl hyphens-auto md:text-3xl xl:text-[1.7rem]">
+                {service.name}
+            </h3>
             <p className={`mt-3 leading-relaxed ${dark ? "text-steel" : "text-graphite"}`}>
                 {service.description}
             </p>
@@ -50,7 +52,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                     return (
                         <li key={item} className="flex gap-2.5">
                             <CheckIcon
-                                className={`mt-0.5 size-4 shrink-0 ${dark ? "text-lime" : "text-accent-ink"}`}
+                                className={`mt-0.5 size-4 shrink-0 ${dark ? "text-mint" : "text-accent-ink"}`}
                             />
                             {item}
                         </li>
@@ -67,7 +69,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                             {service.price === null ? "Precio" : "Desde"}
                         </span>
                         <span
-                            className={`heading-display text-4xl md:text-5xl ${dark ? "text-accent" : "text-ink"}`}
+                            className={`heading-display text-3xl md:text-4xl ${dark ? "text-accent" : "text-ink"}`}
                         >
                             {service.price === null ? "Consultar" : formatPrice(service.price)}
                         </span>
@@ -77,7 +79,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                     serviceSlug={service.slug}
                     className={`mt-5 flex items-center justify-between rounded-full px-5 py-3.5 text-sm font-bold transition-colors ${
                         dark
-                            ? "bg-accent text-ink hover:bg-lime"
+                            ? "bg-accent text-ink hover:bg-mint"
                             : "bg-ink text-chalk hover:bg-accent hover:text-ink"
                     }`}
                 >

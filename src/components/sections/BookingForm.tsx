@@ -262,12 +262,12 @@ export function BookingForm({ services, schedule }: BookingFormProps) {
             <AnimatePresence>
                 {sentLink && (
                     <m.div
-                        className="mt-5 flex items-start gap-3 rounded-2xl border border-lime/30 bg-lime/10 p-4 text-sm"
+                        className="mt-5 flex items-start gap-3 rounded-2xl border border-mint/30 bg-mint/10 p-4 text-sm"
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         role="status"
                     >
-                        <CheckIcon className="mt-0.5 size-5 shrink-0 text-lime" />
+                        <CheckIcon className="mt-0.5 size-5 shrink-0 text-mint" />
                         <p>
                             Te abrimos WhatsApp con el mensaje listo, solo tenés que enviarlo. ¿No
                             se abrió?{" "}
@@ -275,7 +275,7 @@ export function BookingForm({ services, schedule }: BookingFormProps) {
                                 href={sentLink}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="font-bold text-lime underline underline-offset-4"
+                                className="font-bold text-mint underline underline-offset-4"
                             >
                                 Tocá acá
                             </a>

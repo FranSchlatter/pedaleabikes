@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Anton, Archivo } from "next/font/google";
+import { Archivo, Rokkitt } from "next/font/google";
 import { MotionProvider } from "@/components/ui/MotionProvider";
 import { business } from "@/data/business";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
-const anton = Anton({
-    variable: "--font-anton",
-    weight: "400",
+// Slab pesada para títulos, en la línea de la tipografía del logo.
+const rokkitt = Rokkitt({
+    variable: "--font-rokkitt",
+    weight: "800",
     subsets: ["latin"],
     display: "swap",
 });
@@ -58,13 +59,13 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-    themeColor: "#0e0f11",
+    themeColor: "#0a0c0c",
     colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
     return (
-        <html lang="es-AR" className={`${anton.variable} ${archivo.variable} antialiased`}>
+        <html lang="es-AR" className={`${rokkitt.variable} ${archivo.variable} antialiased`}>
             <body className="min-h-dvh overflow-x-clip">
                 <a
                     href="#contenido"

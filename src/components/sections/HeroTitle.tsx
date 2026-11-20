@@ -16,7 +16,7 @@ function countWords(lines: string[]) {
 // sin opacity, así el texto no castiga el LCP ni genera layout shift.
 export function HeroTitle({ lines }: HeroTitleProps) {
     return (
-        <h1 className="heading-display text-[clamp(3.4rem,14vw,8.5rem)] text-chalk">
+        <h1 className="heading-display text-[clamp(2.6rem,12.4vw,7.25rem)] text-chalk">
             {lines.map(function (line, lineIndex) {
                 const words = line.split(" ");
                 const firstWordIndex = countWords(lines.slice(0, lineIndex));

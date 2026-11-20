@@ -22,7 +22,7 @@ function MarqueeRow({ items, reverse }: { items: string[]; reverse?: boolean }) 
                             {items.map(function (item) {
                                 return (
                                     <li key={item} className="flex items-center">
-                                        <span className="heading-display px-6 text-4xl md:text-6xl">
+                                        <span className="heading-display px-6 text-3xl md:text-5xl">
                                             {item}
                                         </span>
                                         <WheelIcon className="size-7 shrink-0 md:size-9" />
@@ -44,7 +44,7 @@ export function Marquee({ items }: MarqueeProps) {
                 <MarqueeRow items={items} />
             </div>
             <div className="-mt-2 rotate-1 scale-105 bg-ink py-3 text-chalk md:py-4">
-                <div className="opacity-90 [&_.heading-display]:text-2xl md:[&_.heading-display]:text-4xl [&_svg]:size-5 [&_svg]:text-lime">
+                <div className="opacity-90 [&_.heading-display]:text-xl md:[&_.heading-display]:text-3xl [&_svg]:size-5 [&_svg]:text-mint">
                     <MarqueeRow items={items} reverse />
                 </div>
             </div>

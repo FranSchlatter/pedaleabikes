@@ -22,7 +22,7 @@ export function Booking({ services, business }: BookingProps) {
         >
             <span
                 aria-hidden
-                className="heading-display pointer-events-none absolute -right-6 top-10 select-none text-[22vw] leading-none text-outline-ink opacity-[0.07] lg:text-[16rem]"
+                className="heading-display pointer-events-none absolute -right-6 top-10 select-none text-[18vw] leading-none bg-brand bg-clip-text text-transparent opacity-[0.1] lg:text-[12rem]"
             >
                 Turno
             </span>

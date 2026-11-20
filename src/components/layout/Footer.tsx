@@ -17,10 +17,10 @@ export function Footer({ business, navItems }: FooterProps) {
                     <Image
                         src="/logo.png"
                         alt="Pedalea Bikes"
-                        width={1400}
-                        height={400}
-                        className="h-12 w-auto"
-                        sizes="180px"
+                        width={298}
+                        height={267}
+                        className="h-24 w-auto"
+                        sizes="110px"
                     />
                     <p className="mt-5 max-w-xs leading-relaxed text-steel">{business.tagline}.</p>
                     <div className="mt-6 flex gap-3">
@@ -46,7 +46,7 @@ export function Footer({ business, navItems }: FooterProps) {
                 </div>
 
                 <div>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                    <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-mint">
                         Contacto
                     </h2>
                     <ul className="mt-5 space-y-3 text-chalk/85">
@@ -84,7 +84,7 @@ export function Footer({ business, navItems }: FooterProps) {
                 </div>
 
                 <div>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                    <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-mint">
                         Horarios
                     </h2>
                     <ul className="mt-5 space-y-2 text-sm text-chalk/85">
@@ -104,7 +104,7 @@ export function Footer({ business, navItems }: FooterProps) {
                 </div>
 
                 <div>
-                    <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                    <h2 className="text-xs font-bold uppercase tracking-[0.3em] text-mint">
                         Medios de pago
                     </h2>
                     <ul className="mt-5 flex flex-wrap gap-2">
@@ -123,7 +123,7 @@ export function Footer({ business, navItems }: FooterProps) {
                         Débito y crédito con posnet en el local.
                     </p>
 
-                    <h2 className="mt-8 text-xs font-bold uppercase tracking-[0.3em] text-lime">
+                    <h2 className="mt-8 text-xs font-bold uppercase tracking-[0.3em] text-mint">
                         Secciones
                     </h2>
                     <ul className="mt-4 grid grid-cols-2 gap-2 text-sm text-chalk/85">
@@ -142,7 +142,7 @@ export function Footer({ business, navItems }: FooterProps) {
 
             <p
                 aria-hidden
-                className="heading-display pointer-events-none select-none whitespace-nowrap text-center text-[22vw] leading-[0.78] text-outline-chalk opacity-[0.12]"
+                className="heading-display pointer-events-none select-none whitespace-nowrap text-center text-[17vw] leading-[0.8] bg-brand bg-clip-text text-transparent opacity-[0.16]"
             >
                 Pedalea
             </p>
