@@ -27,6 +27,7 @@ import {
     getMarqueeItems,
     getNavItems,
     getServices,
+    getServicesVideoUrl,
     getStats,
     getTestimonials,
     getVideos,
@@ -50,6 +51,7 @@ export default async function Home() {
         about,
         testimonials,
         brands,
+        servicesVideoUrl,
     ] = await Promise.all([
         getBusinessInfo(),
         getNavItems(),
@@ -66,6 +68,7 @@ export default async function Home() {
         getAboutContent(),
         getTestimonials(),
         getBrands(),
+        getServicesVideoUrl(),
     ]);
 
     return (
@@ -76,7 +79,7 @@ export default async function Home() {
                 <Hero content={hero} schedule={business.schedule} />
                 <Marquee items={marqueeItems} />
                 <Stats stats={stats} />
-                <Services services={services} />
+                <Services services={services} videoUrl={servicesVideoUrl} />
                 <Workflow steps={steps} />
                 <Booking services={services} business={business} />
                 <Bikes

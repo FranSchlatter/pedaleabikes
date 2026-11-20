@@ -18,9 +18,9 @@ Decisiones tomadas ante ambigüedades, para revisar.
 ## Contenido
 
 - **Services** con precios y "qué incluye" reales ($45.000 / $60.000 / $80.000). El "tiempo estimado" quedó opcional y sin cargar. "Reparaciones puntuales" se mantiene (precio "Consultar") para que el turno tenga esa opción.
-- Cada service linkea con un "?" al **video de Instagram** que explica qué incluye; no se embebe el post porque el embed de IG carga su script y pega en la performance.
-- **Stock de bicis**: sin base de datos, la fuente de verdad es la destacada de Instagram ("entrega inmediata", con precio). La sección Bicis la linkea con una card propia y la grilla queda como catálogo de referencia.
-- **Marcas** como wordmarks tipográficos (no se usan logos de terceros sin tener los archivos oficiales). La grilla usa `auto-fit`, así funciona con 2 o con 10 marcas.
+- Los services son **acumulativos**: cada card muestra "Todo lo del X, más:" (`basedOn`) y solo lo que suma, en vez de repetir la lista. El video de Instagram que los explica va linkeado una vez en el encabezado; no se embebe porque el embed de IG carga su script y pega en la performance.
+- **Stock de bicis**: sin base de datos, la fuente de verdad es la destacada de Instagram ("entrega inmediata", con precio). En la sección Bicis va primero la card de stock y después la grilla como "por encargo: consultá precio y disponibilidad".
+- **Marcas** en un slider infinito (logo + nombre chico), pausa al hover. La lista se repite hasta 10 ítems para que el loop no deje huecos con pocas marcas; los lectores de pantalla leen una lista aparte sin repetir.
 - Contadores: "+1.500 bicis reparadas" y "100% presupuestos antes de arreglar" son cifras de ejemplo.
 - El mensaje de consulta de **accesorios** es "Hola! Quería consultar por el accesorio: …" (el de bicis, "…por la [modelo]", no concuerda en género con muchos accesorios). Las bicis incluyen el rodado en el mensaje.
 - Rodado como texto (`"29"`, `"700c"`): mezcla pulgadas y medidas de ruta. Se muestra `R29` o `700C`.

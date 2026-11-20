@@ -1,7 +1,7 @@
 import type { Service, WorkshopStep } from "@/types";
 
-// Video del IG donde explica qué incluye cada service; se linkea desde las cards.
-const SERVICES_VIDEO_URL = "https://www.instagram.com/p/Df7dbo7hp4e/";
+// Video del IG donde explica qué incluye cada service; se linkea desde el encabezado de la sección.
+export const servicesVideoUrl = "https://www.instagram.com/p/Df7dbo7hp4e/";
 
 // TODO: CONTENIDO — el tiempo de entrega de cada service no lo pasaron; si lo confirman, va en
 // estimatedTime y se muestra como chip.
@@ -21,24 +21,20 @@ export const services: Service[] = [
         ],
         price: 45000,
         highlighted: false,
-        videoUrl: SERVICES_VIDEO_URL,
     },
     {
         id: "svc-intermedio",
         slug: "service-intermedio",
         name: "Service Intermedio",
         description: "Limpieza al detalle y mantenimiento de mazas y pedalera con grasa nueva.",
+        basedOn: "svc-base",
         includes: [
-            "Limpieza al detalle",
-            "Calibración de cambios",
-            "Ajuste de frenos",
+            "Limpieza al detalle (en vez de completa)",
             "Mantenimiento completo de mazas (incluye bolillas y grasa nueva)",
             "Mantenimiento completo de caja pedalera (incluye bolillas y grasa nueva)",
-            "Lubricación y engrasado",
         ],
         price: 60000,
         highlighted: true,
-        videoUrl: SERVICES_VIDEO_URL,
     },
     {
         id: "svc-full",
@@ -46,23 +42,18 @@ export const services: Service[] = [
         name: "Service Full",
         description:
             "Desarme integral, cada componente al detalle y cables nuevos. Sale como nueva.",
+        basedOn: "svc-intermedio",
         includes: [
-            "Desarme integral",
+            "Desarme integral y armado completo",
             "Limpieza al detalle de cada componente",
-            "Armado completo",
-            "Calibración de cambios",
-            "Ajuste de frenos",
-            "Mantenimiento de mazas",
-            "Mantenimiento de caja pedalera",
             "Mantenimiento del juego de dirección",
             "Centrado de ruedas",
-            "Lubricación y engrasado con grasa premium Shimano y aceites a base de ceras",
+            "Grasa premium Shimano y aceites a base de ceras",
             "Lustrado y encerado del cuadro con ceras naturales",
-            "Incluye cambio de cables",
+            "Cambio de cables",
         ],
         price: 80000,
         highlighted: false,
-        videoUrl: SERVICES_VIDEO_URL,
     },
     // TODO: CONTENIDO — no vino en la lista de services; se deja para que el turno tenga la opción
     // de una reparación puntual. Confirmar ítems o sacarla.

@@ -52,8 +52,9 @@ export type Service = {
     price: number | null;
     highlighted: boolean;
     estimatedTime?: string;
-    // Post/reel de Instagram que explica el service.
-    videoUrl?: string;
+    // id del service anterior: la card muestra "Todo lo del X, más:" y `includes` lista solo lo que
+    // suma este, así no se repiten los ítems de una card a la otra.
+    basedOn?: string;
 };
 
 export type WorkshopStep = {
@@ -131,10 +132,8 @@ export type BusinessInfo = {
 export type Brand = {
     id: string;
     name: string;
-    // Qué se trabaja de la marca ("Componentes", "Bicis"...).
-    category: string;
-    // SVG en /public/brands; sin logo se muestra el nombre como wordmark.
-    logo?: string;
+    // SVG en /public/brands.
+    logo: string;
 };
 
 export type Stat = {

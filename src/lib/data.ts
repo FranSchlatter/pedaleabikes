@@ -7,7 +7,7 @@ import { bikeCategories, bikes } from "@/data/bikes";
 import { brands } from "@/data/brands";
 import { business } from "@/data/business";
 import { about, hero, marqueeItems, navItems, stats } from "@/data/content";
-import { services, workshopSteps } from "@/data/services";
+import { services, servicesVideoUrl, workshopSteps } from "@/data/services";
 import { testimonials } from "@/data/testimonials";
 import { videos } from "@/data/videos";
 import type { Accessory, Bike, Product } from "@/types";
@@ -46,6 +46,10 @@ export async function getAccessoryCategories() {
 
 export async function getServices() {
     return services;
+}
+
+export async function getServicesVideoUrl() {
+    return servicesVideoUrl;
 }
 
 export async function getWorkshopSteps() {

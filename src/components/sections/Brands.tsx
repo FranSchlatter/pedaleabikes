@@ -1,34 +1,38 @@
 import Image from "next/image";
-import { Stagger, StaggerItem } from "@/components/ui/Reveal";
-import { SectionHeading } from "@/components/ui/SectionHeading";
+import { Reveal } from "@/components/ui/Reveal";
 import type { Brand } from "@/types";
 
 type BrandsProps = {
     brands: Brand[];
 };
 
-function BrandPlate({ brand }: { brand: Brand }) {
+// El loop desplaza -50%, así que cada copia tiene que ser más ancha que la pantalla: con pocas
+// marcas se repite la lista hasta llegar a MIN_ITEMS.
+const MIN_ITEMS = 10;
+
+function fillTrack(brands: Brand[]) {
+    const track: Brand[] = [];
+    while (track.length < MIN_ITEMS) {
+        track.push(...brands);
+    }
+    return track;
+}
+
+function BrandItem({ brand }: { brand: Brand }) {
     return (
-        <div className="group flex h-full flex-col items-start justify-between gap-6 rounded-3xl bg-white p-6 ring-1 ring-ink/5 transition-[transform,box-shadow] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_30px_60px_-35px_rgba(14,15,17,0.5)] md:p-8">
-            {brand.logo ? (
-                <span className="relative block h-12 w-full md:h-14">
-                    <Image
-                        src={brand.logo}
-                        alt={brand.name}
-                        fill
-                        sizes="240px"
-                        className="object-contain object-left"
-                    />
-                </span>
-            ) : (
-                <span className="heading-display text-4xl text-ink transition-colors group-hover:text-accent-ink md:text-5xl">
-                    {brand.name}
-                </span>
-            )}
-            <span className="text-xs font-bold uppercase tracking-[0.25em] text-graphite">
-                {brand.category}
+        <li className="flex w-32 shrink-0 flex-col items-center gap-3 md:w-40">
+            <Image
+                src={brand.logo}
+                alt=""
+                width={56}
+                height={56}
+                unoptimized
+                className="size-12 object-contain opacity-70 transition-opacity duration-300 group-hover/brands:opacity-100 md:size-14"
+            />
+            <span className="text-[0.7rem] font-bold uppercase tracking-[0.25em] text-graphite">
+                {brand.name}
             </span>
-        </div>
+        </li>
     );
 }
 
@@ -36,38 +40,39 @@ export function Brands({ brands }: BrandsProps) {
     if (brands.length === 0) {
         return null;
     }
+    const track = fillTrack(brands);
+    const copies = [false, true];
     return (
-        <section
-            id="marcas"
-            aria-labelledby="marcas-title"
-            className="relative bg-chalk-2 py-20 md:py-28"
-        >
-            <div className="container-x grid gap-10 lg:grid-cols-[1fr_2fr] lg:items-center">
-                <SectionHeading
+        <section aria-labelledby="marcas-title" className="relative bg-chalk-2 py-14 md:py-20">
+            <Reveal className="container-x">
+                <h2
                     id="marcas-title"
-                    eyebrow="Marcas"
-                    title={
-                        <>
-                            Con las que
-                            <br />
-                            <span className="text-accent-ink">trabajamos</span>
-                        </>
-                    }
-                    description="Repuestos y bicis de marcas que conocemos de punta a punta."
-                />
-                {/* auto-fit estira las placas para llenar la fila, así se ve bien con 2 o con 10. */}
-                <Stagger
-                    as="ul"
-                    className="grid grid-cols-[repeat(auto-fit,minmax(13rem,1fr))] gap-4 md:gap-5"
+                    className="text-center text-xs font-bold uppercase tracking-[0.3em] text-accent-ink"
                 >
-                    {brands.map(function (brand) {
+                    Marcas con las que trabajamos
+                </h2>
+            </Reveal>
+            {/* Lista accesible aparte; el slider es decorativo y se repite. */}
+            <ul className="sr-only">
+                {brands.map(function (brand) {
+                    return <li key={brand.id}>{brand.name}</li>;
+                })}
+            </ul>
+            <div
+                aria-hidden
+                className="group/brands mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
+            >
+                <div className="flex w-max animate-marquee group-hover/brands:[animation-play-state:paused]">
+                    {copies.map(function (isCopy) {
                         return (
-                            <StaggerItem key={brand.id} as="li" className="h-full">
-                                <BrandPlate brand={brand} />
-                            </StaggerItem>
+                            <ul key={String(isCopy)} className="flex shrink-0">
+                                {track.map(function (brand, index) {
+                                    return <BrandItem key={`${brand.id}-${index}`} brand={brand} />;
+                                })}
+                            </ul>
                         );
                     })}
-                </Stagger>
+                </div>
             </div>
         </section>
     );

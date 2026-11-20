@@ -7,16 +7,22 @@ import { SelectServiceLink } from "./SelectServiceLink";
 
 type ServicesProps = {
     services: Service[];
+    videoUrl?: string;
 };
 
-// Todos los services comparten el mismo video, así que el link del encabezado usa el primero.
-function getSectionVideoUrl(services: Service[]) {
+function findServiceName(services: Service[], id?: string) {
     return services.find(function (service) {
-        return service.videoUrl;
-    })?.videoUrl;
+        return service.id === id;
+    })?.name;
 }
 
-function ServiceCard({ service, index }: { service: Service; index: number }) {
+type ServiceCardProps = {
+    service: Service;
+    index: number;
+    baseName?: string;
+};
+
+function ServiceCard({ service, index, baseName }: ServiceCardProps) {
     const dark = service.highlighted;
     return (
         <article
@@ -31,30 +37,12 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                     Más elegido
                 </span>
             )}
-            <div className="flex items-end justify-between gap-4">
-                <span
-                    aria-hidden
-                    className={`heading-display text-7xl leading-none ${dark ? "text-outline-chalk opacity-30" : "text-outline-ink opacity-15"}`}
-                >
-                    0{index + 1}
-                </span>
-                {service.videoUrl && (
-                    <a
-                        href={service.videoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`Ver en Instagram el video de qué incluye el ${service.name}`}
-                        title="¿Qué incluye? Mirá el video"
-                        className={`flex size-9 shrink-0 items-center justify-center rounded-full text-base font-bold transition-colors ${
-                            dark
-                                ? "bg-white/10 text-chalk hover:bg-accent hover:text-ink"
-                                : "bg-chalk text-ink hover:bg-ink hover:text-chalk"
-                        }`}
-                    >
-                        ?
-                    </a>
-                )}
-            </div>
+            <span
+                aria-hidden
+                className={`heading-display text-7xl leading-none ${dark ? "text-outline-chalk opacity-30" : "text-outline-ink opacity-15"}`}
+            >
+                0{index + 1}
+            </span>
             <h3 className="heading-display mt-4 text-2xl hyphens-auto md:text-3xl xl:text-[1.7rem]">
                 {service.name}
             </h3>
@@ -72,7 +60,14 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
                     Listo en {service.estimatedTime}
                 </p>
             )}
-            <ul className="mb-8 mt-6 space-y-2.5 text-sm">
+            {baseName && (
+                <p
+                    className={`mt-6 rounded-2xl px-4 py-3 text-sm font-bold ${dark ? "bg-white/10 text-chalk" : "bg-chalk text-ink"}`}
+                >
+                    Todo lo del {baseName}, más:
+                </p>
+            )}
+            <ul className={`mb-8 space-y-2.5 text-sm ${baseName ? "mt-4" : "mt-6"}`}>
                 {service.includes.map(function (item) {
                     return (
                         <li key={item} className="flex gap-2.5">
@@ -116,8 +111,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
     );
 }
 
-export function Services({ services }: ServicesProps) {
-    const videoUrl = getSectionVideoUrl(services);
+export function Services({ services, videoUrl }: ServicesProps) {
     return (
         <section
             id="taller"
@@ -165,7 +159,11 @@ export function Services({ services }: ServicesProps) {
                                 key={service.id}
                                 className={`h-full ${service.highlighted ? "xl:-mt-6 xl:mb-6" : ""}`}
                             >
-                                <ServiceCard service={service} index={index} />
+                                <ServiceCard
+                                    service={service}
+                                    index={index}
+                                    baseName={findServiceName(services, service.basedOn)}
+                                />
                             </StaggerItem>
                         );
                     })}

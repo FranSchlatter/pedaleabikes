@@ -13,36 +13,53 @@ type BikesProps = {
 };
 
 // El stock cambia seguido y no hay base de datos: la destacada de IG es la fuente de verdad y la
-// grilla de abajo queda como catálogo de referencia.
+// grilla de abajo queda como catálogo de modelos por encargo.
 function StockCard({ url }: { url: string }) {
     return (
-        <Reveal delay={0.15} className="w-full lg:max-w-sm">
+        <Reveal delay={0.1} className="mt-10">
             <a
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative block overflow-hidden rounded-3xl bg-ink-3 p-6 ring-1 ring-white/10 transition-[transform,box-shadow] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_rgba(79,179,174,0.5)] hover:ring-accent/50"
+                className="group relative flex flex-col gap-6 overflow-hidden rounded-3xl bg-ink-3 p-6 ring-1 ring-white/10 transition-[transform,box-shadow] duration-500 ease-out-expo hover:-translate-y-1 hover:shadow-[0_30px_60px_-30px_rgba(79,179,174,0.5)] hover:ring-accent/50 md:flex-row md:items-center md:justify-between md:p-8"
             >
-                <p className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.25em] text-mint">
-                    <span aria-hidden className="relative flex size-2.5">
-                        <span className="absolute inset-0 animate-ping-soft rounded-full bg-mint" />
-                        <span className="relative size-2.5 rounded-full bg-mint" />
-                    </span>
-                    Entrega inmediata
-                </p>
-                <p className="heading-display mt-3 text-2xl md:text-3xl">
-                    Stock de hoy, con precio
-                </p>
-                <p className="mt-2 text-sm leading-relaxed text-steel">
-                    Lo actualizamos en las destacadas de Instagram cada vez que entra o sale una
-                    bici.
-                </p>
-                <span className="mt-5 inline-flex items-center gap-2.5 font-bold text-accent">
+                <div>
+                    <p className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.25em] text-mint">
+                        <span aria-hidden className="relative flex size-2.5">
+                            <span className="absolute inset-0 animate-ping-soft rounded-full bg-mint" />
+                            <span className="relative size-2.5 rounded-full bg-mint" />
+                        </span>
+                        Entrega inmediata
+                    </p>
+                    <p className="heading-display mt-3 text-2xl md:text-3xl">
+                        Lo que hay hoy en el local, con precio
+                    </p>
+                    <p className="mt-2 max-w-xl text-sm leading-relaxed text-steel">
+                        El stock lo actualizamos en las destacadas de Instagram cada vez que entra o
+                        sale una bici.
+                    </p>
+                </div>
+                <span className="inline-flex shrink-0 items-center justify-center gap-2.5 self-start rounded-full bg-accent px-6 py-3.5 font-bold text-ink transition-colors group-hover:bg-mint md:self-auto">
                     <InstagramIcon className="size-5" />
                     Ver stock en Instagram
                     <ArrowUpRightIcon className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </span>
             </a>
+        </Reveal>
+    );
+}
+
+function CatalogIntro({ days }: { days: string }) {
+    return (
+        <Reveal className="mb-8 mt-16 max-w-2xl md:mt-20">
+            <p className="text-xs font-bold uppercase tracking-[0.3em] text-mint">Por encargo</p>
+            <p className="heading-display mt-3 text-3xl md:text-4xl">
+                ¿No está en stock? La traemos
+            </p>
+            <p className="mt-3 leading-relaxed text-steel">
+                Estas son algunas de las opciones que podemos conseguirte en {days}. Consultanos
+                precio y disponibilidad por WhatsApp.
+            </p>
         </Reveal>
     );
 }
@@ -60,12 +77,12 @@ function CustomOrderBanner({ days }: { days: string }) {
                 </span>
                 <div className="relative flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
                     <div className="max-w-2xl">
-                        <p className="text-xs font-bold uppercase tracking-[0.3em]">Por encargo</p>
+                        <p className="text-xs font-bold uppercase tracking-[0.3em]">Otro modelo</p>
                         <p className="heading-display mt-3 text-3xl sm:text-4xl lg:text-5xl">
-                            ¿No está el modelo que buscás?
+                            ¿Buscás algo que no está acá?
                         </p>
                         <p className="mt-3 text-lg font-medium md:text-xl">
-                            Lo traemos por encargo en <strong>{days}</strong>.
+                            Decinos qué necesitás y te lo conseguimos en <strong>{days}</strong>.
                         </p>
                     </div>
                     <a
@@ -95,20 +112,19 @@ export function Bikes({ bikes, categories, customOrderDays, stockUrl }: BikesPro
         >
             <div aria-hidden className="grid-lines absolute inset-0 text-chalk" />
             <div className="container-x relative">
-                <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                    <SectionHeading
-                        id="bicis-title"
-                        eyebrow="Bicis"
-                        tone="dark"
-                        title={
-                            <>
-                                Modelos <span className="text-accent">más pedidos</span>
-                            </>
-                        }
-                        description="Urbanas, MTB, ruta, infantiles y eléctricas. Estos son los modelos que más salen; lo que hay hoy para llevarte está en Instagram."
-                    />
-                    <StockCard url={stockUrl} />
-                </div>
+                <SectionHeading
+                    id="bicis-title"
+                    eyebrow="Bicis"
+                    tone="dark"
+                    title={
+                        <>
+                            Tu próxima <span className="text-accent">bici</span>
+                        </>
+                    }
+                    description="Urbanas, MTB, ruta, infantiles y eléctricas. Llevátela hoy o te la traemos por encargo."
+                />
+                <StockCard url={stockUrl} />
+                <CatalogIntro days={customOrderDays} />
                 <Reveal delay={0.1}>
                     <ProductCatalog
                         id="bikes"

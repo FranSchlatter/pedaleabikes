@@ -36,7 +36,7 @@ Todo se edita en TypeScript, así el editor te avisa si falta un campo. Los tipo
 | `services.ts`     | **Servicios del taller** (nombre, descripción, qué incluye, precio, tiempo) y los 4 pasos del flujo                     |
 | `bikes.ts`        | **Bicis** y sus categorías                                                                                              |
 | `accessories.ts`  | **Accesorios** y sus categorías                                                                                         |
-| `brands.ts`       | **Marcas** con las que trabajan (nombre, rubro y logo SVG opcional en `public/brands/`)                                 |
+| `brands.ts`       | **Marcas** con las que trabajan (nombre y logo SVG en `public/brands/`) para el slider                                  |
 | `testimonials.ts` | Testimonios                                                                                                             |
 | `videos.ts`       | Videos del taller/local                                                                                                 |
 | `content.ts`      | Navegación, textos del hero, marquee, contadores y sección "Nosotros"                                                   |
@@ -48,7 +48,7 @@ De ahí salen solos: el indicador "Abierto ahora / Cerrado", la tabla de horario
 
 ### Servicios y precios
 
-En `services.ts`. `price` es un número en pesos (se formatea solo, ej. `$ 45.000`) o `null` para mostrar "Consultar". `highlighted: true` marca la card destacada ("Más elegido"). `videoUrl` (opcional) muestra el botón "?" que lleva al video de Instagram.
+En `services.ts`. `price` es un número en pesos (se formatea solo, ej. `$ 45.000`) o `null` para mostrar "Consultar". `highlighted: true` marca la card destacada ("Más elegido"). `basedOn` apunta al service anterior: la card muestra "Todo lo del X, más:" y en `includes` va solo lo que suma. El link al video de Instagram es `servicesVideoUrl`.
 
 ### Productos (bicis y accesorios)
 
