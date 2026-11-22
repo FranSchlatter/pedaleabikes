@@ -25,14 +25,14 @@ Todo lo marcado con `// TODO: CONTENIDO` en el código. Ver el README para tama�
 
 - [x] Precios y "qué incluye" de los 3 services → `services.ts`
 - [ ] Tiempo de entrega de cada service (opcional, `estimatedTime`) → `services.ts`
-- [ ] Confirmar o sacar "Reparaciones puntuales" (no vino en la lista) → `services.ts`
+- [x] "Reparaciones puntuales" confirmada por el cliente → `services.ts`
 - [ ] Marcas reales (Shimano y Venzo confirmadas, el resto de ejemplo) → `brands.ts`
 - [ ] Logos oficiales en SVG (los actuales son monogramas placeholder) → `public/brands/`
 - [ ] Modelos reales de bicis (marca, modelo, rodado, descripción, proveedor) → `bikes.ts`
 - [ ] Accesorios reales → `accessories.ts`
 - [ ] Testimonios reales (Google / Instagram) → `testimonials.ts`
 - [ ] Historia, valores y fotos de "Nosotros" → `content.ts` (`about`)
-- [ ] Cifras de los contadores → `content.ts` (`stats`)
+- [x] Cifras de los contadores → `content.ts` (`stats`) (falta confirmar "100% presupuestos")
 - [ ] Confirmar coordenadas del local → `business.ts` (`geo`)
 - [ ] Feriados, si se quieren excluir del formulario de turnos (ver DECISIONS.md)
 

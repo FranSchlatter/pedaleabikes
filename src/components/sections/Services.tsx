@@ -10,19 +10,12 @@ type ServicesProps = {
     videoUrl?: string;
 };
 
-function findServiceName(services: Service[], id?: string) {
-    return services.find(function (service) {
-        return service.id === id;
-    })?.name;
-}
-
 type ServiceCardProps = {
     service: Service;
     index: number;
-    baseName?: string;
 };
 
-function ServiceCard({ service, index, baseName }: ServiceCardProps) {
+function ServiceCard({ service, index }: ServiceCardProps) {
     const dark = service.highlighted;
     return (
         <article
@@ -60,14 +53,7 @@ function ServiceCard({ service, index, baseName }: ServiceCardProps) {
                     Listo en {service.estimatedTime}
                 </p>
             )}
-            {baseName && (
-                <p
-                    className={`mt-6 rounded-2xl px-4 py-3 text-sm font-bold ${dark ? "bg-white/10 text-chalk" : "bg-chalk text-ink"}`}
-                >
-                    Todo lo del {baseName}, más:
-                </p>
-            )}
-            <ul className={`mb-8 space-y-2.5 text-sm ${baseName ? "mt-4" : "mt-6"}`}>
+            <ul className="mb-8 mt-6 space-y-2.5 text-sm">
                 {service.includes.map(function (item) {
                     return (
                         <li key={item} className="flex gap-2.5">
@@ -147,7 +133,7 @@ export function Services({ services, videoUrl }: ServicesProps) {
                             </a>
                         )}
                         <p className="text-sm text-graphite">
-                            Los repuestos que haga falta cambiar se presupuestan aparte.
+                            Repuestos, accesorios y extras se presupuestan aparte.
                         </p>
                     </div>
                 </div>
@@ -159,11 +145,7 @@ export function Services({ services, videoUrl }: ServicesProps) {
                                 key={service.id}
                                 className={`h-full ${service.highlighted ? "xl:-mt-6 xl:mb-6" : ""}`}
                             >
-                                <ServiceCard
-                                    service={service}
-                                    index={index}
-                                    baseName={findServiceName(services, service.basedOn)}
-                                />
+                                <ServiceCard service={service} index={index} />
                             </StaggerItem>
                         );
                     })}

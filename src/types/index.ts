@@ -52,9 +52,6 @@ export type Service = {
     price: number | null;
     highlighted: boolean;
     estimatedTime?: string;
-    // id del service anterior: la card muestra "Todo lo del X, más:" y `includes` lista solo lo que
-    // suma este, así no se repiten los ítems de una card a la otra.
-    basedOn?: string;
 };
 
 export type WorkshopStep = {

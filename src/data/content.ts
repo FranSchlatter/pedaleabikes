@@ -32,15 +32,15 @@ export const marqueeItems: string[] = [
     "Santa Fe",
 ];
 
-// TODO: CONTENIDO — confirmar cifras reales (bicis reparadas, años, etc.).
+// Cifras confirmadas por el cliente, salvo "presupuestos antes de arreglar".
 export const stats: Stat[] = [
-    { id: "repaired", value: 1500, prefix: "+", label: "bicis reparadas" },
-    { id: "mechanics", value: 2, label: "mecánicos en el taller" },
+    { id: "repaired", value: 5000, prefix: "+", label: "bicis reparadas" },
+    { id: "mechanics", value: 2, label: "mecánicos especializados" },
     {
         id: "order",
         value: 2,
         prefix: "1-",
-        label: "días para traer tu bici por encargo",
+        label: "días para traer tu bici nueva por encargo",
     },
     { id: "budget", value: 100, suffix: "%", label: "presupuestos antes de arreglar" },
 ];
@@ -50,7 +50,7 @@ export const about: AboutContent = {
     title: "Somos de acá y vivimos sobre dos ruedas",
     paragraphs: [
         "Pedalea Bikes nació de las ganas de tener en el barrio una bicicletería como la que nos hubiese gustado encontrar: atención directa, precios claros y un taller que te explica qué le pasa a tu bici.",
-        "Hoy somos un equipo chico, con dos mecánicos que conocen cada bici que entra al local. Vendemos bicis y accesorios, y si no tenemos lo que buscás, te lo conseguimos.",
+        "Hoy somos un equipo chico, con dos mecánicos especializados que conocen cada bici que entra al local. Vendemos bicis y accesorios, y si no tenemos lo que buscás, te lo conseguimos.",
     ],
     values: [
         {
@@ -65,8 +65,9 @@ export const about: AboutContent = {
         },
         {
             id: "v-3",
-            title: "Trato de barrio",
-            description: "Te conocemos por tu nombre y por tu bici.",
+            title: "Trato cercano y personalizado",
+            description:
+                "Te conocemos por tu nombre, tu bici y te asesoramos en todo lo que necesites.",
         },
     ],
     images: {

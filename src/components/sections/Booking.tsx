@@ -38,7 +38,7 @@ export function Booking({ services, business }: BookingProps) {
                                 <span className="text-accent-ink">para el taller</span>
                             </>
                         }
-                        description="Completá el formulario y te abrimos WhatsApp con el mensaje listo para mandar."
+                        description="Completá el formulario y contactanos por WhatsApp."
                     />
                     <Reveal delay={0.1} className="mt-10 space-y-4">
                         <div
@@ -50,7 +50,7 @@ export function Booking({ services, business }: BookingProps) {
                                 Elegís el{" "}
                                 <strong className="text-ink">día en que dejás la bici</strong>. La
                                 traés cuando te quede cómodo dentro del horario de atención y te
-                                mandamos el presupuesto por WhatsApp.
+                                enviamos el presupuesto por WhatsApp.
                             </p>
                         </div>
                         <div className="flex flex-col gap-3 text-sm text-graphite sm:flex-row sm:gap-8">

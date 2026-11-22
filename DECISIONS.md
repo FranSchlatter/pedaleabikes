@@ -18,10 +18,10 @@ Decisiones tomadas ante ambigüedades, para revisar.
 ## Contenido
 
 - **Services** con precios y "qué incluye" reales ($45.000 / $60.000 / $80.000). El "tiempo estimado" quedó opcional y sin cargar. "Reparaciones puntuales" se mantiene (precio "Consultar") para que el turno tenga esa opción.
-- Los services son **acumulativos**: cada card muestra "Todo lo del X, más:" (`basedOn`) y solo lo que suma, en vez de repetir la lista. El video de Instagram que los explica va linkeado una vez en el encabezado; no se embebe porque el embed de IG carga su script y pega en la performance.
+- Cada service muestra su lista completa (el cliente prefirió eso a "Todo lo del X, más:"). El video de Instagram que los explica va linkeado una vez en el encabezado; no se embebe porque el embed de IG carga su script y pega en la performance.
 - **Stock de bicis**: sin base de datos, la fuente de verdad es la destacada de Instagram ("entrega inmediata", con precio). En la sección Bicis va primero la card de stock y después la grilla como "por encargo: consultá precio y disponibilidad".
 - **Marcas** en un slider infinito (logo + nombre chico), pausa al hover. La lista se repite hasta 10 ítems para que el loop no deje huecos con pocas marcas; los lectores de pantalla leen una lista aparte sin repetir.
-- Contadores: "+1.500 bicis reparadas" y "100% presupuestos antes de arreglar" son cifras de ejemplo.
+- Contadores confirmados por el cliente (+5.000 bicis, 2 mecánicos, 1-2 días); "100% presupuestos antes de arreglar" sigue siendo de ejemplo.
 - El mensaje de consulta de **accesorios** es "Hola! Quería consultar por el accesorio: …" (el de bicis, "…por la [modelo]", no concuerda en género con muchos accesorios). Las bicis incluyen el rodado en el mensaje.
 - Rodado como texto (`"29"`, `"700c"`): mezcla pulgadas y medidas de ruta. Se muestra `R29` o `700C`.
 - Coordenadas del local aproximadas; código postal tomado de Google Maps (S3000AZQ).

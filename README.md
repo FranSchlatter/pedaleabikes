@@ -48,7 +48,7 @@ De ahí salen solos: el indicador "Abierto ahora / Cerrado", la tabla de horario
 
 ### Servicios y precios
 
-En `services.ts`. `price` es un número en pesos (se formatea solo, ej. `$ 45.000`) o `null` para mostrar "Consultar". `highlighted: true` marca la card destacada ("Más elegido"). `basedOn` apunta al service anterior: la card muestra "Todo lo del X, más:" y en `includes` va solo lo que suma. El link al video de Instagram es `servicesVideoUrl`.
+En `services.ts`. `price` es un número en pesos (se formatea solo, ej. `$ 45.000`) o `null` para mostrar "Consultar". `highlighted: true` marca la card destacada ("Más elegido"). El link al video de Instagram es `servicesVideoUrl`.
 
 ### Productos (bicis y accesorios)
 
