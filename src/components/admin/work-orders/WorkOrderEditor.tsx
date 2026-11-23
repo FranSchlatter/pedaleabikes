@@ -369,9 +369,9 @@ export function WorkOrderEditor({
                                     <thead className="text-left text-[11px] font-bold uppercase tracking-wide text-muted">
                                         <tr className="border-b border-line">
                                             <th className="py-1.5">Ítem</th>
-                                            <th className="py-1.5 text-right">Cant.</th>
-                                            <th className="py-1.5 text-right">Precio</th>
-                                            <th className="py-1.5 text-right">Subtotal</th>
+                                            <th className="px-2 py-1.5 text-right">Cant.</th>
+                                            <th className="px-2 py-1.5 text-right">Precio</th>
+                                            <th className="py-1.5 pl-2 text-right">Subtotal</th>
                                             <th className="w-10" />
                                         </tr>
                                     </thead>
@@ -395,7 +395,7 @@ export function WorkOrderEditor({
                                                     <td className="py-1.5 text-right tabular-nums">
                                                         {formatARS(i.unit_price)}
                                                     </td>
-                                                    <td className="py-1.5 text-right font-semibold tabular-nums">
+                                                    <td className="whitespace-nowrap py-1.5 pl-2 text-right font-semibold tabular-nums">
                                                         {formatARS(i.quantity * i.unit_price)}
                                                     </td>
                                                     <td className="py-1 text-right">

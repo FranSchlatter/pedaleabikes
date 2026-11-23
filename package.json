@@ -17,7 +17,8 @@
         "db:start": "supabase start",
         "db:stop": "supabase stop",
         "db:reset": "supabase db reset",
-        "inventory:sample": "node scripts/generate-sample-inventory.mjs"
+        "inventory:sample": "node scripts/generate-sample-inventory.mjs",
+        "test:db": "vitest run --config vitest.integration.config.mts"
     },
     "dependencies": {
         "@hookform/resolvers": "7.0.6",
