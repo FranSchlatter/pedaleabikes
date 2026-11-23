@@ -6,7 +6,14 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import type { ActionResult } from "@/lib/admin/action-types";
 import { Button } from "./ui/button";
-import { Dialog, DialogBody, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "./ui/dialog";
+import {
+    Dialog,
+    DialogBody,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "./ui/dialog";
 import { Field, Input, NativeSelect, Textarea } from "./ui/input";
 
 export type FieldDef = {
@@ -25,8 +32,8 @@ type Props = {
     initial?: Record<string, string | boolean | null>;
     triggerLabel: string;
     editing?: boolean;
-    // Ruta a la que ir después de crear (recibe el id).
-    redirectTo?: (id: string) => string;
+    // Ruta base a la que ir después de crear: se le agrega el id.
+    redirectBase?: string;
     // Server Action (se puede pasar como prop desde un Server Component).
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onSave: (values: any) => Promise<ActionResult<{ id: string }>>;
@@ -35,7 +42,16 @@ type Props = {
 };
 
 // Formulario genérico en modal para ABMs simples (proveedores, clientes, bicis).
-export function EntityForm({ title, fields, initial = {}, triggerLabel, editing, redirectTo, onSave, extra }: Props) {
+export function EntityForm({
+    title,
+    fields,
+    initial = {},
+    triggerLabel,
+    editing,
+    redirectBase,
+    onSave,
+    extra,
+}: Props) {
     const router = useRouter();
     const [open, setOpen] = useState(false);
     const [values, setValues] = useState<Record<string, string | boolean>>({});
@@ -63,7 +79,7 @@ export function EntityForm({ title, fields, initial = {}, triggerLabel, editing,
             }
             toast.success("Guardado");
             setOpen(false);
-            if (!editing && redirectTo) router.push(redirectTo(result.data.id));
+            if (!editing && redirectBase) router.push(redirectBase + result.data.id);
         });
     }
 
@@ -84,12 +100,18 @@ export function EntityForm({ title, fields, initial = {}, triggerLabel, editing,
                                 const id = `ef-${f.name}`;
                                 if (f.type === "checkbox") {
                                     return (
-                                        <label key={f.name} className="flex items-center gap-2 text-sm sm:col-span-2">
+                                        <label
+                                            key={f.name}
+                                            className="flex items-center gap-2 text-sm sm:col-span-2"
+                                        >
                                             <input
                                                 type="checkbox"
                                                 checked={values[f.name] === true}
                                                 onChange={function (e) {
-                                                    setValues({ ...values, [f.name]: e.target.checked });
+                                                    setValues({
+                                                        ...values,
+                                                        [f.name]: e.target.checked,
+                                                    });
                                                 }}
                                             />
                                             {f.label}
@@ -97,13 +119,21 @@ export function EntityForm({ title, fields, initial = {}, triggerLabel, editing,
                                     );
                                 }
                                 return (
-                                    <Field key={f.name} label={f.label} htmlFor={id} className={f.full ? "sm:col-span-2" : undefined}>
+                                    <Field
+                                        key={f.name}
+                                        label={f.label}
+                                        htmlFor={id}
+                                        className={f.full ? "sm:col-span-2" : undefined}
+                                    >
                                         {f.type === "textarea" ? (
                                             <Textarea
                                                 id={id}
                                                 value={String(values[f.name] ?? "")}
                                                 onChange={function (e) {
-                                                    setValues({ ...values, [f.name]: e.target.value });
+                                                    setValues({
+                                                        ...values,
+                                                        [f.name]: e.target.value,
+                                                    });
                                                 }}
                                             />
                                         ) : f.type === "select" ? (
@@ -111,7 +141,10 @@ export function EntityForm({ title, fields, initial = {}, triggerLabel, editing,
                                                 id={id}
                                                 value={String(values[f.name] ?? "")}
                                                 onChange={function (e) {
-                                                    setValues({ ...values, [f.name]: e.target.value });
+                                                    setValues({
+                                                        ...values,
+                                                        [f.name]: e.target.value,
+                                                    });
                                                 }}
                                             >
                                                 <option value="">—</option>
@@ -132,7 +165,10 @@ export function EntityForm({ title, fields, initial = {}, triggerLabel, editing,
                                                 placeholder={f.placeholder}
                                                 value={String(values[f.name] ?? "")}
                                                 onChange={function (e) {
-                                                    setValues({ ...values, [f.name]: e.target.value });
+                                                    setValues({
+                                                        ...values,
+                                                        [f.name]: e.target.value,
+                                                    });
                                                 }}
                                             />
                                         )}
@@ -140,7 +176,10 @@ export function EntityForm({ title, fields, initial = {}, triggerLabel, editing,
                                 );
                             })}
                             {error ? (
-                                <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger sm:col-span-2">
+                                <p
+                                    role="alert"
+                                    className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger sm:col-span-2"
+                                >
                                     {error}
                                 </p>
                             ) : null}

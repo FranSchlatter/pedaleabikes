@@ -17,6 +17,9 @@ import { formatARS } from "@/lib/admin/money";
 import { isUuid } from "@/lib/admin/params";
 import { whatsAppUrl } from "@/lib/admin/phone";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Cliente" };
 
 export default async function CustomerPage({ params }: { params: Promise<{ id: string }> }) {
@@ -27,7 +30,9 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
         db.from("customers").select("*, bikes(*)").eq("id", id).maybeSingle(),
         db
             .from("work_orders")
-            .select("id, number, status, received_at, delivered_at, final_price, problem, bikes(brand, model, wheel_size, bike_type, color)")
+            .select(
+                "id, number, status, received_at, delivered_at, final_price, problem, bikes(brand, model, wheel_size, bike_type, color)",
+            )
             .eq("customer_id", id)
             .order("received_at", { ascending: false }),
         db
@@ -50,7 +55,9 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
         <div className="space-y-4">
             <PageHeader
                 title={c.name}
-                description={[c.phone, c.email].filter(Boolean).join(" · ") || "Sin datos de contacto"}
+                description={
+                    [c.phone, c.email].filter(Boolean).join(" · ") || "Sin datos de contacto"
+                }
                 actions={
                     <>
                         {c.phone ? (
@@ -63,14 +70,29 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                                 <MessageCircleIcon /> WhatsApp
                             </a>
                         ) : null}
-                        <OpenQuickButton kind="sale" label="Venta" customerId={c.id} variant="secondary" />
-                        <OpenQuickButton kind="workOrder" label="Orden" customerId={c.id} variant="secondary" />
+                        <OpenQuickButton
+                            kind="sale"
+                            label="Venta"
+                            customerId={c.id}
+                            variant="secondary"
+                        />
+                        <OpenQuickButton
+                            kind="workOrder"
+                            label="Orden"
+                            customerId={c.id}
+                            variant="secondary"
+                        />
                         <EntityForm
                             title="Editar cliente"
                             triggerLabel="Editar"
                             editing
                             fields={CUSTOMER_FIELDS}
-                            initial={{ name: c.name, phone: c.phone, email: c.email, notes: c.notes }}
+                            initial={{
+                                name: c.name,
+                                phone: c.phone,
+                                email: c.email,
+                                notes: c.notes,
+                            }}
                             extra={{ id: c.id }}
                             onSave={saveCustomer}
                         />
@@ -104,10 +126,17 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                     <ul className="divide-y divide-line">
                         {c.bikes.map(function (b) {
                             return (
-                                <li key={b.id} className="flex items-center justify-between gap-3 px-4 py-2 text-sm">
+                                <li
+                                    key={b.id}
+                                    className="flex items-center justify-between gap-3 px-4 py-2 text-sm"
+                                >
                                     <span>
                                         {bikeLabel(b)}
-                                        {b.notes ? <span className="block text-xs text-muted">{b.notes}</span> : null}
+                                        {b.notes ? (
+                                            <span className="block text-xs text-muted">
+                                                {b.notes}
+                                            </span>
+                                        ) : null}
                                     </span>
                                     <EntityForm
                                         title="Editar bici"
@@ -147,20 +176,32 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                                         return (
                                             <Tr key={o.id}>
                                                 <Td>
-                                                    <Link href={`/admin/ordenes/${o.id}`} className="font-semibold text-primary hover:underline">
+                                                    <Link
+                                                        href={`/admin/ordenes/${o.id}`}
+                                                        className="font-semibold text-primary hover:underline"
+                                                    >
                                                         #{o.number}
                                                     </Link>
                                                 </Td>
-                                                <Td className="tabular-nums">{formatDate(o.received_at)}</Td>
+                                                <Td className="tabular-nums">
+                                                    {formatDate(o.received_at)}
+                                                </Td>
                                                 <Td className="max-w-56 text-xs">
-                                                    <div className="truncate">{bikeLabel(o.bikes)}</div>
-                                                    <div className="truncate text-muted">{o.problem}</div>
+                                                    <div className="truncate">
+                                                        {bikeLabel(o.bikes)}
+                                                    </div>
+                                                    <div className="truncate text-muted">
+                                                        {o.problem}
+                                                    </div>
                                                 </Td>
                                                 <Td>
                                                     <StatusBadge status={o.status} />
                                                 </Td>
                                                 <Td className="text-right tabular-nums">
-                                                    {o.final_price !== null && o.status === "entregada" ? formatARS(o.final_price) : "—"}
+                                                    {o.final_price !== null &&
+                                                    o.status === "entregada"
+                                                        ? formatARS(o.final_price)
+                                                        : "—"}
                                                 </Td>
                                             </Tr>
                                         );
@@ -179,7 +220,10 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                             {(sales ?? []).map(function (s) {
                                 return (
                                     <li key={s.id} className="flex justify-between gap-3 px-4 py-2">
-                                        <Link href={`/admin/ventas/${s.id}`} className="min-w-0 truncate hover:underline">
+                                        <Link
+                                            href={`/admin/ventas/${s.id}`}
+                                            className="min-w-0 truncate hover:underline"
+                                        >
                                             #{s.number} · {formatDate(s.occurred_at)} ·{" "}
                                             {s.sale_items
                                                 .map(function (i) {
@@ -188,7 +232,11 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                                                 .join(", ")}
                                         </Link>
                                         <span className="shrink-0 tabular-nums">
-                                            {s.voided_at ? <Badge tone="danger">anulada</Badge> : formatARS(s.total)}
+                                            {s.voided_at ? (
+                                                <Badge tone="danger">anulada</Badge>
+                                            ) : (
+                                                formatARS(s.total)
+                                            )}
                                         </span>
                                     </li>
                                 );

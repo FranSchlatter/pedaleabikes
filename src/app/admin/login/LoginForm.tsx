@@ -25,7 +25,13 @@ export function LoginForm() {
                 />
             </Field>
             <Field label="Contraseña" htmlFor="password">
-                <Input id="password" name="password" type="password" autoComplete="current-password" required />
+                <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                />
             </Field>
             {state.error ? (
                 <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">

@@ -19,7 +19,9 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
     const [{ data: wo }, settings] = await Promise.all([
         db
             .from("work_orders")
-            .select("*, customers(name, phone), bikes(brand, model, wheel_size, bike_type, color), work_order_items(*)")
+            .select(
+                "*, customers(name, phone), bikes(brand, model, wheel_size, bike_type, color), work_order_items(*)",
+            )
             .eq("id", id)
             .maybeSingle(),
         getSettings(db),
@@ -43,9 +45,17 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
             </div>
             <header className="flex items-start justify-between gap-4 border-b-2 border-ink pb-3">
                 <div className="flex items-center gap-3">
-                    <Image src="/logo.png" alt="" width={64} height={57} className="rounded bg-ink p-1" />
+                    <Image
+                        src="/logo.png"
+                        alt=""
+                        width={64}
+                        height={57}
+                        className="rounded bg-ink p-1"
+                    />
                     <div>
-                        <p className="font-display text-xl font-extrabold uppercase">{settings.business_name}</p>
+                        <p className="font-display text-xl font-extrabold uppercase">
+                            {settings.business_name}
+                        </p>
                         <p>{settings.address}</p>
                         <p>
                             {settings.phone}
@@ -87,7 +97,9 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
                 ) : null}
                 {wo.work_done ? (
                     <div>
-                        <p className="text-xs uppercase tracking-wide text-muted">Trabajos realizados</p>
+                        <p className="text-xs uppercase tracking-wide text-muted">
+                            Trabajos realizados
+                        </p>
                         <p className="whitespace-pre-line">{wo.work_done}</p>
                     </div>
                 ) : null}
@@ -110,7 +122,9 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
                                     <td className="py-1">{i.description}</td>
                                     <td className="py-1 text-right">{i.quantity}</td>
                                     <td className="py-1 text-right">{formatARS(i.unit_price)}</td>
-                                    <td className="py-1 text-right">{formatARS(i.quantity * Number(i.unit_price))}</td>
+                                    <td className="py-1 text-right">
+                                        {formatARS(i.quantity * Number(i.unit_price))}
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -131,12 +145,16 @@ export default async function ReceiptPage({ params }: { params: Promise<{ id: st
                     <p>Presupuesto informado: {formatARS(wo.budget_amount)}</p>
                 ) : null}
                 <p className="text-lg font-bold">
-                    {charged !== null ? `Total cobrado: ${formatARS(charged)}` : `Total: ${formatARS(total)}`}
+                    {charged !== null
+                        ? `Total cobrado: ${formatARS(charged)}`
+                        : `Total: ${formatARS(total)}`}
                 </p>
             </div>
 
             {settings.receipt_footer ? (
-                <p className="mt-6 border-t border-line pt-3 text-xs text-muted">{settings.receipt_footer}</p>
+                <p className="mt-6 border-t border-line pt-3 text-xs text-muted">
+                    {settings.receipt_footer}
+                </p>
             ) : null}
             <div className="mt-10 grid grid-cols-2 gap-10 text-center text-xs text-muted">
                 <p className="border-t border-ink pt-1">Firma del cliente</p>

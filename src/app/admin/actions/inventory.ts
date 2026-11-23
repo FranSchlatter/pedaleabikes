@@ -51,8 +51,16 @@ export async function saveProduct(input: ProductInput) {
 
 const quickSchema = z.discriminatedUnion("field", [
     z.object({ id: z.uuid(), field: z.literal("cost"), value: z.number().min(0) }),
-    z.object({ id: z.uuid(), field: z.literal("margin"), value: z.number().min(0).max(100).nullable() }),
-    z.object({ id: z.uuid(), field: z.literal("manual_price"), value: z.number().min(0).nullable() }),
+    z.object({
+        id: z.uuid(),
+        field: z.literal("margin"),
+        value: z.number().min(0).max(100).nullable(),
+    }),
+    z.object({
+        id: z.uuid(),
+        field: z.literal("manual_price"),
+        value: z.number().min(0).nullable(),
+    }),
     z.object({ id: z.uuid(), field: z.literal("min_stock"), value: z.number().int().min(0) }),
     z.object({ id: z.uuid(), field: z.literal("stock"), value: z.number().int() }),
 ]);

@@ -36,7 +36,9 @@ const voidSchema = z.object({ id: z.uuid(), reason: z.string().max(300).optional
 
 export async function voidPurchase(input: z.infer<typeof voidSchema>) {
     return runAction(voidSchema, input, async function (data, db) {
-        check(await db.rpc("void_purchase", { p_purchase_id: data.id, p_reason: data.reason ?? "" }));
+        check(
+            await db.rpc("void_purchase", { p_purchase_id: data.id, p_reason: data.reason ?? "" }),
+        );
         return null;
     });
 }

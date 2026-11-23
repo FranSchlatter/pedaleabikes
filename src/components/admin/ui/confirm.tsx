@@ -60,6 +60,7 @@ export function Confirm({
                             <Label htmlFor="confirm-reason">Motivo (opcional)</Label>
                             <Input
                                 id="confirm-reason"
+                                autoFocus
                                 value={reason}
                                 onChange={function (e) {
                                     setReason(e.target.value);
@@ -75,6 +76,7 @@ export function Confirm({
                             </Label>
                             <Input
                                 id="confirm-type"
+                                autoFocus={!askReason}
                                 value={typed}
                                 autoComplete="off"
                                 onChange={function (e) {

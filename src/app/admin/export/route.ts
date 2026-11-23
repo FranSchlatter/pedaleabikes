@@ -28,7 +28,11 @@ function n(value: unknown) {
     return value === null || value === undefined ? null : Number(value);
 }
 
-const TX_TYPE: Record<string, string> = { income: "Ingreso", expense: "Egreso", transfer: "Transferencia" };
+const TX_TYPE: Record<string, string> = {
+    income: "Ingreso",
+    expense: "Egreso",
+    transfer: "Transferencia",
+};
 
 // Tablas completas para el backup (todas las columnas, tal cual están en la base).
 const BACKUP_TABLES = [
@@ -52,7 +56,9 @@ const BACKUP_TABLES = [
 ] as const;
 
 function range(url: URL, fallbackDays: number) {
-    const to = isValidDate(url.searchParams.get("hasta")) ? url.searchParams.get("hasta")! : todayAR();
+    const to = isValidDate(url.searchParams.get("hasta"))
+        ? url.searchParams.get("hasta")!
+        : todayAR();
     const fromParam = url.searchParams.get("desde");
     const from = isValidDate(fromParam)
         ? fromParam
@@ -98,7 +104,9 @@ async function buildSheets(db: Db, table: string, url: URL): Promise<Sheet[] | n
             const rows = await fetchAll(function (a, b) {
                 return db
                     .from("sales")
-                    .select("*, accounts(name), customers(name), sale_items(*, transaction_categories(name))")
+                    .select(
+                        "*, accounts(name), customers(name), sale_items(*, transaction_categories(name))",
+                    )
                     .gte("occurred_at", from)
                     .lt("occurred_at", to)
                     .order("occurred_at")
@@ -188,7 +196,9 @@ async function buildSheets(db: Db, table: string, url: URL): Promise<Sheet[] | n
             const rows = await fetchAll(function (a, b) {
                 return db
                     .from("work_orders")
-                    .select("*, customers(name, phone), bikes(brand, model, wheel_size, bike_type, color), work_order_items(*)")
+                    .select(
+                        "*, customers(name, phone), bikes(brand, model, wheel_size, bike_type, color), work_order_items(*)",
+                    )
                     .order("number")
                     .range(a, b);
             });
@@ -259,7 +269,13 @@ async function buildSheets(db: Db, table: string, url: URL): Promise<Sheet[] | n
                             Monto: n(t.amount),
                             Descripción: t.description,
                             Proveedor: t.suppliers?.name,
-                            Origen: t.sale_id ? "Venta" : t.purchase_id ? "Compra" : t.work_order_id ? "Orden" : "Manual",
+                            Origen: t.sale_id
+                                ? "Venta"
+                                : t.purchase_id
+                                  ? "Compra"
+                                  : t.work_order_id
+                                    ? "Orden"
+                                    : "Manual",
                             Anulado: t.voided_at ? "Sí" : "",
                         };
                     }),
@@ -365,7 +381,9 @@ export async function GET(request: Request) {
     }
     const wb = XLSX.utils.book_new();
     for (const sheet of sheets) {
-        const ws = XLSX.utils.json_to_sheet(sheet.rows.length ? sheet.rows : [{ "(sin datos)": "" }]);
+        const ws = XLSX.utils.json_to_sheet(
+            sheet.rows.length ? sheet.rows : [{ "(sin datos)": "" }],
+        );
         XLSX.utils.book_append_sheet(wb, ws, sheet.name.slice(0, 31));
     }
     const buffer = XLSX.write(wb, { type: "buffer", bookType: "xlsx" }) as Buffer;

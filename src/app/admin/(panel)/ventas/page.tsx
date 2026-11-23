@@ -10,13 +10,18 @@ import { addDays, dayBounds, formatDateTime, isValidDate, todayAR } from "@/lib/
 import { formatARS } from "@/lib/admin/money";
 import { isUuid, param, type SearchParams } from "@/lib/admin/params";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Ventas" };
 
 export default async function SalesPage({ searchParams }: { searchParams: SearchParams }) {
     const params = await searchParams;
     const db = await getDb();
     const today = todayAR();
-    const fromDate = isValidDate(param(params, "desde")) ? param(params, "desde")! : addDays(today, -30);
+    const fromDate = isValidDate(param(params, "desde"))
+        ? param(params, "desde")!
+        : addDays(today, -30);
     const toDate = isValidDate(param(params, "hasta")) ? param(params, "hasta")! : today;
     const account = param(params, "cuenta");
     const showVoided = param(params, "anuladas") === "1";
@@ -83,12 +88,18 @@ export default async function SalesPage({ searchParams }: { searchParams: Search
             <div className="mb-3 grid grid-cols-2 gap-3 md:grid-cols-3">
                 <Stat label="Total del período" value={formatARS(total)} />
                 <Stat label="Cantidad" value={valid.length} />
-                <Stat label="Ticket promedio" value={formatARS(valid.length ? Math.round(total / valid.length) : 0)} />
+                <Stat
+                    label="Ticket promedio"
+                    value={formatARS(valid.length ? Math.round(total / valid.length) : 0)}
+                />
             </div>
 
             <Card>
                 {rows.length === 0 ? (
-                    <EmptyState title="No hay ventas en este período" description="Probá con otras fechas." />
+                    <EmptyState
+                        title="No hay ventas en este período"
+                        description="Probá con otras fechas."
+                    />
                 ) : (
                     <TableWrap>
                         <Table>
@@ -105,24 +116,45 @@ export default async function SalesPage({ searchParams }: { searchParams: Search
                             <tbody>
                                 {rows.map(function (s) {
                                     return (
-                                        <Tr key={s.id} className={s.voided_at ? "text-muted line-through" : undefined}>
+                                        <Tr
+                                            key={s.id}
+                                            className={
+                                                s.voided_at ? "text-muted line-through" : undefined
+                                            }
+                                        >
                                             <Td>
-                                                <Link href={`/admin/ventas/${s.id}`} className="font-semibold text-primary hover:underline">
+                                                <Link
+                                                    href={`/admin/ventas/${s.id}`}
+                                                    className="font-semibold text-primary hover:underline"
+                                                >
                                                     #{s.number}
                                                 </Link>
                                             </Td>
-                                            <Td className="whitespace-nowrap tabular-nums">{formatDateTime(s.occurred_at)}</Td>
+                                            <Td className="whitespace-nowrap tabular-nums">
+                                                {formatDateTime(s.occurred_at)}
+                                            </Td>
                                             <Td className="max-w-md truncate">
-                                                {s.voided_at ? <Badge tone="danger" className="mr-1 no-underline">Anulada</Badge> : null}
+                                                {s.voided_at ? (
+                                                    <Badge
+                                                        tone="danger"
+                                                        className="mr-1 no-underline"
+                                                    >
+                                                        Anulada
+                                                    </Badge>
+                                                ) : null}
                                                 {s.sale_items
                                                     .map(function (i) {
-                                                        return i.quantity > 1 ? `${i.quantity}× ${i.description}` : i.description;
+                                                        return i.quantity > 1
+                                                            ? `${i.quantity}× ${i.description}`
+                                                            : i.description;
                                                     })
                                                     .join(", ")}
                                             </Td>
                                             <Td>{s.customers?.name ?? "—"}</Td>
                                             <Td>{s.accounts?.name}</Td>
-                                            <Td className="text-right font-semibold tabular-nums">{formatARS(s.total)}</Td>
+                                            <Td className="text-right font-semibold tabular-nums">
+                                                {formatARS(s.total)}
+                                            </Td>
                                         </Tr>
                                     );
                                 })}

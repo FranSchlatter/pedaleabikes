@@ -156,13 +156,19 @@ export function SearchSelect({
                                     )}
                                 >
                                     <span className="min-w-0">
-                                        <span className="block truncate font-medium">{option.label}</span>
+                                        <span className="block truncate font-medium">
+                                            {option.label}
+                                        </span>
                                         {option.sublabel ? (
-                                            <span className="block truncate text-xs text-muted">{option.sublabel}</span>
+                                            <span className="block truncate text-xs text-muted">
+                                                {option.sublabel}
+                                            </span>
                                         ) : null}
                                     </span>
                                     {option.right ? (
-                                        <span className="shrink-0 text-right tabular-nums">{option.right}</span>
+                                        <span className="shrink-0 text-right tabular-nums">
+                                            {option.right}
+                                        </span>
                                     ) : null}
                                 </li>
                             );

@@ -15,7 +15,12 @@ export type CatalogProduct = {
 export type CatalogService = { id: string; name: string; price: number };
 export type Option = { id: string; name: string };
 export type CustomerOption = { id: string; name: string; phone: string | null };
-export type TxCategory = { id: string; name: string; code: string | null; type: "income" | "expense" };
+export type TxCategory = {
+    id: string;
+    name: string;
+    code: string | null;
+    type: "income" | "expense";
+};
 
 export type Catalog = {
     products: CatalogProduct[];
@@ -27,12 +32,7 @@ export type Catalog = {
 };
 
 export type WorkOrderStatus =
-    | "recibida"
-    | "presupuestada"
-    | "en_reparacion"
-    | "lista"
-    | "entregada"
-    | "cancelada";
+    "recibida" | "presupuestada" | "en_reparacion" | "lista" | "entregada" | "cancelada";
 
 export const WORK_ORDER_STATUSES: { value: WorkOrderStatus; label: string }[] = [
     { value: "recibida", label: "Recibida" },
@@ -43,7 +43,12 @@ export const WORK_ORDER_STATUSES: { value: WorkOrderStatus; label: string }[] = 
     { value: "cancelada", label: "Cancelada" },
 ];
 
-export const OPEN_STATUSES: WorkOrderStatus[] = ["recibida", "presupuestada", "en_reparacion", "lista"];
+export const OPEN_STATUSES: WorkOrderStatus[] = [
+    "recibida",
+    "presupuestada",
+    "en_reparacion",
+    "lista",
+];
 
 export function statusLabel(status: string) {
     return (

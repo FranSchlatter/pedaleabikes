@@ -51,17 +51,30 @@ export function PricingForm({ settings }: { settings: SettingsData }) {
             return;
         }
         startTransition(async function () {
-            const result = await saveSettings({ default_margin: m / 100, price_rounding: rounding });
-            if (result.ok) toast.success("Guardado. Se recalcularon los precios que usan el margen por defecto.");
+            const result = await saveSettings({
+                default_margin: m / 100,
+                price_rounding: rounding,
+            });
+            if (result.ok)
+                toast.success(
+                    "Guardado. Se recalcularon los precios que usan el margen por defecto.",
+                );
             else toast.error(result.error);
         });
     }
 
     return (
         <Card>
-            <CardHeader title="Precios" description="Precio = costo × (1 + margen), redondeado hacia arriba." />
+            <CardHeader
+                title="Precios"
+                description="Precio = costo × (1 + margen), redondeado hacia arriba."
+            />
             <form onSubmit={submit} className="grid gap-3 p-4 sm:grid-cols-3">
-                <Field label="Margen por defecto (%)" htmlFor="set-margin" hint="Recargo sobre el costo">
+                <Field
+                    label="Margen por defecto (%)"
+                    htmlFor="set-margin"
+                    hint="Recargo sobre el costo"
+                >
                     <Input
                         id="set-margin"
                         inputMode="decimal"
@@ -72,7 +85,11 @@ export function PricingForm({ settings }: { settings: SettingsData }) {
                         className="text-right"
                     />
                 </Field>
-                <Field label="Redondeo" htmlFor="set-round" hint="Hacia arriba, para no perder margen">
+                <Field
+                    label="Redondeo"
+                    htmlFor="set-round"
+                    hint="Hacia arriba, para no perder margen"
+                >
                     <NativeSelect
                         id="set-round"
                         value={rounding}
@@ -135,7 +152,10 @@ export function BusinessForm({ settings }: { settings: SettingsData }) {
 
     return (
         <Card>
-            <CardHeader title="Datos del negocio" description="Aparecen en el comprobante y en los mensajes de WhatsApp." />
+            <CardHeader
+                title="Datos del negocio"
+                description="Aparecen en el comprobante y en los mensajes de WhatsApp."
+            />
             <form onSubmit={submit} className="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-3">
                 {fields.map(function (f) {
                     return (
@@ -150,7 +170,11 @@ export function BusinessForm({ settings }: { settings: SettingsData }) {
                         </Field>
                     );
                 })}
-                <Field label="Pie del comprobante" htmlFor="biz-footer" className="sm:col-span-2 lg:col-span-3">
+                <Field
+                    label="Pie del comprobante"
+                    htmlFor="biz-footer"
+                    className="sm:col-span-2 lg:col-span-3"
+                >
                     <Textarea
                         id="biz-footer"
                         className="min-h-14"
@@ -235,7 +259,14 @@ function EditableList({
                     </thead>
                     <tbody>
                         {rows.map(function (row) {
-                            return <EditableRow key={String(row.id)} row={row} columns={columns} onSave={onSave} />;
+                            return (
+                                <EditableRow
+                                    key={String(row.id)}
+                                    row={row}
+                                    columns={columns}
+                                    onSave={onSave}
+                                />
+                            );
                         })}
                         {adding ? (
                             <EditableRow
@@ -343,7 +374,11 @@ function EditableRow({
                                 disabled={locked}
                                 autoFocus={isNew && c === columns[0]}
                                 onChange={function (e) {
-                                    set(c.type === "number" ? Number(e.target.value) : e.target.value);
+                                    set(
+                                        c.type === "number"
+                                            ? Number(e.target.value)
+                                            : e.target.value,
+                                    );
                                 }}
                                 className="h-8"
                             />
@@ -384,7 +419,12 @@ export function AccountsEditor({ rows }: { rows: Row[] }) {
             columns={[
                 { key: "name", label: "Nombre", type: "text" },
                 { key: "kind", label: "Tipo", type: "select", options: ACCOUNT_KINDS },
-                { key: "initial_balance", label: "Saldo inicial", type: "money", className: "w-40" },
+                {
+                    key: "initial_balance",
+                    label: "Saldo inicial",
+                    type: "money",
+                    className: "w-40",
+                },
                 { key: "sort_order", label: "Orden", type: "number", className: "w-20" },
                 { key: "active", label: "Activa", type: "checkbox", className: "w-16" },
             ]}
@@ -402,16 +442,30 @@ export function AccountsEditor({ rows }: { rows: Row[] }) {
     );
 }
 
-export function CategoriesEditor({ rows, incomeCategories }: { rows: Row[]; incomeCategories: { value: string; label: string }[] }) {
+export function CategoriesEditor({
+    rows,
+    incomeCategories,
+}: {
+    rows: Row[];
+    incomeCategories: { value: string; label: string }[];
+}) {
     return (
         <EditableList
             title="Categorías de productos"
             description="Cada una se asocia a la categoría de ingreso donde caen sus ventas."
             rows={rows}
-            blank={{ name: "", income_category_id: incomeCategories[1]?.value ?? incomeCategories[0]?.value ?? "" }}
+            blank={{
+                name: "",
+                income_category_id: incomeCategories[1]?.value ?? incomeCategories[0]?.value ?? "",
+            }}
             columns={[
                 { key: "name", label: "Nombre", type: "text" },
-                { key: "income_category_id", label: "Ingreso en", type: "select", options: incomeCategories },
+                {
+                    key: "income_category_id",
+                    label: "Ingreso en",
+                    type: "select",
+                    options: incomeCategories,
+                },
             ]}
             onSave={function (r) {
                 return saveCategory({
@@ -437,7 +491,13 @@ export function TxCategoriesEditor({ rows }: { rows: Row[] }) {
             title="Categorías de caja"
             description="Las del sistema (usadas por las automatizaciones) solo permiten cambiar el nombre."
             rows={rows}
-            blank={{ name: "", type: "expense", report_group: "operating", active: true, code: null }}
+            blank={{
+                name: "",
+                type: "expense",
+                report_group: "operating",
+                active: true,
+                code: null,
+            }}
             columns={[
                 { key: "name", label: "Nombre", type: "text" },
                 {
@@ -524,7 +584,8 @@ export function DataPanel() {
                 <div>
                     <p className="font-semibold">Backup completo</p>
                     <p className="mb-2 text-sm text-muted">
-                        Descarga todas las tablas en un Excel (una hoja por tabla). Conviene hacerlo una vez por semana.
+                        Descarga todas las tablas en un Excel (una hoja por tabla). Conviene hacerlo
+                        una vez por semana.
                     </p>
                     <a href="/admin/export?table=backup" className={buttonVariants()} download>
                         <DownloadIcon /> Descargar backup
@@ -533,8 +594,9 @@ export function DataPanel() {
                 <div>
                     <p className="font-semibold text-danger">Borrar datos de ejemplo</p>
                     <p className="mb-2 text-sm text-muted">
-                        Para empezar a usarlo en serio: borra ventas, compras, órdenes, caja, productos, clientes y
-                        proveedores. Conserva configuración, cuentas (saldo inicial en 0), categorías y servicios.
+                        Para empezar a usarlo en serio: borra ventas, compras, órdenes, caja,
+                        productos, clientes y proveedores. Conserva configuración, cuentas (saldo
+                        inicial en 0), categorías y servicios.
                     </p>
                     <Confirm
                         title="¿Borrar todos los datos?"

@@ -39,7 +39,12 @@ type Props = {
     onDone: () => void;
 };
 
-export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenChange, onDone }: Props) {
+export function PurchaseDialog({
+    catalog,
+    supplierId: initialSupplier,
+    onOpenChange,
+    onDone,
+}: Props) {
     const [supplierId, setSupplierId] = useState(initialSupplier ?? "");
     const [lines, setLines] = useState<Line[]>([]);
     const [accountId, setAccountId] = useState<string | null>(null);
@@ -62,15 +67,21 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
             if (!catalog) return [];
             return [...catalog.products]
                 .sort(function (a, b) {
-                    return Number(b.supplier_id === supplierId) - Number(a.supplier_id === supplierId);
+                    return (
+                        Number(b.supplier_id === supplierId) - Number(a.supplier_id === supplierId)
+                    );
                 })
                 .map(function (p) {
                     return {
                         key: p.id,
                         label: p.name,
                         keywords: p.sku ?? "",
-                        sublabel: [p.sku, `stock ${p.stock}`, `mín. ${p.min_stock}`].filter(Boolean).join(" · "),
-                        right: <span className="text-xs text-muted">costo {formatARS(p.cost)}</span>,
+                        sublabel: [p.sku, `stock ${p.stock}`, `mín. ${p.min_stock}`]
+                            .filter(Boolean)
+                            .join(" · "),
+                        right: (
+                            <span className="text-xs text-muted">costo {formatARS(p.cost)}</span>
+                        ),
                     };
                 });
         },
@@ -146,14 +157,20 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                 account_id: effectiveAccount,
                 invoice_ref: invoiceRef,
                 items: lines.map(function (l) {
-                    return { product_id: l.productId, quantity: l.quantity, unit_cost: l.unitCost ?? 0 };
+                    return {
+                        product_id: l.productId,
+                        quantity: l.quantity,
+                        unit_cost: l.unitCost ?? 0,
+                    };
                 }),
             });
             if (!result.ok) {
                 setError(result.error);
                 return;
             }
-            toast.success(`Compra #${result.data.number} registrada · ${formatARS(result.data.total)}`);
+            toast.success(
+                `Compra #${result.data.number} registrada · ${formatARS(result.data.total)}`,
+            );
             onDone();
         });
     }
@@ -164,13 +181,17 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                 <DialogHeader>
                     <DialogTitle>Nueva compra</DialogTitle>
                     <DialogDescription>
-                        Suma stock, registra el egreso de mercadería y actualiza el costo (y el precio) de cada
-                        producto.
+                        Suma stock, registra el egreso de mercadería y actualiza el costo (y el
+                        precio) de cada producto.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogBody className="space-y-4">
                     <div className="grid gap-3 sm:grid-cols-3">
-                        <Field label="Proveedor" htmlFor="purchase-supplier" className="sm:col-span-1">
+                        <Field
+                            label="Proveedor"
+                            htmlFor="purchase-supplier"
+                            className="sm:col-span-1"
+                        >
                             <NativeSelect
                                 id="purchase-supplier"
                                 value={supplierId}
@@ -234,15 +255,23 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                                 <tbody>
                                     {lines.map(function (line) {
                                         const changed =
-                                            line.unitCost !== null && line.unitCost !== line.previousCost;
+                                            line.unitCost !== null &&
+                                            line.unitCost !== line.previousCost;
                                         return (
-                                            <tr key={line.productId} className="border-t border-line align-top">
+                                            <tr
+                                                key={line.productId}
+                                                className="border-t border-line align-top"
+                                            >
                                                 <td className="px-2 py-1.5">
                                                     <p className="font-medium">{line.name}</p>
                                                     <p className="text-xs text-muted">
-                                                        Stock {line.stock} · costo anterior {formatARS(line.previousCost)}
+                                                        Stock {line.stock} · costo anterior{" "}
+                                                        {formatARS(line.previousCost)}
                                                         {changed ? (
-                                                            <span className="font-semibold text-warning"> · cambia</span>
+                                                            <span className="font-semibold text-warning">
+                                                                {" "}
+                                                                · cambia
+                                                            </span>
                                                         ) : null}
                                                     </p>
                                                 </td>
@@ -254,7 +283,12 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                                                         value={line.quantity}
                                                         onChange={function (e) {
                                                             update(line.productId, {
-                                                                quantity: Math.max(1, Math.floor(Number(e.target.value) || 1)),
+                                                                quantity: Math.max(
+                                                                    1,
+                                                                    Math.floor(
+                                                                        Number(e.target.value) || 1,
+                                                                    ),
+                                                                ),
                                                             });
                                                         }}
                                                         className="h-8 text-right tabular-nums"
@@ -271,7 +305,9 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                                                     />
                                                 </td>
                                                 <td className="px-2 py-1.5 pt-3 text-right font-semibold tabular-nums">
-                                                    {formatARS(line.quantity * (line.unitCost ?? 0))}
+                                                    {formatARS(
+                                                        line.quantity * (line.unitCost ?? 0),
+                                                    )}
                                                 </td>
                                                 <td className="px-1 py-1.5">
                                                     <Button
@@ -281,7 +317,10 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                                                         onClick={function () {
                                                             setLines(function (prev) {
                                                                 return prev.filter(function (l) {
-                                                                    return l.productId !== line.productId;
+                                                                    return (
+                                                                        l.productId !==
+                                                                        line.productId
+                                                                    );
                                                                 });
                                                             });
                                                         }}
@@ -297,7 +336,8 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                         </div>
                     ) : (
                         <p className="rounded-md border border-dashed border-line-strong px-3 py-6 text-center text-sm text-muted">
-                            Buscá los productos que llegaron. La cantidad sugerida es la de reposición.
+                            Buscá los productos que llegaron. La cantidad sugerida es la de
+                            reposición.
                         </p>
                     )}
 
@@ -311,14 +351,20 @@ export function PurchaseDialog({ catalog, supplierId: initialSupplier, onOpenCha
                     </div>
 
                     {error ? (
-                        <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
+                        <p
+                            role="alert"
+                            className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger"
+                        >
                             {error}
                         </p>
                     ) : null}
                 </DialogBody>
                 <DialogFooter className="justify-between">
                     <p className="text-sm text-muted">
-                        Total <span className="ml-1 text-2xl font-bold tabular-nums text-ink">{formatARS(total)}</span>
+                        Total{" "}
+                        <span className="ml-1 text-2xl font-bold tabular-nums text-ink">
+                            {formatARS(total)}
+                        </span>
                     </p>
                     <Button size="lg" onClick={submit} disabled={pending || !catalog}>
                         {pending ? "Registrando…" : "Registrar compra"}

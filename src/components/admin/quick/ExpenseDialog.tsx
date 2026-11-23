@@ -51,7 +51,8 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
         return c.type === type;
     });
     const effectiveCategory =
-        categoryId && categories.some(function (c) {
+        categoryId &&
+        categories.some(function (c) {
             return c.id === categoryId;
         })
             ? categoryId
@@ -118,7 +119,10 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
                         <DialogTitle>Movimiento de caja</DialogTitle>
                     </DialogHeader>
                     <DialogBody className="space-y-3">
-                        <div role="tablist" className="grid grid-cols-3 rounded-md border border-line-strong p-0.5 text-sm font-semibold">
+                        <div
+                            role="tablist"
+                            className="grid grid-cols-3 rounded-md border border-line-strong p-0.5 text-sm font-semibold"
+                        >
                             {TABS.map(function (tab) {
                                 return (
                                     <button
@@ -131,7 +135,9 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
                                         }}
                                         className={cn(
                                             "rounded py-1.5",
-                                            type === tab.value ? "bg-ink text-chalk" : "text-muted hover:text-ink",
+                                            type === tab.value
+                                                ? "bg-ink text-chalk"
+                                                : "text-muted hover:text-ink",
                                         )}
                                     >
                                         {tab.label}
@@ -141,7 +147,12 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
                         </div>
 
                         <Field label="Monto">
-                            <MoneyInput value={amount} onValueChange={setAmount} autoFocus className="h-11 text-lg" />
+                            <MoneyInput
+                                value={amount}
+                                onValueChange={setAmount}
+                                autoFocus
+                                className="h-11 text-lg"
+                            />
                         </Field>
 
                         {type === "transfer" ? (
@@ -181,7 +192,8 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
                                     </NativeSelect>
                                 </Field>
                                 <p className="col-span-2 text-xs text-muted">
-                                    Las transferencias entre cuentas no cuentan como ingreso ni gasto.
+                                    Las transferencias entre cuentas no cuentan como ingreso ni
+                                    gasto.
                                 </p>
                             </div>
                         ) : (
@@ -203,7 +215,10 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
                                         })}
                                     </NativeSelect>
                                 </Field>
-                                <Field label={type === "expense" ? "Pagado con" : "Cobrado en"} htmlFor="tx-account">
+                                <Field
+                                    label={type === "expense" ? "Pagado con" : "Cobrado en"}
+                                    htmlFor="tx-account"
+                                >
                                     <NativeSelect
                                         id="tx-account"
                                         value={effectiveAccount}
@@ -222,11 +237,16 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
                                 </Field>
                                 {isMerch ? (
                                     <p className="col-span-2 rounded-md bg-warning-soft px-2 py-1.5 text-xs text-warning">
-                                        Para mercadería usá <b>+ Compra</b>: así suma stock y actualiza costos.
+                                        Para mercadería usá <b>+ Compra</b>: así suma stock y
+                                        actualiza costos.
                                     </p>
                                 ) : null}
                                 {type === "expense" ? (
-                                    <Field label="Proveedor (opcional)" htmlFor="tx-supplier" className="col-span-2">
+                                    <Field
+                                        label="Proveedor (opcional)"
+                                        htmlFor="tx-supplier"
+                                        className="col-span-2"
+                                    >
                                         <NativeSelect
                                             id="tx-supplier"
                                             value={supplierId}
@@ -272,7 +292,10 @@ export function ExpenseDialog({ catalog, initialType, onOpenChange, onDone }: Pr
                         </div>
 
                         {error ? (
-                            <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
+                            <p
+                                role="alert"
+                                className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger"
+                            >
                                 {error}
                             </p>
                         ) : null}

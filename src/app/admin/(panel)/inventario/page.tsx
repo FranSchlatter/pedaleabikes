@@ -16,6 +16,9 @@ import { isUuid, param, type SearchParams } from "@/lib/admin/params";
 import { fetchAll, getSettings } from "@/lib/admin/queries";
 import { matches } from "@/lib/admin/search";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Inventario" };
 
 export default async function InventoryPage({ searchParams }: { searchParams: SearchParams }) {
@@ -27,21 +30,22 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
     const stock = param(params, "stock");
     const inactive = param(params, "inactivos") === "1";
 
-    const [products, { data: categories }, { data: suppliers }, { data: value }, settings] = await Promise.all([
-        fetchAll(function (from, to) {
-            return db
-                .from("products")
-                .select(
-                    "id, sku, name, location, cost, margin, manual_price, price, stock, min_stock, active, category_id, supplier_id, categories(name), suppliers(name)",
-                )
-                .order("name")
-                .range(from, to);
-        }),
-        db.from("categories").select("id, name").order("sort_order").order("name"),
-        db.from("suppliers").select("id, name").order("name"),
-        db.rpc("inventory_value"),
-        getSettings(db),
-    ]);
+    const [products, { data: categories }, { data: suppliers }, { data: value }, settings] =
+        await Promise.all([
+            fetchAll(function (from, to) {
+                return db
+                    .from("products")
+                    .select(
+                        "id, sku, name, location, cost, margin, manual_price, price, stock, min_stock, active, category_id, supplier_id, categories(name), suppliers(name)",
+                    )
+                    .order("name")
+                    .range(from, to);
+            }),
+            db.from("categories").select("id, name").order("sort_order").order("name"),
+            db.from("suppliers").select("id, name").order("name"),
+            db.rpc("inventory_value"),
+            getSettings(db),
+        ]);
 
     const rows = products.filter(function (p) {
         if (!inactive && !p.active) return false;
@@ -73,7 +77,10 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
                 actions={
                     <>
                         <ExportLink table="products" />
-                        <Link href="/admin/inventario/importar" className={buttonVariants({ variant: "secondary" })}>
+                        <Link
+                            href="/admin/inventario/importar"
+                            className={buttonVariants({ variant: "secondary" })}
+                        >
                             <UploadIcon /> Importar Excel
                         </Link>
                         <BulkPriceDialog categories={categoryOptions} suppliers={supplierOptions} />
@@ -89,7 +96,12 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
 
             <div className="mb-3 grid gap-3 lg:grid-cols-[1fr_2fr]">
                 <div className="grid grid-cols-2 gap-3">
-                    <Stat label="Valor del inventario" value={formatARS(totalValue)} hint="Σ stock × costo" className="col-span-2" />
+                    <Stat
+                        label="Valor del inventario"
+                        value={formatARS(totalValue)}
+                        hint="Σ stock × costo"
+                        className="col-span-2"
+                    />
                     <Stat label="Unidades" value={formatNumber(totalUnits)} />
                     <Stat
                         label="Bajo mínimo"
@@ -109,10 +121,15 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
                                 <li key={v.category_id ?? "none"} className="py-1">
                                     <div className="flex justify-between gap-2">
                                         <span className="truncate">{v.category_name}</span>
-                                        <span className="font-semibold tabular-nums">{formatARS(v.value)}</span>
+                                        <span className="font-semibold tabular-nums">
+                                            {formatARS(v.value)}
+                                        </span>
                                     </div>
                                     <div className="mt-1 h-1.5 rounded bg-canvas">
-                                        <div className="h-1.5 rounded bg-primary" style={{ width: `${pct}%` }} />
+                                        <div
+                                            className="h-1.5 rounded bg-primary"
+                                            style={{ width: `${pct}%` }}
+                                        />
                                     </div>
                                 </li>
                             );
@@ -169,7 +186,11 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
             <Card>
                 {rows.length === 0 ? (
                     <EmptyState
-                        title={products.length === 0 ? "Todavía no hay productos" : "Ningún producto coincide"}
+                        title={
+                            products.length === 0
+                                ? "Todavía no hay productos"
+                                : "Ningún producto coincide"
+                        }
                         description={
                             products.length === 0
                                 ? "Cargá uno con “Nuevo producto” o importá tu Excel de inventario."
@@ -188,7 +209,8 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
                                 supplier: p.suppliers?.name ?? null,
                                 cost: Number(p.cost),
                                 margin: p.margin === null ? null : Number(p.margin),
-                                manual_price: p.manual_price === null ? null : Number(p.manual_price),
+                                manual_price:
+                                    p.manual_price === null ? null : Number(p.manual_price),
                                 price: Number(p.price),
                                 stock: p.stock,
                                 min_stock: p.min_stock,
@@ -200,8 +222,9 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
                 )}
             </Card>
             <p className="mt-2 text-xs text-muted">
-                {rows.length} productos. Margen = recargo sobre el costo (vacío = {Math.round(settings.default_margin * 100)} %
-                por defecto). Precio = costo × (1 + margen), redondeado hacia arriba a ${settings.price_rounding}, salvo precio manual.
+                {rows.length} productos. Margen = recargo sobre el costo (vacío ={" "}
+                {Math.round(settings.default_margin * 100)} % por defecto). Precio = costo × (1 +
+                margen), redondeado hacia arriba a ${settings.price_rounding}, salvo precio manual.
             </p>
         </div>
     );

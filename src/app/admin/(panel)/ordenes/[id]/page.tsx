@@ -6,6 +6,9 @@ import { bikeLabel } from "@/lib/admin/labels";
 import { isUuid, param, type SearchParams } from "@/lib/admin/params";
 import { getSettings } from "@/lib/admin/queries";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Orden de trabajo" };
 
 export default async function WorkOrderPage({

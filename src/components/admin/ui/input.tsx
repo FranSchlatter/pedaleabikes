@@ -19,7 +19,10 @@ export function NativeSelect({ className, ...props }: ComponentProps<"select">) 
 export function Label({ className, ...props }: ComponentProps<"label">) {
     return (
         <label
-            className={cn("mb-1 block text-xs font-semibold uppercase tracking-wide text-muted", className)}
+            className={cn(
+                "mb-1 block text-xs font-semibold uppercase tracking-wide text-muted",
+                className,
+            )}
             {...props}
         />
     );

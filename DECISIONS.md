@@ -1,6 +1,76 @@
 # Decisiones
 
-Decisiones tomadas ante ambigüedades, para revisar.
+Decisiones tomadas ante ambigüedades, para revisar. Primero el sistema de gestión (`/admin`), después la landing.
+
+# Sistema de gestión (`/admin`, v1)
+
+## Estructura y stack
+
+- **Todo vive en el mismo repo**, bajo `src/app/admin`. La landing no se tocó salvo: tokens nuevos en `globals.css` (con nombres que no existían: `canvas`, `surface`, `line`, `muted`, `primary`, `danger`, …) y el plan anterior movido a `docs/PLAN-landing.md`. El build sigue marcando `/` como estático.
+- **Next 16**: el "middleware" ahora se llama `proxy` (`src/proxy.ts`), con matcher solo para `/admin`. La landing no pasa por ahí. Es un chequeo optimista: cada página y cada Server Action vuelve a validar la sesión (`src/lib/admin/auth.ts`, patrón Data Access Layer).
+- **Cache Components sigue activo** (lo usa la landing). Todo el admin es por request: `getDb()` llama a `connection()`, el layout del panel envuelve las páginas en `<Suspense>` y cada página declara `instant = false`.
+- **shadcn/ui escrito a mano** en `src/components/admin/ui` (Radix + cva + tailwind-merge, mismas APIs que shadcn). No se corrió `shadcn init` porque reescribe `globals.css` y su token `accent` choca con el `accent` de la landing.
+- **Selects nativos** en vez del Select de Radix: más rápidos con teclado y en mobile.
+- **Supabase local con Docker** (`npx supabase start`) para desarrollar y probar. `supabase/config.toml` deja apagados realtime, storage, edge functions y analytics, y con `enable_signup = false` (solo existe el usuario que se crea con el script).
+- Estilo de código igual que la landing: `function` en vez de arrow functions, `type`, 4 espacios.
+
+## Modelo de datos (cambios respecto del pedido)
+
+- **Toda la lógica que mueve plata o stock está en funciones de Postgres** (`supabase/migrations/…_functions.sql`): `create_sale`, `void_sale`, `create_purchase`, `void_purchase`, `create_work_order`, `add/remove_work_order_item`, `deliver_work_order`, `cancel_work_order`, `adjust_stock`, `import_products`, `bulk_update_costs`. Cada una es una transacción: todo o nada. Son `SECURITY INVOKER`, así que respetan RLS.
+- **El stock solo cambia vía movimientos.** Un trigger rechaza cualquier `UPDATE` de `products.stock` que no venga de `_move_stock()`, y el alta con stock inicial genera sola un movimiento "Carga inicial". `stock_movements` guarda cantidad con signo y `stock_after`.
+- **Precio guardado, no calculado al vuelo**: `products.price` lo mantiene un trigger (`compute_price`). Si cambia el margen por defecto o el redondeo en Configuración, se recalculan todos los precios no manuales. La misma fórmula está en TypeScript (`src/lib/admin/calc.ts`) para las vistas previas, con tests.
+- **Margen = recargo sobre el costo** (80 % → precio = costo × 1,8), como pidió el cliente. En reportes, el "margen bruto %" es sobre la venta (lo habitual en un estado de resultados); la UI lo aclara en cada lugar.
+- **Redondeo hacia arriba** al múltiplo configurado (default $100), para no perder margen.
+- **Costo del producto = último costo de compra** (no promedio ponderado). Lo vendido congela el costo del momento (`unit_cost` en `sale_items` / `work_order_items`), que es la base del costo de lo vendido.
+- **Anular una compra no restaura el costo anterior** del producto (queda guardado en `purchase_items.previous_cost` como referencia).
+- **Stock entero** (`integer`). Se permite vender con stock 0 (queda negativo, con aviso en la venta), porque en el mostrador a veces se vende algo antes de cargarlo.
+- **"Bajo mínimo" = stock ≤ mínimo**, y solo si el mínimo es mayor a 0. Vista `v_low_stock` con la cantidad sugerida (mínimo × 2 − stock).
+- **Categorías de caja con `code` y `report_group`**: `code` fija las que usan las automatizaciones (taller, repuestos, mercadería, retiros, …) y `report_group` define cómo entran al resultado: `revenue`, `operating` (gasto del mes), `merchandise` (compras de mercadería: no es gasto) y `withdrawal` (retiros, aparte). Las del sistema solo se pueden renombrar.
+- **Cada categoría de producto apunta a una categoría de ingreso** (Repuestos → Venta de repuestos, etc.). En la importación, las categorías nuevas se asignan por nombre ("bici" → bicicletas; "accesorio", "indumentaria", "casco"… → accesorios; el resto → repuestos), editable después.
+- **Una venta genera un ingreso por categoría**, todos en la cuenta elegida (pago único por venta; los pagos divididos quedan para v2).
+- **Líneas de venta**: producto, servicio, línea libre (con categoría de ingreso elegible, default "Otros ingresos", costo 0) y "Comisión por venta de bicicleta" (monto libre, costo 0).
+- **Órdenes de trabajo**: los repuestos descuentan stock al agregarse; quitar un repuesto lo devuelve. Al entregar se cobra en un solo paso (cuenta + precio final). Si el precio final difiere del calculado, la diferencia (descuento o recargo) va a Taller; si el descuento supera lo de taller, el resto se descuenta de los repuestos. Precio final 0 (garantía) no genera ingresos. No hay señas ni pagos parciales en v1.
+- **Cancelar una orden** sirve para cualquier estado, incluso entregada: devuelve repuestos y anula ingresos. La orden queda "Cancelada" con su historial.
+- **Anular nunca borra**: ventas, compras, órdenes y movimientos de caja quedan marcados (`voided_at`) y salen de saldos y reportes. Los movimientos de caja automáticos se anulan desde su origen.
+- **Fechas**: `timestamptz` y día/mes de negocio con `ar_date()` en hora de Argentina. Argentina no tiene horario de verano, así que en TypeScript los límites de día usan `-03:00` fijo. Cargar una venta o gasto con otra fecha la registra a las 12:00 de ese día.
+- **Clientes y bicis**: una bici pertenece a un cliente; la orden guarda la bici (opcional).
+- **Preparado para v2 sin rehacer**: movimientos de stock con tipo y fecha (rotación ABC), categorías de caja con grupo de reporte (estado de resultados), vistas de reporte en SQL, y RLS por `authenticated` (multiusuario agrega una tabla de perfiles y políticas por rol).
+
+## Reportes
+
+- **Facturación** = ingresos de la actividad (todas las categorías de ingreso). **Costo de lo vendido** = Σ cantidad × costo congelado de ventas no anuladas + órdenes entregadas. **Resultado** = margen bruto − gastos operativos. **Retiros** aparte. **Compras de mercadería** se muestran como dato aparte, con la explicación de por qué no son gasto.
+- Los ingresos de las órdenes se reconocen el día de entrega (igual que su costo).
+- **Ticket promedio** = solo ventas de mostrador.
+- Los gráficos usan una paleta de 3 series validada para daltonismo y contraste (verde azulado, naranja, violeta); cada gráfico tiene vista de tabla.
+
+## Pantallas y uso
+
+- **Atajos**: V venta, O orden, C compra, G gasto (con el foco fuera de un campo). En la venta: Enter agrega lo buscado y, con el buscador vacío, cobra; Cmd/Ctrl+Enter cobra desde cualquier campo.
+- **Los modales rápidos cargan el catálogo entero una vez** (productos, servicios, clientes) y lo refrescan en segundo plano al abrirse, para que el autocompletado sea instantáneo. Pensado para unos pocos miles de productos.
+- **Edición inline del stock** en la tabla de inventario = ajuste con motivo "Corrección desde la tabla de inventario". El ajuste con motivo propio está en la ficha del producto.
+- **Filtros por URL** (form GET): se pueden guardar como favorito o compartir.
+- **WhatsApp**: teléfonos normalizados a 549 + característica + número (saca 0 y 15; sin característica asume 342, Santa Fe).
+- Las compras solo aceptan productos que ya existen (si no está, se crea primero en Inventario).
+- **Backup**: un Excel con una hoja por tabla, todas las columnas tal cual están en la base.
+
+## Importador de Excel
+
+- **El archivo `data/inventario.xlsx` no está en el repo.** El importador no depende de un formato fijo: detecta la fila de encabezados, adivina el mapeo por sinónimos habituales (Código, Descripción, Rubro, Proveedor, Precio costo, Precio venta, Stock, Mínimo, Ubicación, …) y deja corregir cada columna antes de importar. Para probar está `data/inventario-ejemplo.xlsx` (`npm run inventory:sample` lo regenera). **Pendiente: probarlo con el Excel real del cliente.**
+- Con costo y precio de venta, por defecto **se calcula el margen de cada producto** (así el precio acompaña cuando cambia el costo). Si no hay costo, o el precio es menor al costo, se guarda como precio manual. También se puede elegir "precio manual" o "ignorar".
+- Busca existentes por SKU (o por nombre si la fila no tiene SKU). Si el stock cambia, lo registra como movimiento "Importación".
+- El archivo se lee en el navegador y se manda en tandas de 500 filas.
+
+## Datos de ejemplo
+
+- El seed genera ~3 meses de actividad usando las mismas funciones que la app, así stock, caja y reportes cierran. Fechas relativas a hoy, para que el panel siempre se vea vivo.
+- Servicios base = los 4 de la landing; "Reparaciones puntuales" con precio 0 (se carga el monto en cada orden).
+- **Limpieza**: Configuración → "Borrar datos de ejemplo" (pide escribir BORRAR), o `select reset_business_data('BORRAR');`. Conserva configuración, cuentas (con saldo inicial en 0), categorías y servicios.
+
+## Bugs encontrados en la prueba de punta a punta
+
+- Supabase bloquea `DELETE`/`UPDATE` sin `WHERE` para usuarios autenticados (`pg-safeupdate`). El seed no lo detectaba porque corre como superusuario; apareció al entregar una orden desde la app. Se corrigió con `where true` en las dos sentencias afectadas y se volvieron a probar todas las funciones vía API como usuario autenticado.
+
+# Landing
 
 ## Identidad
 

@@ -9,6 +9,9 @@ import { dayBounds, daysSince, formatDate, formatTime, todayAR } from "@/lib/adm
 import { formatARS } from "@/lib/admin/money";
 import { OPEN_STATUSES, WORK_ORDER_STATUSES } from "@/lib/admin/types";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Hoy" };
 
 export default async function TodayPage() {
@@ -26,7 +29,9 @@ export default async function TodayPage() {
             .lt("occurred_at", to),
         db
             .from("sales")
-            .select("id, number, occurred_at, total, accounts(name), customers(name), sale_items(description)")
+            .select(
+                "id, number, occurred_at, total, accounts(name), customers(name), sale_items(description)",
+            )
             .is("voided_at", null)
             .gte("occurred_at", from)
             .lt("occurred_at", to)
@@ -43,7 +48,11 @@ export default async function TodayPage() {
             .select("id, number, status, received_at, promised_at, customers(name, phone)")
             .in("status", OPEN_STATUSES)
             .order("received_at"),
-        db.from("v_low_stock").select("id, name, stock, min_stock, supplier_name").order("stock").limit(12),
+        db
+            .from("v_low_stock")
+            .select("id, name, stock, min_stock, supplier_name")
+            .order("stock")
+            .limit(12),
         db.from("accounts").select("id, name").order("sort_order"),
     ]);
 
@@ -91,14 +100,26 @@ export default async function TodayPage() {
             <QuickButtons />
 
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                <Stat label="Cobrado hoy" value={formatARS(incomeTotal)} hint="Ventas + órdenes entregadas" />
-                <Stat label="Ventas de mostrador" value={formatARS(salesTotal)} hint={`${sales.length} ventas`} />
+                <Stat
+                    label="Cobrado hoy"
+                    value={formatARS(incomeTotal)}
+                    hint="Ventas + órdenes entregadas"
+                />
+                <Stat
+                    label="Ventas de mostrador"
+                    value={formatARS(salesTotal)}
+                    hint={`${sales.length} ventas`}
+                />
                 <Stat
                     label="Entregadas hoy"
                     value={formatARS(deliveredTotal)}
                     hint={`${delivered.length} órdenes`}
                 />
-                <Stat label="Gastos de hoy" value={formatARS(expenseTotal)} hint="Sin compras de mercadería" />
+                <Stat
+                    label="Gastos de hoy"
+                    value={formatARS(expenseTotal)}
+                    hint="Sin compras de mercadería"
+                />
             </div>
 
             <div className="grid gap-4 xl:grid-cols-3">
@@ -108,9 +129,18 @@ export default async function TodayPage() {
                         {accounts.map(function (a) {
                             const amount = incomeByAccount.get(a.id) ?? 0;
                             return (
-                                <li key={a.id} className="flex items-center justify-between px-4 py-2.5 text-sm">
+                                <li
+                                    key={a.id}
+                                    className="flex items-center justify-between px-4 py-2.5 text-sm"
+                                >
                                     <span>{a.name}</span>
-                                    <span className={amount ? "font-bold tabular-nums" : "tabular-nums text-muted"}>
+                                    <span
+                                        className={
+                                            amount
+                                                ? "font-bold tabular-nums"
+                                                : "tabular-nums text-muted"
+                                        }
+                                    >
                                         {formatARS(amount)}
                                     </span>
                                 </li>
@@ -127,7 +157,10 @@ export default async function TodayPage() {
                     <CardHeader
                         title="Órdenes abiertas"
                         action={
-                            <Link href="/admin/ordenes" className="text-sm font-semibold text-primary hover:underline">
+                            <Link
+                                href="/admin/ordenes"
+                                className="text-sm font-semibold text-primary hover:underline"
+                            >
                                 Ver tablero
                             </Link>
                         }
@@ -138,7 +171,9 @@ export default async function TodayPage() {
                                 <div key={col.status} className="bg-surface p-3">
                                     <div className="flex items-center justify-between">
                                         <StatusBadge status={col.status} />
-                                        <span className="text-2xl font-bold tabular-nums">{col.orders.length}</span>
+                                        <span className="text-2xl font-bold tabular-nums">
+                                            {col.orders.length}
+                                        </span>
                                     </div>
                                     <ul className="mt-2 space-y-1 text-sm">
                                         {col.orders.slice(0, 4).map(function (o) {
@@ -152,7 +187,13 @@ export default async function TodayPage() {
                                                         <span className="truncate">
                                                             #{o.number} {o.customers?.name}
                                                         </span>
-                                                        <span className={days > 5 ? "text-danger" : "text-muted"}>
+                                                        <span
+                                                            className={
+                                                                days > 5
+                                                                    ? "text-danger"
+                                                                    : "text-muted"
+                                                            }
+                                                        >
                                                             {days}d
                                                         </span>
                                                     </Link>
@@ -160,7 +201,9 @@ export default async function TodayPage() {
                                             );
                                         })}
                                         {col.orders.length > 4 ? (
-                                            <li className="text-xs text-muted">y {col.orders.length - 4} más</li>
+                                            <li className="text-xs text-muted">
+                                                y {col.orders.length - 4} más
+                                            </li>
                                         ) : null}
                                     </ul>
                                 </div>
@@ -175,13 +218,19 @@ export default async function TodayPage() {
                     <CardHeader
                         title="Ventas de hoy"
                         action={
-                            <Link href="/admin/ventas" className="text-sm font-semibold text-primary hover:underline">
+                            <Link
+                                href="/admin/ventas"
+                                className="text-sm font-semibold text-primary hover:underline"
+                            >
                                 Ver todas
                             </Link>
                         }
                     />
                     {sales.length === 0 && delivered.length === 0 ? (
-                        <EmptyState title="Todavía no hay ventas hoy" description="Usá + Venta (tecla V)." />
+                        <EmptyState
+                            title="Todavía no hay ventas hoy"
+                            description="Usá + Venta (tecla V)."
+                        />
                     ) : (
                         <TableWrap>
                             <Table>
@@ -197,10 +246,17 @@ export default async function TodayPage() {
                                     {sales.map(function (s) {
                                         return (
                                             <Tr key={s.id}>
-                                                <Td className="tabular-nums text-muted">{formatTime(s.occurred_at)}</Td>
+                                                <Td className="tabular-nums text-muted">
+                                                    {formatTime(s.occurred_at)}
+                                                </Td>
                                                 <Td>
-                                                    <Link href={`/admin/ventas/${s.id}`} className="hover:underline">
-                                                        <span className="font-semibold">#{s.number}</span>{" "}
+                                                    <Link
+                                                        href={`/admin/ventas/${s.id}`}
+                                                        className="hover:underline"
+                                                    >
+                                                        <span className="font-semibold">
+                                                            #{s.number}
+                                                        </span>{" "}
                                                         {s.sale_items
                                                             .map(function (i) {
                                                                 return i.description;
@@ -218,11 +274,18 @@ export default async function TodayPage() {
                                     {delivered.map(function (o) {
                                         return (
                                             <Tr key={o.id}>
-                                                <Td className="tabular-nums text-muted">{formatTime(o.delivered_at)}</Td>
+                                                <Td className="tabular-nums text-muted">
+                                                    {formatTime(o.delivered_at)}
+                                                </Td>
                                                 <Td>
-                                                    <Link href={`/admin/ordenes/${o.id}`} className="hover:underline">
-                                                        <span className="font-semibold">OT #{o.number}</span> entregada ·{" "}
-                                                        {o.customers?.name}
+                                                    <Link
+                                                        href={`/admin/ordenes/${o.id}`}
+                                                        className="hover:underline"
+                                                    >
+                                                        <span className="font-semibold">
+                                                            OT #{o.number}
+                                                        </span>{" "}
+                                                        entregada · {o.customers?.name}
                                                     </Link>
                                                 </Td>
                                                 <Td className="text-muted">Taller</Td>
@@ -256,12 +319,20 @@ export default async function TodayPage() {
                         <ul className="divide-y divide-line text-sm">
                             {low.map(function (p) {
                                 return (
-                                    <li key={p.id} className="flex items-center justify-between gap-2 px-4 py-2">
+                                    <li
+                                        key={p.id}
+                                        className="flex items-center justify-between gap-2 px-4 py-2"
+                                    >
                                         <span className="min-w-0">
-                                            <Link href={`/admin/inventario/${p.id}`} className="block truncate hover:underline">
+                                            <Link
+                                                href={`/admin/inventario/${p.id}`}
+                                                className="block truncate hover:underline"
+                                            >
                                                 {p.name}
                                             </Link>
-                                            <span className="block truncate text-xs text-muted">{p.supplier_name}</span>
+                                            <span className="block truncate text-xs text-muted">
+                                                {p.supplier_name}
+                                            </span>
                                         </span>
                                         <span
                                             className={

@@ -22,7 +22,17 @@ type Props = {
     total: number;
 };
 
-export function KanbanCard({ id, number, status, customer, bike, problem, days, promisedAt, total }: Props) {
+export function KanbanCard({
+    id,
+    number,
+    status,
+    customer,
+    bike,
+    problem,
+    days,
+    promisedAt,
+    total,
+}: Props) {
     const [pending, startTransition] = useTransition();
     const index = OPEN_STATUSES.indexOf(status);
     const prev = OPEN_STATUSES[index - 1];
@@ -36,11 +46,21 @@ export function KanbanCard({ id, number, status, customer, bike, problem, days, 
     }
 
     return (
-        <article className={cn("rounded-md border border-line bg-surface p-2.5 text-sm shadow-xs", pending && "opacity-50")}>
+        <article
+            className={cn(
+                "rounded-md border border-line bg-surface p-2.5 text-sm shadow-xs",
+                pending && "opacity-50",
+            )}
+        >
             <Link href={`/admin/ordenes/${id}`} className="block">
                 <div className="flex items-baseline justify-between gap-2">
                     <span className="font-bold">#{number}</span>
-                    <span className={cn("text-xs tabular-nums", days > 5 ? "font-bold text-danger" : "text-muted")}>
+                    <span
+                        className={cn(
+                            "text-xs tabular-nums",
+                            days > 5 ? "font-bold text-danger" : "text-muted",
+                        )}
+                    >
                         hace {days}d
                     </span>
                 </div>
@@ -48,8 +68,12 @@ export function KanbanCard({ id, number, status, customer, bike, problem, days, 
                 <p className="truncate text-xs text-muted">{bike}</p>
                 {problem ? <p className="mt-1 line-clamp-2 text-xs">{problem}</p> : null}
                 <div className="mt-1.5 flex items-center justify-between text-xs">
-                    <span className="text-muted">{promisedAt ? `Prometida ${formatDate(promisedAt)}` : ""}</span>
-                    <span className="font-semibold tabular-nums">{total ? formatARS(total) : ""}</span>
+                    <span className="text-muted">
+                        {promisedAt ? `Prometida ${formatDate(promisedAt)}` : ""}
+                    </span>
+                    <span className="font-semibold tabular-nums">
+                        {total ? formatARS(total) : ""}
+                    </span>
                 </div>
             </Link>
             <div className="mt-2 flex justify-between gap-1 border-t border-line pt-1.5">

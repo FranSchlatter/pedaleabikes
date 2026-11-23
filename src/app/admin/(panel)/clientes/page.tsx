@@ -14,6 +14,9 @@ import { param, type SearchParams } from "@/lib/admin/params";
 import { fetchAll } from "@/lib/admin/queries";
 import { matches } from "@/lib/admin/search";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Clientes" };
 
 export default async function CustomersPage({ searchParams }: { searchParams: SearchParams }) {
@@ -23,7 +26,9 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
     const customers = await fetchAll(function (from, to) {
         return db
             .from("customers")
-            .select("id, name, phone, email, created_at, bikes(id), work_orders(id, received_at), sales(id)")
+            .select(
+                "id, name, phone, email, created_at, bikes(id), work_orders(id, received_at), sales(id)",
+            )
             .order("name")
             .range(from, to);
     });
@@ -45,9 +50,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
                             triggerLabel="Cliente"
                             fields={CUSTOMER_FIELDS}
                             onSave={saveCustomer}
-                            redirectTo={function (id) {
-                                return `/admin/clientes/${id}`;
-                            }}
+                            redirectBase="/admin/clientes/"
                         />
                     </>
                 }
@@ -55,12 +58,24 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
             <Filters action="/admin/clientes" clearHref="/admin/clientes">
                 <div className="min-w-64 flex-1">
                     <Label htmlFor="q">Buscar</Label>
-                    <Input id="q" name="q" defaultValue={q} placeholder="Nombre, teléfono o email" />
+                    <Input
+                        id="q"
+                        name="q"
+                        defaultValue={q}
+                        placeholder="Nombre, teléfono o email"
+                    />
                 </div>
             </Filters>
             <Card>
                 {rows.length === 0 ? (
-                    <EmptyState title={customers.length ? "Nadie coincide con la búsqueda" : "Todavía no hay clientes"} description="Se crean al vuelo desde + Orden." />
+                    <EmptyState
+                        title={
+                            customers.length
+                                ? "Nadie coincide con la búsqueda"
+                                : "Todavía no hay clientes"
+                        }
+                        description="Se crean al vuelo desde + Orden."
+                    />
                 ) : (
                     <TableWrap>
                         <Table>
@@ -85,15 +100,26 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
                                     return (
                                         <Tr key={c.id}>
                                             <Td>
-                                                <Link href={`/admin/clientes/${c.id}`} className="font-semibold text-primary hover:underline">
+                                                <Link
+                                                    href={`/admin/clientes/${c.id}`}
+                                                    className="font-semibold text-primary hover:underline"
+                                                >
                                                     {c.name}
                                                 </Link>
                                             </Td>
                                             <Td className="tabular-nums">{c.phone ?? "—"}</Td>
-                                            <Td className="text-right tabular-nums">{c.bikes.length}</Td>
-                                            <Td className="text-right tabular-nums">{c.work_orders.length}</Td>
-                                            <Td className="text-right tabular-nums">{c.sales.length}</Td>
-                                            <Td className="tabular-nums text-muted">{formatDate(last)}</Td>
+                                            <Td className="text-right tabular-nums">
+                                                {c.bikes.length}
+                                            </Td>
+                                            <Td className="text-right tabular-nums">
+                                                {c.work_orders.length}
+                                            </Td>
+                                            <Td className="text-right tabular-nums">
+                                                {c.sales.length}
+                                            </Td>
+                                            <Td className="tabular-nums text-muted">
+                                                {formatDate(last)}
+                                            </Td>
                                         </Tr>
                                     );
                                 })}

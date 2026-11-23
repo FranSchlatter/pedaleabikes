@@ -12,7 +12,12 @@
         "typecheck": "tsc --noEmit",
         "images:placeholders": "node scripts/generate-placeholders.mjs",
         "test": "vitest run",
-        "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts"
+        "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts && prettier --write src/lib/supabase/database.types.ts",
+        "admin:user": "node --env-file-if-exists=.env.local scripts/create-admin-user.mjs",
+        "db:start": "supabase start",
+        "db:stop": "supabase stop",
+        "db:reset": "supabase db reset",
+        "inventory:sample": "node scripts/generate-sample-inventory.mjs"
     },
     "dependencies": {
         "@hookform/resolvers": "7.0.6",

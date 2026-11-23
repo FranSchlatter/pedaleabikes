@@ -14,33 +14,97 @@ export type ImportField =
     | "stock"
     | "min_stock";
 
-export const IMPORT_FIELDS: { field: ImportField; label: string; required?: boolean; synonyms: string[] }[] = [
-    { field: "sku", label: "SKU / código", synonyms: ["sku", "codigo", "cod", "cod.", "código", "articulo", "id", "ref", "referencia"] },
+export const IMPORT_FIELDS: {
+    field: ImportField;
+    label: string;
+    required?: boolean;
+    synonyms: string[];
+}[] = [
+    {
+        field: "sku",
+        label: "SKU / código",
+        synonyms: ["sku", "codigo", "cod", "cod.", "código", "articulo", "id", "ref", "referencia"],
+    },
     {
         field: "name",
         label: "Nombre / descripción",
         required: true,
-        synonyms: ["nombre", "descripcion", "descripción", "producto", "detalle", "articulo descripcion", "item"],
+        synonyms: [
+            "nombre",
+            "descripcion",
+            "descripción",
+            "producto",
+            "detalle",
+            "articulo descripcion",
+            "item",
+        ],
     },
-    { field: "category", label: "Categoría / rubro", synonyms: ["categoria", "rubro", "familia", "tipo", "linea", "grupo"] },
-    { field: "supplier", label: "Proveedor / marca", synonyms: ["proveedor", "prov", "distribuidor", "marca"] },
-    { field: "location", label: "Ubicación", synonyms: ["ubicacion", "ubicación", "lugar", "estante", "deposito", "posicion"] },
+    {
+        field: "category",
+        label: "Categoría / rubro",
+        synonyms: ["categoria", "rubro", "familia", "tipo", "linea", "grupo"],
+    },
+    {
+        field: "supplier",
+        label: "Proveedor / marca",
+        synonyms: ["proveedor", "prov", "distribuidor", "marca"],
+    },
+    {
+        field: "location",
+        label: "Ubicación",
+        synonyms: ["ubicacion", "ubicación", "lugar", "estante", "deposito", "posicion"],
+    },
     {
         field: "cost",
         label: "Costo unitario",
-        synonyms: ["costo", "precio costo", "costo unitario", "p. costo", "precio de costo", "compra", "precio compra", "neto"],
+        synonyms: [
+            "costo",
+            "precio costo",
+            "costo unitario",
+            "p. costo",
+            "precio de costo",
+            "compra",
+            "precio compra",
+            "neto",
+        ],
     },
     {
         field: "price",
         label: "Precio de venta",
-        synonyms: ["precio", "precio venta", "precio de venta", "pvp", "venta", "p. venta", "precio final", "lista"],
+        synonyms: [
+            "precio",
+            "precio venta",
+            "precio de venta",
+            "pvp",
+            "venta",
+            "p. venta",
+            "precio final",
+            "lista",
+        ],
     },
-    { field: "margin", label: "Margen %", synonyms: ["margen", "margen %", "recargo", "markup", "ganancia", "%"] },
-    { field: "stock", label: "Stock", synonyms: ["stock", "cantidad", "existencia", "cant", "cant.", "unidades", "stock actual"] },
+    {
+        field: "margin",
+        label: "Margen %",
+        synonyms: ["margen", "margen %", "recargo", "markup", "ganancia", "%"],
+    },
+    {
+        field: "stock",
+        label: "Stock",
+        synonyms: ["stock", "cantidad", "existencia", "cant", "cant.", "unidades", "stock actual"],
+    },
     {
         field: "min_stock",
         label: "Stock mínimo",
-        synonyms: ["minimo", "mínimo", "stock minimo", "stock mín.", "stock min", "min", "punto de pedido", "reposicion"],
+        synonyms: [
+            "minimo",
+            "mínimo",
+            "stock minimo",
+            "stock mín.",
+            "stock min",
+            "min",
+            "punto de pedido",
+            "reposicion",
+        ],
     },
 ];
 
@@ -49,7 +113,9 @@ export type Mapping = Partial<Record<ImportField, number>>;
 // Adivina el mapeo por nombre de columna: primero coincidencia exacta, después parcial.
 export function guessMapping(headers: string[]): Mapping {
     const normalized = headers.map(function (h) {
-        return normalize(String(h ?? "")).replace(/\s+/g, " ").trim();
+        return normalize(String(h ?? ""))
+            .replace(/\s+/g, " ")
+            .trim();
     });
     const mapping: Mapping = {};
     const used = new Set<number>();
@@ -109,7 +175,11 @@ function marginValue(value: unknown) {
     return n > 5 ? n / 100 : n;
 }
 
-export function buildRow(cells: unknown[], mapping: Mapping, priceMode: PriceMode): ImportRow | null {
+export function buildRow(
+    cells: unknown[],
+    mapping: Mapping,
+    priceMode: PriceMode,
+): ImportRow | null {
     function cell(field: ImportField) {
         const i = mapping[field];
         return i === undefined ? undefined : cells[i];

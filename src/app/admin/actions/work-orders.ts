@@ -4,7 +4,11 @@ import { z } from "zod";
 import { check, runAction } from "@/lib/admin/action";
 
 const optionalText = z.string().trim().max(2000).optional();
-const optionalMoney = z.number().min(0, "Los montos no pueden ser negativos.").nullable().optional();
+const optionalMoney = z
+    .number()
+    .min(0, "Los montos no pueden ser negativos.")
+    .nullable()
+    .optional();
 
 const createSchema = z
     .object({
@@ -38,7 +42,10 @@ export type WorkOrderInput = z.infer<typeof createSchema>;
 
 export async function createWorkOrder(input: WorkOrderInput) {
     return runAction(createSchema, input, async function (data, db) {
-        return check(await db.rpc("create_work_order", { p: data })) as { id: string; number: number };
+        return check(await db.rpc("create_work_order", { p: data })) as {
+            id: string;
+            number: number;
+        };
     });
 }
 
@@ -56,7 +63,10 @@ const updateSchema = z.object({
 
 export async function updateWorkOrder(input: z.infer<typeof updateSchema>) {
     return runAction(updateSchema, input, async function ({ id, ...fields }, db) {
-        const patch = { ...fields, promised_at: fields.promised_at === "" ? null : fields.promised_at };
+        const patch = {
+            ...fields,
+            promised_at: fields.promised_at === "" ? null : fields.promised_at,
+        };
         check(await db.from("work_orders").update(patch).eq("id", id));
         return null;
     });
@@ -101,7 +111,10 @@ const itemSchema = z.object({
 export async function addWorkOrderItem(input: z.infer<typeof itemSchema>) {
     return runAction(itemSchema, input, async function (data, db) {
         return check(
-            await db.rpc("add_work_order_item", { p_work_order_id: data.work_order_id, p: data.item }),
+            await db.rpc("add_work_order_item", {
+                p_work_order_id: data.work_order_id,
+                p: data.item,
+            }),
         );
     });
 }
@@ -125,7 +138,12 @@ const deliverSchema = z.object({
 export async function deliverWorkOrder(input: z.infer<typeof deliverSchema>) {
     return runAction(deliverSchema, input, async function (data, db) {
         if (data.work_done !== undefined) {
-            check(await db.from("work_orders").update({ work_done: data.work_done }).eq("id", data.id));
+            check(
+                await db
+                    .from("work_orders")
+                    .update({ work_done: data.work_done })
+                    .eq("id", data.id),
+            );
         }
         check(
             await db.rpc("deliver_work_order", {

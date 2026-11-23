@@ -13,25 +13,35 @@ import { isUuid } from "@/lib/admin/params";
 import { getSettings } from "@/lib/admin/queries";
 import { MOVEMENT_LABELS } from "@/lib/admin/types";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Producto" };
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
     if (!isUuid(id)) notFound();
     const db = await getDb();
-    const [{ data: p }, { data: movements }, { data: categories }, { data: suppliers }, settings] = await Promise.all([
-        db.from("products").select("*, categories(name), suppliers(id, name)").eq("id", id).maybeSingle(),
-        db
-            .from("stock_movements")
-            .select("id, occurred_at, kind, quantity, stock_after, reason, sale_id, purchase_id, work_order_id")
-            .eq("product_id", id)
-            .order("occurred_at", { ascending: false })
-            .order("created_at", { ascending: false })
-            .limit(300),
-        db.from("categories").select("id, name").order("sort_order").order("name"),
-        db.from("suppliers").select("id, name").order("name"),
-        getSettings(db),
-    ]);
+    const [{ data: p }, { data: movements }, { data: categories }, { data: suppliers }, settings] =
+        await Promise.all([
+            db
+                .from("products")
+                .select("*, categories(name), suppliers(id, name)")
+                .eq("id", id)
+                .maybeSingle(),
+            db
+                .from("stock_movements")
+                .select(
+                    "id, occurred_at, kind, quantity, stock_after, reason, sale_id, purchase_id, work_order_id",
+                )
+                .eq("product_id", id)
+                .order("occurred_at", { ascending: false })
+                .order("created_at", { ascending: false })
+                .limit(300),
+            db.from("categories").select("id, name").order("sort_order").order("name"),
+            db.from("suppliers").select("id, name").order("name"),
+            getSettings(db),
+        ]);
     if (!p) notFound();
 
     const cost = Number(p.cost);
@@ -53,13 +63,17 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                     <>
                         {p.sku ?? "Sin SKU"} · {p.categories?.name ?? "Sin categoría"} ·{" "}
                         {p.suppliers ? (
-                            <Link href={`/admin/proveedores/${p.suppliers.id}`} className="text-primary hover:underline">
+                            <Link
+                                href={`/admin/proveedores/${p.suppliers.id}`}
+                                className="text-primary hover:underline"
+                            >
                                 {p.suppliers.name}
                             </Link>
                         ) : (
                             "Sin proveedor"
                         )}
-                        {p.location ? ` · ${p.location}` : ""} {!p.active ? <Badge tone="danger">Inactivo</Badge> : null}
+                        {p.location ? ` · ${p.location}` : ""}{" "}
+                        {!p.active ? <Badge tone="danger">Inactivo</Badge> : null}
                     </>
                 }
                 actions={
@@ -91,25 +105,43 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                     label="Stock"
                     value={p.stock}
                     tone={p.stock <= 0 ? "negative" : undefined}
-                    hint={isLowStock(p.stock, p.min_stock) ? `Bajo mínimo (${p.min_stock})` : `Mínimo ${p.min_stock}`}
+                    hint={
+                        isLowStock(p.stock, p.min_stock)
+                            ? `Bajo mínimo (${p.min_stock})`
+                            : `Mínimo ${p.min_stock}`
+                    }
                 />
                 <Stat label="Costo" value={formatARS(cost)} />
                 <Stat
                     label="Precio"
                     value={formatARS(price)}
-                    hint={p.manual_price !== null ? "Precio manual" : `Margen ${formatPct(p.margin ?? settings.default_margin)}${p.margin === null ? " (default)" : ""}`}
+                    hint={
+                        p.manual_price !== null
+                            ? "Precio manual"
+                            : `Margen ${formatPct(p.margin ?? settings.default_margin)}${p.margin === null ? " (default)" : ""}`
+                    }
                 />
                 <Stat label="Recargo real" value={formatPct(markup)} hint="precio / costo − 1" />
                 <Stat label="Valor en stock" value={formatARS(Math.max(p.stock, 0) * cost)} />
             </div>
             <div className="grid gap-4 lg:grid-cols-3">
                 <Card>
-                    <CardHeader title="Ajuste manual de stock" description="Conteo, rotura, pérdida, regalo…" />
-                    <AdjustStockForm productId={p.id} currentStock={p.stock} />
-                    {p.notes ? <p className="border-t border-line px-4 py-3 text-sm text-muted">{p.notes}</p> : null}
+                    <CardHeader
+                        title="Ajuste manual de stock"
+                        description="Conteo, rotura, pérdida, regalo…"
+                    />
+                    <AdjustStockForm key={p.stock} productId={p.id} currentStock={p.stock} />
+                    {p.notes ? (
+                        <p className="border-t border-line px-4 py-3 text-sm text-muted">
+                            {p.notes}
+                        </p>
+                    ) : null}
                 </Card>
                 <Card className="lg:col-span-2">
-                    <CardHeader title="Historial de movimientos" description="Todo cambio de stock queda registrado." />
+                    <CardHeader
+                        title="Historial de movimientos"
+                        description="Todo cambio de stock queda registrado."
+                    />
                     {(movements ?? []).length === 0 ? (
                         <EmptyState title="Sin movimientos todavía" />
                     ) : (
@@ -129,11 +161,16 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                         const ref = refLink(m);
                                         return (
                                             <Tr key={m.id}>
-                                                <Td className="whitespace-nowrap tabular-nums">{formatDateTime(m.occurred_at)}</Td>
+                                                <Td className="whitespace-nowrap tabular-nums">
+                                                    {formatDateTime(m.occurred_at)}
+                                                </Td>
                                                 <Td>{MOVEMENT_LABELS[m.kind] ?? m.kind}</Td>
                                                 <Td className="text-muted">
                                                     {ref ? (
-                                                        <Link href={ref.href} className="text-primary hover:underline">
+                                                        <Link
+                                                            href={ref.href}
+                                                            className="text-primary hover:underline"
+                                                        >
                                                             {m.reason ?? ref.label}
                                                         </Link>
                                                     ) : (
@@ -149,7 +186,9 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
                                                 >
                                                     {m.quantity > 0 ? `+${m.quantity}` : m.quantity}
                                                 </Td>
-                                                <Td className="text-right tabular-nums">{m.stock_after}</Td>
+                                                <Td className="text-right tabular-nums">
+                                                    {m.stock_after}
+                                                </Td>
                                             </Tr>
                                         );
                                     })}

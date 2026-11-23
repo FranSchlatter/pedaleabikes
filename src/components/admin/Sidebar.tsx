@@ -105,7 +105,8 @@ export function Sidebar() {
                                         }}
                                         className={cn(
                                             "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium text-chalk/80 hover:bg-ink-3 hover:text-chalk",
-                                            active && "bg-accent font-semibold text-ink hover:bg-accent hover:text-ink",
+                                            active &&
+                                                "bg-accent font-semibold text-ink hover:bg-accent hover:text-ink",
                                         )}
                                     >
                                         <Icon className="size-4 shrink-0" />

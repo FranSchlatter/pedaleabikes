@@ -630,7 +630,8 @@ begin
 
     create temp table if not exists _wo_alloc (category_id uuid primary key, amount numeric)
         on commit drop;
-    delete from _wo_alloc;
+    -- "where true": Supabase exige WHERE en DELETE (pg-safeupdate).
+    delete from _wo_alloc where true;
 
     insert into _wo_alloc (category_id, amount)
     select income_category_id, sum(quantity * unit_price)
@@ -932,6 +933,6 @@ begin
         public.suppliers
     restart identity;
 
-    update public.accounts set initial_balance = 0;
+    update public.accounts set initial_balance = 0 where true;
 end;
 $$;

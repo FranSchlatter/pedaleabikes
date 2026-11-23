@@ -18,7 +18,13 @@ import { Field, Input, NativeSelect } from "@/components/admin/ui/input";
 import { parseARS } from "@/lib/admin/money";
 import type { Option } from "@/lib/admin/types";
 
-export function BulkPriceDialog({ categories, suppliers }: { categories: Option[]; suppliers: Option[] }) {
+export function BulkPriceDialog({
+    categories,
+    suppliers,
+}: {
+    categories: Option[];
+    suppliers: Option[];
+}) {
     const [open, setOpen] = useState(false);
     const [percent, setPercent] = useState("");
     const [supplierId, setSupplierId] = useState("");
@@ -54,7 +60,9 @@ export function BulkPriceDialog({ categories, suppliers }: { categories: Option[
                 setError(result.error);
                 return;
             }
-            toast.success(`Costos actualizados: ${result.data.count} productos (${value > 0 ? "+" : ""}${value} %)`);
+            toast.success(
+                `Costos actualizados: ${result.data.count} productos (${value > 0 ? "+" : ""}${value} %)`,
+            );
             setOpen(false);
             reset();
         });
@@ -80,12 +88,16 @@ export function BulkPriceDialog({ categories, suppliers }: { categories: Option[
                 <DialogHeader>
                     <DialogTitle>Actualización masiva</DialogTitle>
                     <DialogDescription>
-                        Para listas nuevas: aplica un % al costo. Los precios se recalculan con el margen de cada
-                        producto (los de precio manual no cambian).
+                        Para listas nuevas: aplica un % al costo. Los precios se recalculan con el
+                        margen de cada producto (los de precio manual no cambian).
                     </DialogDescription>
                 </DialogHeader>
                 <DialogBody className="space-y-3">
-                    <Field label="Porcentaje sobre el costo" htmlFor="bulk-pct" hint="Ej.: 12 sube 12 %, -5 baja 5 %">
+                    <Field
+                        label="Porcentaje sobre el costo"
+                        htmlFor="bulk-pct"
+                        hint="Ej.: 12 sube 12 %, -5 baja 5 %"
+                    >
                         <Input
                             id="bulk-pct"
                             autoFocus
@@ -137,12 +149,15 @@ export function BulkPriceDialog({ categories, suppliers }: { categories: Option[
                     </Field>
                     {confirming ? (
                         <p className="rounded-md bg-warning-soft px-3 py-2 text-sm text-warning">
-                            No elegiste proveedor ni categoría: se va a aplicar a <b>todos</b> los productos activos.
-                            Volvé a tocar “Aplicar” para confirmar.
+                            No elegiste proveedor ni categoría: se va a aplicar a <b>todos</b> los
+                            productos activos. Volvé a tocar “Aplicar” para confirmar.
                         </p>
                     ) : null}
                     {error ? (
-                        <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
+                        <p
+                            role="alert"
+                            className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger"
+                        >
                             {error}
                         </p>
                     ) : null}

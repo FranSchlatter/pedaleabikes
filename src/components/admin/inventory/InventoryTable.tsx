@@ -28,7 +28,13 @@ export type InventoryRow = {
 
 type Field = "cost" | "margin" | "stock" | "min_stock";
 
-export function InventoryTable({ rows, defaultMargin }: { rows: InventoryRow[]; defaultMargin: number }) {
+export function InventoryTable({
+    rows,
+    defaultMargin,
+}: {
+    rows: InventoryRow[];
+    defaultMargin: number;
+}) {
     return (
         <TableWrap className="max-h-[70dvh]">
             <Table>
@@ -79,7 +85,11 @@ function Row({ row, defaultMargin }: { row: InventoryRow; defaultMargin: number 
             toast.error("Valor inválido.");
             return false;
         }
-        if (value === current || (value !== null && current !== null && Math.abs(value - current) < 1e-9)) return true;
+        if (
+            value === current ||
+            (value !== null && current !== null && Math.abs(value - current) < 1e-9)
+        )
+            return true;
         startTransition(async function () {
             const result = await quickUpdateProduct({ id: row.id, field, value } as never);
             if (!result.ok) {
@@ -87,7 +97,8 @@ function Row({ row, defaultMargin }: { row: InventoryRow; defaultMargin: number 
                 return;
             }
             setPrice(result.data.price);
-            if (field === "stock") toast.success(`Stock de ${row.name}: ${value} (ajuste registrado)`);
+            if (field === "stock")
+                toast.success(`Stock de ${row.name}: ${value} (ajuste registrado)`);
         });
         return true;
     }
@@ -95,7 +106,10 @@ function Row({ row, defaultMargin }: { row: InventoryRow; defaultMargin: number 
     return (
         <Tr className={cn(!row.active && "opacity-50", pending && "opacity-60")}>
             <Td className="min-w-56">
-                <Link href={`/admin/inventario/${row.id}`} className="font-medium hover:text-primary hover:underline">
+                <Link
+                    href={`/admin/inventario/${row.id}`}
+                    className="font-medium hover:text-primary hover:underline"
+                >
                     {row.name}
                 </Link>
                 <div className="text-xs text-muted">
@@ -144,7 +158,10 @@ function Row({ row, defaultMargin }: { row: InventoryRow; defaultMargin: number 
                         return commit("stock", v);
                     }}
                     label={`Stock de ${row.name}`}
-                    className={cn("w-16", row.stock <= 0 ? "text-danger font-bold" : low && "text-warning font-bold")}
+                    className={cn(
+                        "w-16",
+                        row.stock <= 0 ? "text-danger font-bold" : low && "text-warning font-bold",
+                    )}
                 />
             </Td>
             <Td className="text-right">
@@ -157,7 +174,9 @@ function Row({ row, defaultMargin }: { row: InventoryRow; defaultMargin: number 
                     className="w-14"
                 />
             </Td>
-            <Td className="text-right tabular-nums text-muted">{formatARS(Math.max(row.stock, 0) * row.cost)}</Td>
+            <Td className="text-right tabular-nums text-muted">
+                {formatARS(Math.max(row.stock, 0) * row.cost)}
+            </Td>
         </Tr>
     );
 }

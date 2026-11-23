@@ -9,9 +9,18 @@ import { Table, TableWrap, Td, Th, Tr } from "@/components/admin/ui/table";
 import { getDb } from "@/lib/admin/auth";
 import { monthResult, percentChange } from "@/lib/admin/calc";
 import { cn } from "@/lib/admin/cn";
-import { addMonths, currentMonthAR, formatMonth, isValidMonth, monthBounds } from "@/lib/admin/dates";
+import {
+    addMonths,
+    currentMonthAR,
+    formatMonth,
+    isValidMonth,
+    monthBounds,
+} from "@/lib/admin/dates";
 import { formatARS, formatPct } from "@/lib/admin/money";
 import { param, type SearchParams } from "@/lib/admin/params";
+
+// Depende de la sesión: siempre por request.
+export const instant = false;
 
 export const metadata: Metadata = { title: "Reportes" };
 
@@ -40,7 +49,15 @@ const EMPTY: Omit<Monthly, "month"> = {
     work_orders_total: 0,
 };
 
-function Delta({ current, previous, invert = false }: { current: number; previous: number; invert?: boolean }) {
+function Delta({
+    current,
+    previous,
+    invert = false,
+}: {
+    current: number;
+    previous: number;
+    invert?: boolean;
+}) {
     const change = percentChange(current, previous);
     if (change === null) return <span className="text-muted">sin datos del mes anterior</span>;
     const good = invert ? change <= 0 : change >= 0;
@@ -63,8 +80,20 @@ function Kpi({
     strong?: boolean;
 }) {
     return (
-        <div className={cn("rounded-lg border px-4 py-3", strong ? "border-ink bg-ink text-chalk" : "border-line bg-surface")}>
-            <p className={cn("text-xs font-semibold uppercase tracking-wide", strong ? "text-steel" : "text-muted")}>{label}</p>
+        <div
+            className={cn(
+                "rounded-lg border px-4 py-3",
+                strong ? "border-ink bg-ink text-chalk" : "border-line bg-surface",
+            )}
+        >
+            <p
+                className={cn(
+                    "text-xs font-semibold uppercase tracking-wide",
+                    strong ? "text-steel" : "text-muted",
+                )}
+            >
+                {label}
+            </p>
             <p className="mt-1 text-xl font-bold tabular-nums">{value}</p>
             {sub ? <div className="mt-0.5 text-xs">{sub}</div> : null}
         </div>
@@ -132,7 +161,12 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
             operatingExpenses: m.operating_expenses,
             withdrawals: m.withdrawals,
         });
-        return { month: m.month, income: m.revenue, expenses: m.cogs + m.operating_expenses, result: r.result };
+        return {
+            month: m.month,
+            income: m.revenue,
+            expenses: m.cogs + m.operating_expenses,
+            result: r.result,
+        };
     });
 
     const cats = catRes.data ?? [];
@@ -171,7 +205,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
     const services = items.filter(function (i) {
         return i.kind === "service" || i.kind === "labor" || i.kind === "free";
     });
-    function top<T extends { quantity: number; margin: number }>(list: T[], by: "quantity" | "margin") {
+    function top<T extends { quantity: number; margin: number }>(
+        list: T[],
+        by: "quantity" | "margin",
+    ) {
         return [...list]
             .sort(function (a, b) {
                 return b[by] - a[by];
@@ -188,7 +225,11 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
                 description={`Resultado de ${formatMonth(month)} comparado con ${formatMonth(prevMonth)}.`}
                 actions={
                     <div className="flex items-center gap-1">
-                        <Link href={`/admin/reportes?mes=${prevMonth}`} className={buttonVariants({ variant: "secondary", size: "icon" })} aria-label="Mes anterior">
+                        <Link
+                            href={`/admin/reportes?mes=${prevMonth}`}
+                            className={buttonVariants({ variant: "secondary", size: "icon" })}
+                            aria-label="Mes anterior"
+                        >
                             <ChevronLeftIcon />
                         </Link>
                         <form action="/admin/reportes" className="flex items-center gap-1">
@@ -199,7 +240,10 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
                                 className="h-9 rounded-md border border-line-strong bg-surface px-2 text-sm"
                                 aria-label="Mes"
                             />
-                            <button type="submit" className={buttonVariants({ variant: "secondary" })}>
+                            <button
+                                type="submit"
+                                className={buttonVariants({ variant: "secondary" })}
+                            >
                                 Ver
                             </button>
                         </form>
@@ -216,12 +260,19 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
 
             {!hasData ? (
                 <Card>
-                    <EmptyState title={`Sin movimientos en ${formatMonth(month)}`} description="Elegí otro mes." />
+                    <EmptyState
+                        title={`Sin movimientos en ${formatMonth(month)}`}
+                        description="Elegí otro mes."
+                    />
                 </Card>
             ) : null}
 
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                <Kpi label="Facturación" value={formatARS(cur.revenue)} sub={<Delta current={cur.revenue} previous={prev.revenue} />} />
+                <Kpi
+                    label="Facturación"
+                    value={formatARS(cur.revenue)}
+                    sub={<Delta current={cur.revenue} previous={prev.revenue} />}
+                />
                 <Kpi
                     label="Costo de lo vendido"
                     value={formatARS(cur.cogs)}
@@ -232,7 +283,9 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
                     value={
                         <>
                             {formatARS(curR.grossMargin)}{" "}
-                            <span className="text-base font-semibold text-muted">{formatPct(curR.grossMarginPct)}</span>
+                            <span className="text-base font-semibold text-muted">
+                                {formatPct(curR.grossMarginPct)}
+                            </span>
                         </>
                     }
                     sub={<Delta current={curR.grossMargin} previous={prevR.grossMargin} />}
@@ -240,7 +293,13 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
                 <Kpi
                     label="Gastos operativos"
                     value={formatARS(cur.operating_expenses)}
-                    sub={<Delta current={cur.operating_expenses} previous={prev.operating_expenses} invert />}
+                    sub={
+                        <Delta
+                            current={cur.operating_expenses}
+                            previous={prev.operating_expenses}
+                            invert
+                        />
+                    }
                 />
                 <Kpi
                     label="Resultado del mes"
@@ -248,14 +307,19 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
                     value={formatARS(curR.result)}
                     sub={
                         <span className="text-steel">
-                            Margen bruto − gastos operativos · {formatPct(curR.resultPct)} de la facturación
+                            Margen bruto − gastos operativos · {formatPct(curR.resultPct)} de la
+                            facturación
                         </span>
                     }
                 />
                 <Kpi
                     label="Retiros personales"
                     value={formatARS(cur.withdrawals)}
-                    sub={<span className="text-muted">Aparte. Después de retiros: {formatARS(curR.afterWithdrawals)}</span>}
+                    sub={
+                        <span className="text-muted">
+                            Aparte. Después de retiros: {formatARS(curR.afterWithdrawals)}
+                        </span>
+                    }
                 />
                 <Kpi
                     label="Ticket promedio (mostrador)"
@@ -277,25 +341,34 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
                 <InfoIcon className="mt-0.5 size-5 shrink-0 text-primary" />
                 <div>
                     <p>
-                        <b>Compras de mercadería del mes: {formatARS(cur.merchandise_purchases)}</b> (mes anterior{" "}
-                        {formatARS(prev.merchandise_purchases)}).
+                        <b>Compras de mercadería del mes: {formatARS(cur.merchandise_purchases)}</b>{" "}
+                        (mes anterior {formatARS(prev.merchandise_purchases)}).
                     </p>
                     <p className="text-muted">
-                        No son gasto del mes: esa plata pasa a ser stock, y su costo se reconoce recién cuando se vende
-                        (en “Costo de lo vendido”). Por eso el resultado puede ser bueno en un mes de mucha compra.
+                        No son gasto del mes: esa plata pasa a ser stock, y su costo se reconoce
+                        recién cuando se vende (en “Costo de lo vendido”). Por eso el resultado
+                        puede ser bueno en un mes de mucha compra.
                     </p>
                 </div>
             </Card>
 
             <Card>
-                <CardHeader title="Últimos 12 meses" description="Ingresos, egresos (costo de lo vendido + gastos operativos) y resultado." />
+                <CardHeader
+                    title="Últimos 12 meses"
+                    description="Ingresos, egresos (costo de lo vendido + gastos operativos) y resultado."
+                />
                 <div className="p-3">
                     <EvolutionChart data={evolution} />
                 </div>
             </Card>
 
             <div className="grid gap-4 lg:grid-cols-2">
-                <CategoryTable title="Ingresos por categoría" rows={incomeCats} total={cur.revenue} prevTotal={prevTotal} />
+                <CategoryTable
+                    title="Ingresos por categoría"
+                    rows={incomeCats}
+                    total={cur.revenue}
+                    prevTotal={prevTotal}
+                />
                 <div className="space-y-4">
                     <CategoryTable
                         title="Gastos operativos por categoría"
@@ -317,10 +390,22 @@ export default async function ReportsPage({ searchParams }: { searchParams: Sear
             </div>
 
             <div className="grid gap-4 lg:grid-cols-2">
-                <RankingTable title="Productos más vendidos (cantidad)" rows={top(products, "quantity")} />
-                <RankingTable title="Productos que más margen dejaron" rows={top(products, "margin")} />
-                <RankingTable title="Servicios y mano de obra (cantidad)" rows={top(services, "quantity")} />
-                <RankingTable title="Servicios y mano de obra (margen)" rows={top(services, "margin")} />
+                <RankingTable
+                    title="Productos más vendidos (cantidad)"
+                    rows={top(products, "quantity")}
+                />
+                <RankingTable
+                    title="Productos que más margen dejaron"
+                    rows={top(products, "margin")}
+                />
+                <RankingTable
+                    title="Servicios y mano de obra (cantidad)"
+                    rows={top(services, "quantity")}
+                />
+                <RankingTable
+                    title="Servicios y mano de obra (margen)"
+                    rows={top(services, "margin")}
+                />
             </div>
         </div>
     );
@@ -364,13 +449,20 @@ function CategoryTable({
                                 return (
                                     <Tr key={r.category_id}>
                                         <Td>{r.name}</Td>
-                                        <Td className="text-right font-semibold tabular-nums">{formatARS(value)}</Td>
+                                        <Td className="text-right font-semibold tabular-nums">
+                                            {formatARS(value)}
+                                        </Td>
                                         <Td>
                                             <div className="flex items-center gap-2">
                                                 <div className="h-2 flex-1 rounded bg-canvas">
-                                                    <div className="h-2 rounded bg-primary" style={{ width: `${pct * 100}%` }} />
+                                                    <div
+                                                        className="h-2 rounded bg-primary"
+                                                        style={{ width: `${pct * 100}%` }}
+                                                    />
                                                 </div>
-                                                <span className="w-9 text-right text-xs tabular-nums text-muted">{formatPct(pct)}</span>
+                                                <span className="w-9 text-right text-xs tabular-nums text-muted">
+                                                    {formatPct(pct)}
+                                                </span>
                                             </div>
                                         </Td>
                                         <Td className="text-right text-xs tabular-nums">
@@ -379,7 +471,9 @@ function CategoryTable({
                                                 <span
                                                     className={cn(
                                                         "ml-1",
-                                                        (invert ? change <= 0 : change >= 0) ? "text-success" : "text-danger",
+                                                        (invert ? change <= 0 : change >= 0)
+                                                            ? "text-success"
+                                                            : "text-danger",
                                                     )}
                                                 >
                                                     {change >= 0 ? "▲" : "▼"}
@@ -402,7 +496,14 @@ function RankingTable({
     rows,
 }: {
     title: string;
-    rows: { key: string; description: string; quantity: number; revenue: number; margin: number; productId: string | null }[];
+    rows: {
+        key: string;
+        description: string;
+        quantity: number;
+        revenue: number;
+        margin: number;
+        productId: string | null;
+    }[];
 }) {
     return (
         <Card>
@@ -428,7 +529,10 @@ function RankingTable({
                                         <Td className="text-muted tabular-nums">{i + 1}</Td>
                                         <Td className="max-w-64 truncate">
                                             {r.productId ? (
-                                                <Link href={`/admin/inventario/${r.productId}`} className="hover:underline">
+                                                <Link
+                                                    href={`/admin/inventario/${r.productId}`}
+                                                    className="hover:underline"
+                                                >
                                                     {r.description}
                                                 </Link>
                                             ) : (
@@ -436,7 +540,9 @@ function RankingTable({
                                             )}
                                         </Td>
                                         <Td className="text-right tabular-nums">{r.quantity}</Td>
-                                        <Td className="text-right tabular-nums">{formatARS(r.revenue)}</Td>
+                                        <Td className="text-right tabular-nums">
+                                            {formatARS(r.revenue)}
+                                        </Td>
                                         <Td className="text-right font-semibold tabular-nums">
                                             {formatARS(r.margin)}
                                             <span className="ml-1 text-xs font-normal text-muted">

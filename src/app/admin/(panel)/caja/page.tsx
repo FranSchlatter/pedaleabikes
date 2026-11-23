@@ -15,15 +15,24 @@ import { formatARS } from "@/lib/admin/money";
 import { isUuid, param, type SearchParams } from "@/lib/admin/params";
 import { fetchAll } from "@/lib/admin/queries";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Caja" };
 
-const TYPE_LABEL: Record<string, string> = { income: "Ingreso", expense: "Egreso", transfer: "Transferencia" };
+const TYPE_LABEL: Record<string, string> = {
+    income: "Ingreso",
+    expense: "Egreso",
+    transfer: "Transferencia",
+};
 
 export default async function CashPage({ searchParams }: { searchParams: SearchParams }) {
     const params = await searchParams;
     const db = await getDb();
     const today = todayAR();
-    const fromDate = isValidDate(param(params, "desde")) ? param(params, "desde")! : addDays(today, -30);
+    const fromDate = isValidDate(param(params, "desde"))
+        ? param(params, "desde")!
+        : addDays(today, -30);
     const toDate = isValidDate(param(params, "hasta")) ? param(params, "hasta")! : today;
     const type = param(params, "tipo");
     const category = param(params, "categoria");
@@ -32,7 +41,11 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
 
     const [{ data: balances }, { data: categories }, transactions] = await Promise.all([
         db.from("v_account_balances").select("*").order("sort_order"),
-        db.from("transaction_categories").select("id, name, type").order("type").order("sort_order"),
+        db
+            .from("transaction_categories")
+            .select("id, name, type")
+            .order("type")
+            .order("sort_order"),
         fetchAll(function (from, to) {
             let q = db
                 .from("transactions")
@@ -43,7 +56,8 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                 .lt("occurred_at", dayBounds(toDate).to)
                 .order("occurred_at", { ascending: false })
                 .range(from, to);
-            if (type === "income" || type === "expense" || type === "transfer") q = q.eq("type", type);
+            if (type === "income" || type === "expense" || type === "transfer")
+                q = q.eq("type", type);
             if (isUuid(category)) q = q.eq("category_id", category);
             if (isUuid(account)) q = q.or(`account_id.eq.${account},to_account_id.eq.${account}`);
             if (!showVoided) q = q.is("voided_at", null);
@@ -60,13 +74,16 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
     }
     const accountsList = balances ?? [];
     const total = accountsList.reduce(function (s, a) {
-        return s + accountBalance({
-            initial_balance: Number(a.initial_balance),
-            income: Number(a.income),
-            expense: Number(a.expense),
-            transfer_in: Number(a.transfer_in),
-            transfer_out: Number(a.transfer_out),
-        });
+        return (
+            s +
+            accountBalance({
+                initial_balance: Number(a.initial_balance),
+                income: Number(a.income),
+                expense: Number(a.expense),
+                transfer_in: Number(a.transfer_in),
+                transfer_out: Number(a.transfer_out),
+            })
+        );
     }, 0);
 
     function origin(t: (typeof transactions)[number]) {
@@ -82,9 +99,22 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                 title="Caja"
                 actions={
                     <>
-                        <ExportLink table="transactions" query={`desde=${fromDate}&hasta=${toDate}`} />
-                        <OpenQuickButton kind="expense" expenseType="transfer" label="Transferencia" variant="secondary" />
-                        <OpenQuickButton kind="expense" expenseType="income" label="Ingreso" variant="secondary" />
+                        <ExportLink
+                            table="transactions"
+                            query={`desde=${fromDate}&hasta=${toDate}`}
+                        />
+                        <OpenQuickButton
+                            kind="expense"
+                            expenseType="transfer"
+                            label="Transferencia"
+                            variant="secondary"
+                        />
+                        <OpenQuickButton
+                            kind="expense"
+                            expenseType="income"
+                            label="Ingreso"
+                            variant="secondary"
+                        />
                         <OpenQuickButton kind="expense" expenseType="expense" label="Gasto" />
                     </>
                 }
@@ -109,7 +139,11 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                         />
                     );
                 })}
-                <Stat label="Total en cuentas" value={formatARS(total)} className="border-ink bg-ink text-chalk [&_p]:text-chalk" />
+                <Stat
+                    label="Total en cuentas"
+                    value={formatARS(total)}
+                    className="border-ink bg-ink text-chalk [&_p]:text-chalk"
+                />
             </div>
 
             <Filters action="/admin/caja" clearHref="/admin/caja">
@@ -183,7 +217,12 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
 
             <div className="mb-3 grid grid-cols-3 gap-3">
                 <Stat label="Ingresos del período" value={formatARS(income)} tone="positive" />
-                <Stat label="Egresos del período" value={formatARS(expense)} tone="negative" hint="Incluye compras de mercadería" />
+                <Stat
+                    label="Egresos del período"
+                    value={formatARS(expense)}
+                    tone="negative"
+                    hint="Incluye compras de mercadería"
+                />
                 <Stat label="Neto" value={formatARS(income - expense)} />
             </div>
 
@@ -208,10 +247,25 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                                 {transactions.map(function (t) {
                                     const o = origin(t);
                                     return (
-                                        <Tr key={t.id} className={t.voided_at ? "text-muted line-through" : undefined}>
-                                            <Td className="whitespace-nowrap tabular-nums">{formatDateTime(t.occurred_at)}</Td>
+                                        <Tr
+                                            key={t.id}
+                                            className={
+                                                t.voided_at ? "text-muted line-through" : undefined
+                                            }
+                                        >
+                                            <Td className="whitespace-nowrap tabular-nums">
+                                                {formatDateTime(t.occurred_at)}
+                                            </Td>
                                             <Td>
-                                                <Badge tone={t.type === "income" ? "success" : t.type === "expense" ? "danger" : "neutral"}>
+                                                <Badge
+                                                    tone={
+                                                        t.type === "income"
+                                                            ? "success"
+                                                            : t.type === "expense"
+                                                              ? "danger"
+                                                              : "neutral"
+                                                    }
+                                                >
                                                     {TYPE_LABEL[t.type]}
                                                 </Badge>
                                             </Td>
@@ -222,13 +276,21 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                                             </Td>
                                             <Td className="max-w-72 truncate">
                                                 {o ? (
-                                                    <Link href={o.href} className="text-primary hover:underline">
+                                                    <Link
+                                                        href={o.href}
+                                                        className="text-primary hover:underline"
+                                                    >
                                                         {t.description ?? o.label}
                                                     </Link>
                                                 ) : (
                                                     (t.description ?? "—")
                                                 )}
-                                                {t.suppliers?.name && !o ? <span className="text-muted"> · {t.suppliers.name}</span> : null}
+                                                {t.suppliers?.name && !o ? (
+                                                    <span className="text-muted">
+                                                        {" "}
+                                                        · {t.suppliers.name}
+                                                    </span>
+                                                ) : null}
                                             </Td>
                                             <Td
                                                 className={cn(
@@ -237,11 +299,21 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                                                     t.type === "expense" && "text-danger",
                                                 )}
                                             >
-                                                {t.type === "expense" ? "−" : t.type === "income" ? "+" : ""}
+                                                {t.type === "expense"
+                                                    ? "−"
+                                                    : t.type === "income"
+                                                      ? "+"
+                                                      : ""}
                                                 {formatARS(t.amount)}
                                             </Td>
                                             <Td className="text-right">
-                                                {!o && !t.voided_at ? <VoidButton kind="transaction" id={t.id} size="sm" /> : null}
+                                                {!o && !t.voided_at ? (
+                                                    <VoidButton
+                                                        kind="transaction"
+                                                        id={t.id}
+                                                        size="sm"
+                                                    />
+                                                ) : null}
                                             </Td>
                                         </Tr>
                                     );

@@ -39,3 +39,12 @@ Todo lo marcado con `// TODO: CONTENIDO` en el código. Ver el README para tama�
 ## Deploy
 
 - [ ] Dominio definitivo y `NEXT_PUBLIC_SITE_URL` en Vercel
+
+## Sistema de gestión (`/admin`)
+
+- [ ] Crear el proyecto de Supabase de producción, correr migraciones y crear el usuario (ver `SETUP.md`)
+- [ ] **Pasar el Excel real de inventario** (`data/inventario.xlsx` no estaba en el repo): probar el importador con ese archivo y ajustar sinónimos de columnas si hace falta (`src/lib/admin/import-mapping.ts`)
+- [ ] Confirmar con el cliente: margen por defecto 80 % y redondeo hacia arriba a $100
+- [ ] Confirmar precios de "Reparaciones puntuales" (quedó en $0, se carga el monto en cada orden) y si quiere más servicios fijos (parche, centrado, purgado…)
+- [ ] Cargar saldos iniciales reales de las cuentas después de borrar los datos de ejemplo
+- [ ] CUIT y pie del comprobante en Configuración

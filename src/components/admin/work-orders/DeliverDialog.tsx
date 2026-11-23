@@ -32,7 +32,16 @@ type Props = {
     onClose: () => void;
 };
 
-export function DeliverDialog({ orderId, number, items, labor, total, workDone, tallerCategoryId, onClose }: Props) {
+export function DeliverDialog({
+    orderId,
+    number,
+    items,
+    labor,
+    total,
+    workDone,
+    tallerCategoryId,
+    onClose,
+}: Props) {
     const { catalog } = useQuickActions();
     const [finalPrice, setFinalPrice] = useState<number | null>(total);
     const [accountId, setAccountId] = useState<string | null>(null);
@@ -90,19 +99,31 @@ export function DeliverDialog({ orderId, number, items, labor, total, workDone, 
             <DialogContent size="sm">
                 <DialogHeader>
                     <DialogTitle>Entregar y cobrar · #{number}</DialogTitle>
-                    <DialogDescription>Genera los ingresos en caja y pasa la orden a Entregada.</DialogDescription>
+                    <DialogDescription>
+                        Genera los ingresos en caja y pasa la orden a Entregada.
+                    </DialogDescription>
                 </DialogHeader>
                 <DialogBody className="space-y-3">
                     <div>
                         <Label>Precio final</Label>
-                        <MoneyInput value={finalPrice} onValueChange={setFinalPrice} autoFocus className="h-11 text-lg" />
+                        <MoneyInput
+                            value={finalPrice}
+                            onValueChange={setFinalPrice}
+                            autoFocus
+                            className="h-11 text-lg"
+                        />
                         <p className="mt-1 text-xs text-muted">
-                            Calculado: {formatARS(total)}. Si cobrás distinto, la diferencia va a Taller.
+                            Calculado: {formatARS(total)}. Si cobrás distinto, la diferencia va a
+                            Taller.
                         </p>
                     </div>
                     <div>
                         <Label>Cobrado en</Label>
-                        <AccountPicker accounts={catalog?.accounts ?? []} value={account} onChange={setAccountId} />
+                        <AccountPicker
+                            accounts={catalog?.accounts ?? []}
+                            value={account}
+                            onChange={setAccountId}
+                        />
                     </div>
                     <div>
                         <Label>Trabajos realizados</Label>
@@ -114,7 +135,9 @@ export function DeliverDialog({ orderId, number, items, labor, total, workDone, 
                         />
                     </div>
                     <div className="rounded-md bg-canvas p-2.5 text-sm">
-                        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Se registra en caja</p>
+                        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">
+                            Se registra en caja
+                        </p>
                         {allocation.length === 0 ? (
                             <p className="text-muted">Sin ingresos (precio 0).</p>
                         ) : (
@@ -123,7 +146,9 @@ export function DeliverDialog({ orderId, number, items, labor, total, workDone, 
                                     return (
                                         <li key={a.key} className="flex justify-between">
                                             <span>{categoryName.get(a.key) ?? "Taller"}</span>
-                                            <span className="tabular-nums">{formatARS(a.amount)}</span>
+                                            <span className="tabular-nums">
+                                                {formatARS(a.amount)}
+                                            </span>
                                         </li>
                                     );
                                 })}
@@ -131,7 +156,10 @@ export function DeliverDialog({ orderId, number, items, labor, total, workDone, 
                         )}
                     </div>
                     {error ? (
-                        <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
+                        <p
+                            role="alert"
+                            className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger"
+                        >
                             {error}
                         </p>
                     ) : null}
@@ -140,7 +168,11 @@ export function DeliverDialog({ orderId, number, items, labor, total, workDone, 
                     <Button variant="secondary" onClick={onClose}>
                         Volver
                     </Button>
-                    <Button onClick={submit} disabled={pending} className="bg-success hover:bg-success/90">
+                    <Button
+                        onClick={submit}
+                        disabled={pending}
+                        className="bg-success hover:bg-success/90"
+                    >
                         {pending ? "Registrando…" : `Cobrar ${formatARS(finalPrice ?? 0)}`}
                     </Button>
                 </DialogFooter>

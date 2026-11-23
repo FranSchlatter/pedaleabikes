@@ -11,7 +11,9 @@ export async function getCatalog(): Promise<Catalog> {
         fetchAll(function (from, to) {
             return db
                 .from("products")
-                .select("id, sku, name, price, cost, stock, min_stock, supplier_id, categories(name)")
+                .select(
+                    "id, sku, name, price, cost, stock, min_stock, supplier_id, categories(name)",
+                )
                 .eq("active", true)
                 .order("name")
                 .range(from, to);

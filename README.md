@@ -1,11 +1,31 @@
-# Pedalea Bikes — Landing
+# Pedalea Bikes — Landing + sistema de gestión
 
-Landing de **Pedalea Bikes** (bicicletería y taller, Mitre 4701, Santa Fe Capital).
-Solo frontend: sin base de datos, sin backend, sin pagos. Todo el contenido sale de archivos tipados en `src/data`.
+Proyecto de **Pedalea Bikes** (bicicletería y taller, Mitre 4701, Santa Fe Capital). Tiene dos partes:
+
+- **Landing pública** (`/`): solo frontend, el contenido sale de archivos tipados en `src/data`.
+- **Sistema de gestión** (`/admin`, con login): ventas, órdenes de trabajo, inventario, compras, proveedores, clientes, caja y reportes, sobre Supabase. **Configuración, usuario, importación del Excel, limpieza de datos de ejemplo y deploy: ver [`SETUP.md`](SETUP.md).**
+
+## Sistema de gestión (`/admin`)
+
+| Pantalla              | Qué hace                                                                                                  |
+| --------------------- | --------------------------------------------------------------------------------------------------------- |
+| Hoy                   | Cobros del día por medio de pago, entregas, órdenes abiertas por estado, stock bajo, botones rápidos      |
+| Ventas                | Listado con filtros, detalle con costo congelado y margen, anulación                                      |
+| Órdenes de trabajo    | Tablero por estado + lista, repuestos/servicios, entregar y cobrar, WhatsApp, comprobante imprimible      |
+| Inventario            | Edición inline, valor del inventario, ajustes con motivo, historial, importar Excel, actualización masiva |
+| Compras / Proveedores | Compras que suman stock y actualizan costos; lista de reposición copiable para WhatsApp                   |
+| Clientes              | Bicis, historial de órdenes y compras                                                                     |
+| Caja                  | Saldos por cuenta, movimientos con filtros, gastos, ingresos y transferencias                             |
+| Reportes              | Facturación, costo de lo vendido, margen bruto, gastos, resultado, retiros, 12 meses, rankings            |
+| Configuración         | Margen y redondeo, datos del negocio, cuentas, categorías, servicios, backup, borrar datos de ejemplo     |
+
+Atajos: **V** venta · **O** orden · **C** compra · **G** gasto. En la venta, Enter agrega y con el buscador vacío cobra.
+
+Código: páginas en `src/app/admin`, componentes en `src/components/admin`, lógica en `src/lib/admin` (cálculos puros con tests en `calc.test.ts`), base de datos en `supabase/migrations` (las operaciones que mueven stock y plata son funciones de Postgres transaccionales). Plan en `PLAN.md`, decisiones en `DECISIONS.md`.
 
 **Marca:** teal `#2C7D7B` del logo sobre negro, títulos en Rokkitt (slab). Ver `DECISIONS.md`.
 
-**Stack:** Next.js 16 (App Router, Cache Components) · TypeScript · Tailwind CSS 4 · Motion · react-hook-form + Zod.
+**Stack:** Next.js 16 (App Router, Cache Components) · TypeScript · Tailwind CSS 4 · Motion · react-hook-form + Zod. Gestión: Supabase (Postgres + Auth) · Server Actions · Radix (estilo shadcn/ui) · Recharts · SheetJS · Vitest.
 
 ## Cómo correrlo
 

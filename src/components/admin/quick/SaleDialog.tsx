@@ -198,10 +198,15 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
             return;
         }
         const missing = lines.find(function (l) {
-            return l.unitPrice === null || (l.kind !== "product" && l.kind !== "service" && !l.description.trim());
+            return (
+                l.unitPrice === null ||
+                (l.kind !== "product" && l.kind !== "service" && !l.description.trim())
+            );
         });
         if (missing) {
-            setError(`Completá el precio y la descripción de "${missing.description || "la línea libre"}".`);
+            setError(
+                `Completá el precio y la descripción de "${missing.description || "la línea libre"}".`,
+            );
             return;
         }
         if (!effectiveAccount) {
@@ -212,9 +217,19 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
             const price = l.unitPrice ?? 0;
             switch (l.kind) {
                 case "product":
-                    return { kind: "product", product_id: l.refId!, quantity: l.quantity, unit_price: price };
+                    return {
+                        kind: "product",
+                        product_id: l.refId!,
+                        quantity: l.quantity,
+                        unit_price: price,
+                    };
                 case "service":
-                    return { kind: "service", service_id: l.refId!, quantity: l.quantity, unit_price: price };
+                    return {
+                        kind: "service",
+                        service_id: l.refId!,
+                        quantity: l.quantity,
+                        unit_price: price,
+                    };
                 case "free":
                     return {
                         kind: "free",
@@ -224,7 +239,12 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                         income_category_id: l.incomeCategoryId,
                     };
                 default:
-                    return { kind: "commission", description: l.description, quantity: 1, unit_price: price };
+                    return {
+                        kind: "commission",
+                        description: l.description,
+                        quantity: 1,
+                        unit_price: price,
+                    };
             }
         });
         startTransition(async function () {
@@ -238,7 +258,9 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                 setError(result.error);
                 return;
             }
-            toast.success(`Venta #${result.data.number} registrada · ${formatARS(result.data.total)}`);
+            toast.success(
+                `Venta #${result.data.number} registrada · ${formatARS(result.data.total)}`,
+            );
             onDone();
         });
     }
@@ -257,7 +279,8 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                 <DialogHeader>
                     <DialogTitle>Nueva venta</DialogTitle>
                     <DialogDescription>
-                        Buscá y agregá con <Kbd>Enter</Kbd>. Con el buscador vacío, <Kbd>Enter</Kbd> cobra.
+                        Buscá y agregá con <Kbd>Enter</Kbd>. Con el buscador vacío, <Kbd>Enter</Kbd>{" "}
+                        cobra.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogBody className="space-y-4">
@@ -289,9 +312,13 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                                             line.stock !== undefined &&
                                             line.quantity > line.stock;
                                         return (
-                                            <tr key={line.uid} className="border-t border-line align-top">
+                                            <tr
+                                                key={line.uid}
+                                                className="border-t border-line align-top"
+                                            >
                                                 <td className="px-2 py-1.5">
-                                                    {line.kind === "free" || line.kind === "commission" ? (
+                                                    {line.kind === "free" ||
+                                                    line.kind === "commission" ? (
                                                         <div className="space-y-1">
                                                             <Input
                                                                 value={line.description}
@@ -299,47 +326,66 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                                                                 aria-label="Descripción"
                                                                 autoFocus={line.kind === "free"}
                                                                 onChange={function (e) {
-                                                                    update(line.uid, { description: e.target.value });
+                                                                    update(line.uid, {
+                                                                        description: e.target.value,
+                                                                    });
                                                                 }}
                                                                 className="h-8"
                                                             />
                                                             {line.kind === "free" ? (
                                                                 <NativeSelect
                                                                     aria-label="Categoría de ingreso"
-                                                                    value={line.incomeCategoryId ?? ""}
+                                                                    value={
+                                                                        line.incomeCategoryId ?? ""
+                                                                    }
                                                                     onChange={function (e) {
                                                                         update(line.uid, {
-                                                                            incomeCategoryId: e.target.value,
+                                                                            incomeCategoryId:
+                                                                                e.target.value,
                                                                         });
                                                                     }}
                                                                     className="h-8 text-xs"
                                                                 >
-                                                                    {incomeCategories.map(function (c) {
-                                                                        return (
-                                                                            <option key={c.id} value={c.id}>
-                                                                                {c.name}
-                                                                            </option>
-                                                                        );
-                                                                    })}
+                                                                    {incomeCategories.map(
+                                                                        function (c) {
+                                                                            return (
+                                                                                <option
+                                                                                    key={c.id}
+                                                                                    value={c.id}
+                                                                                >
+                                                                                    {c.name}
+                                                                                </option>
+                                                                            );
+                                                                        },
+                                                                    )}
                                                                 </NativeSelect>
                                                             ) : (
-                                                                <Badge tone="primary">Comisión · costo 0</Badge>
+                                                                <Badge tone="primary">
+                                                                    Comisión · costo 0
+                                                                </Badge>
                                                             )}
                                                         </div>
                                                     ) : (
                                                         <div>
-                                                            <p className="font-medium">{line.description}</p>
+                                                            <p className="font-medium">
+                                                                {line.description}
+                                                            </p>
                                                             {line.kind === "service" ? (
-                                                                <p className="text-xs text-muted">Servicio</p>
+                                                                <p className="text-xs text-muted">
+                                                                    Servicio
+                                                                </p>
                                                             ) : (
                                                                 <p
                                                                     className={cn(
                                                                         "text-xs text-muted",
-                                                                        noStock && "font-semibold text-warning",
+                                                                        noStock &&
+                                                                            "font-semibold text-warning",
                                                                     )}
                                                                 >
                                                                     Stock: {line.stock}
-                                                                    {noStock ? " · queda negativo" : ""}
+                                                                    {noStock
+                                                                        ? " · queda negativo"
+                                                                        : ""}
                                                                 </p>
                                                             )}
                                                         </div>
@@ -355,7 +401,12 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                                                         aria-label="Cantidad"
                                                         onChange={function (e) {
                                                             update(line.uid, {
-                                                                quantity: Math.max(1, Math.floor(Number(e.target.value) || 1)),
+                                                                quantity: Math.max(
+                                                                    1,
+                                                                    Math.floor(
+                                                                        Number(e.target.value) || 1,
+                                                                    ),
+                                                                ),
                                                             });
                                                         }}
                                                         className="h-8 text-right tabular-nums"
@@ -373,7 +424,9 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                                                     />
                                                 </td>
                                                 <td className="px-2 py-1.5 pt-3 text-right font-semibold tabular-nums">
-                                                    {formatARS(line.quantity * (line.unitPrice ?? 0))}
+                                                    {formatARS(
+                                                        line.quantity * (line.unitPrice ?? 0),
+                                                    )}
                                                 </td>
                                                 <td className="px-1 py-1.5">
                                                     <Button
@@ -453,14 +506,20 @@ export function SaleDialog({ catalog, customerId: initialCustomer, onOpenChange,
                     </div>
 
                     {error ? (
-                        <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
+                        <p
+                            role="alert"
+                            className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger"
+                        >
                             {error}
                         </p>
                     ) : null}
                 </DialogBody>
                 <DialogFooter className="justify-between">
                     <p className="text-sm text-muted">
-                        Total <span className="ml-1 text-2xl font-bold tabular-nums text-ink">{formatARS(total)}</span>
+                        Total{" "}
+                        <span className="ml-1 text-2xl font-bold tabular-nums text-ink">
+                            {formatARS(total)}
+                        </span>
                     </p>
                     <Button size="lg" onClick={submit} disabled={pending || !catalog}>
                         {pending ? "Registrando…" : `Cobrar ${formatARS(total)}`}

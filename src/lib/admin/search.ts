@@ -1,8 +1,5 @@
 export function normalize(text: string) {
-    return text
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "");
+    return text.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
 }
 
 // Todas las palabras del query tienen que aparecer (en cualquier orden).

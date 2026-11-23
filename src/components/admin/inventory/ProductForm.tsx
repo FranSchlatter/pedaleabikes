@@ -85,11 +85,20 @@ export function ProductFormButton(props: Props) {
     );
 }
 
-function ProductDialog({ categories, suppliers, defaultMargin, rounding, product, onClose }: Props & { onClose: () => void }) {
+function ProductDialog({
+    categories,
+    suppliers,
+    defaultMargin,
+    rounding,
+    product,
+    onClose,
+}: Props & { onClose: () => void }) {
     const router = useRouter();
     const [data, setData] = useState<ProductData>(product ?? EMPTY);
     const [marginText, setMarginText] = useState(
-        product?.margin === null || product?.margin === undefined ? "" : formatNumber(product.margin * 100),
+        product?.margin === null || product?.margin === undefined
+            ? ""
+            : formatNumber(product.margin * 100),
     );
     const [error, setError] = useState<string | null>(null);
     const [pending, startTransition] = useTransition();
@@ -237,12 +246,18 @@ function ProductDialog({ categories, suppliers, defaultMargin, rounding, product
                                 onChange={function (e) {
                                     setMarginText(e.target.value);
                                     const n = parseARS(e.target.value);
-                                    set("margin", e.target.value.trim() === "" || n === null ? null : n / 100);
+                                    set(
+                                        "margin",
+                                        e.target.value.trim() === "" || n === null ? null : n / 100,
+                                    );
                                 }}
                                 className="text-right"
                             />
                         </Field>
-                        <Field label="Precio manual (opcional)" hint="Solo para excepciones: ignora costo y margen">
+                        <Field
+                            label="Precio manual (opcional)"
+                            hint="Solo para excepciones: ignora costo y margen"
+                        >
                             <MoneyInput
                                 value={data.manual_price}
                                 onValueChange={function (v) {
@@ -251,11 +266,19 @@ function ProductDialog({ categories, suppliers, defaultMargin, rounding, product
                             />
                         </Field>
                         <div className="flex flex-col justify-center rounded-md bg-info-soft px-3 py-2">
-                            <span className="text-xs font-semibold uppercase tracking-wide text-muted">Precio de venta</span>
-                            <span className="text-xl font-bold tabular-nums">{formatARS(price)}</span>
+                            <span className="text-xs font-semibold uppercase tracking-wide text-muted">
+                                Precio de venta
+                            </span>
+                            <span className="text-xl font-bold tabular-nums">
+                                {formatARS(price)}
+                            </span>
                         </div>
                         {!editing ? (
-                            <Field label="Stock inicial" htmlFor="p-stock" hint="Queda registrado como carga inicial">
+                            <Field
+                                label="Stock inicial"
+                                htmlFor="p-stock"
+                                hint="Queda registrado como carga inicial"
+                            >
                                 <Input
                                     id="p-stock"
                                     type="number"
@@ -266,14 +289,21 @@ function ProductDialog({ categories, suppliers, defaultMargin, rounding, product
                                 />
                             </Field>
                         ) : null}
-                        <Field label="Stock mínimo" htmlFor="p-min" hint="Alerta y lista de reposición">
+                        <Field
+                            label="Stock mínimo"
+                            htmlFor="p-min"
+                            hint="Alerta y lista de reposición"
+                        >
                             <Input
                                 id="p-min"
                                 type="number"
                                 min={0}
                                 value={data.min_stock}
                                 onChange={function (e) {
-                                    set("min_stock", Math.max(0, Math.trunc(Number(e.target.value) || 0)));
+                                    set(
+                                        "min_stock",
+                                        Math.max(0, Math.trunc(Number(e.target.value) || 0)),
+                                    );
                                 }}
                             />
                         </Field>
@@ -300,7 +330,10 @@ function ProductDialog({ categories, suppliers, defaultMargin, rounding, product
                             </label>
                         ) : null}
                         {error ? (
-                            <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger sm:col-span-2">
+                            <p
+                                role="alert"
+                                className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger sm:col-span-2"
+                            >
                                 {error}
                             </p>
                         ) : null}

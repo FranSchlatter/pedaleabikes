@@ -18,12 +18,18 @@ import { normalize } from "@/lib/admin/search";
 import { OPEN_STATUSES, WORK_ORDER_STATUSES, type WorkOrderStatus } from "@/lib/admin/types";
 import { cn } from "@/lib/admin/cn";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Órdenes de trabajo" };
 
 const SELECT =
     "id, number, status, received_at, delivered_at, promised_at, labor_amount, final_price, budget_amount, problem, customers(name, phone), bikes(brand, model, wheel_size, bike_type, color), work_order_items(quantity, unit_price)";
 
-function orderTotal(o: { labor_amount: number; work_order_items: { quantity: number; unit_price: number }[] }) {
+function orderTotal(o: {
+    labor_amount: number;
+    work_order_items: { quantity: number; unit_price: number }[];
+}) {
     return (
         Number(o.labor_amount) +
         o.work_order_items.reduce(function (s, i) {
@@ -47,7 +53,9 @@ export default async function WorkOrdersPage({ searchParams }: { searchParams: S
                             href="/admin/ordenes"
                             className={cn(
                                 "flex items-center gap-1 rounded px-2.5 py-1.5",
-                                view === "tablero" ? "bg-ink text-chalk" : "text-muted hover:text-ink",
+                                view === "tablero"
+                                    ? "bg-ink text-chalk"
+                                    : "text-muted hover:text-ink",
                             )}
                         >
                             <LayoutGridIcon className="size-4" /> Tablero
@@ -56,7 +64,9 @@ export default async function WorkOrdersPage({ searchParams }: { searchParams: S
                             href="/admin/ordenes?vista=lista"
                             className={cn(
                                 "flex items-center gap-1 rounded px-2.5 py-1.5",
-                                view === "lista" ? "bg-ink text-chalk" : "text-muted hover:text-ink",
+                                view === "lista"
+                                    ? "bg-ink text-chalk"
+                                    : "text-muted hover:text-ink",
                             )}
                         >
                             <ListIcon className="size-4" /> Lista
@@ -70,7 +80,11 @@ export default async function WorkOrdersPage({ searchParams }: { searchParams: S
     );
 
     if (view === "tablero") {
-        const { data } = await db.from("work_orders").select(SELECT).in("status", OPEN_STATUSES).order("received_at");
+        const { data } = await db
+            .from("work_orders")
+            .select(SELECT)
+            .in("status", OPEN_STATUSES)
+            .order("received_at");
         const orders = data ?? [];
         return (
             <div>
@@ -81,14 +95,21 @@ export default async function WorkOrdersPage({ searchParams }: { searchParams: S
                             return o.status === status;
                         });
                         return (
-                            <section key={status} className="flex flex-col rounded-lg border border-line bg-canvas">
+                            <section
+                                key={status}
+                                className="flex flex-col rounded-lg border border-line bg-canvas"
+                            >
                                 <header className="flex items-center justify-between border-b border-line bg-surface px-3 py-2 rounded-t-lg">
                                     <StatusBadge status={status} />
-                                    <span className="text-sm font-bold tabular-nums">{column.length}</span>
+                                    <span className="text-sm font-bold tabular-nums">
+                                        {column.length}
+                                    </span>
                                 </header>
                                 <div className="flex flex-1 flex-col gap-2 p-2">
                                     {column.length === 0 ? (
-                                        <p className="px-2 py-6 text-center text-xs text-muted">Sin órdenes</p>
+                                        <p className="px-2 py-6 text-center text-xs text-muted">
+                                            Sin órdenes
+                                        </p>
                                     ) : (
                                         column.map(function (o) {
                                             return (
@@ -119,7 +140,9 @@ export default async function WorkOrdersPage({ searchParams }: { searchParams: S
     const today = todayAR();
     const status = param(params, "estado");
     const q = param(params, "q");
-    const fromDate = isValidDate(param(params, "desde")) ? param(params, "desde")! : addDays(today, -60);
+    const fromDate = isValidDate(param(params, "desde"))
+        ? param(params, "desde")!
+        : addDays(today, -60);
     const toDate = isValidDate(param(params, "hasta")) ? param(params, "hasta")! : today;
 
     let query = db
@@ -129,7 +152,12 @@ export default async function WorkOrdersPage({ searchParams }: { searchParams: S
         .lt("received_at", dayBounds(toDate).to)
         .order("number", { ascending: false })
         .limit(500);
-    if (status && WORK_ORDER_STATUSES.some(function (s) { return s.value === status; })) {
+    if (
+        status &&
+        WORK_ORDER_STATUSES.some(function (s) {
+            return s.value === status;
+        })
+    ) {
         query = query.eq("status", status);
     } else if (status === "abiertas") {
         query = query.in("status", OPEN_STATUSES);
@@ -199,19 +227,32 @@ export default async function WorkOrdersPage({ searchParams }: { searchParams: S
                                     return (
                                         <Tr key={o.id}>
                                             <Td>
-                                                <Link href={`/admin/ordenes/${o.id}`} className="font-semibold text-primary hover:underline">
+                                                <Link
+                                                    href={`/admin/ordenes/${o.id}`}
+                                                    className="font-semibold text-primary hover:underline"
+                                                >
                                                     #{o.number}
                                                 </Link>
                                             </Td>
-                                            <Td className="tabular-nums">{formatDate(o.received_at)}</Td>
+                                            <Td className="tabular-nums">
+                                                {formatDate(o.received_at)}
+                                            </Td>
                                             <Td>{o.customers?.name}</Td>
-                                            <Td className="max-w-56 truncate text-muted">{bikeLabel(o.bikes)}</Td>
+                                            <Td className="max-w-56 truncate text-muted">
+                                                {bikeLabel(o.bikes)}
+                                            </Td>
                                             <Td>
                                                 <StatusBadge status={o.status} />
                                             </Td>
-                                            <Td className="tabular-nums">{formatDate(o.delivered_at)}</Td>
+                                            <Td className="tabular-nums">
+                                                {formatDate(o.delivered_at)}
+                                            </Td>
                                             <Td className="text-right font-semibold tabular-nums">
-                                                {formatARS(o.status === "entregada" ? Number(o.final_price) : orderTotal(o))}
+                                                {formatARS(
+                                                    o.status === "entregada"
+                                                        ? Number(o.final_price)
+                                                        : orderTotal(o),
+                                                )}
                                             </Td>
                                         </Tr>
                                     );

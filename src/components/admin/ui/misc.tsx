@@ -2,7 +2,9 @@ import type { ComponentProps, ReactNode } from "react";
 import { cn } from "@/lib/admin/cn";
 
 export function Card({ className, ...props }: ComponentProps<"section">) {
-    return <section className={cn("rounded-lg border border-line bg-surface", className)} {...props} />;
+    return (
+        <section className={cn("rounded-lg border border-line bg-surface", className)} {...props} />
+    );
 }
 
 export function CardHeader({
@@ -94,7 +96,12 @@ export function EmptyState({
     className?: string;
 }) {
     return (
-        <div className={cn("flex flex-col items-center justify-center gap-2 px-4 py-10 text-center", className)}>
+        <div
+            className={cn(
+                "flex flex-col items-center justify-center gap-2 px-4 py-10 text-center",
+                className,
+            )}
+        >
             <p className="text-sm font-semibold text-ink">{title}</p>
             {description ? <p className="max-w-sm text-sm text-muted">{description}</p> : null}
             {action ? <div className="mt-2">{action}</div> : null}

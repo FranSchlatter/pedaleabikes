@@ -5,6 +5,9 @@ import { PageHeader } from "@/components/admin/ui/misc";
 import { getDb } from "@/lib/admin/auth";
 import { getSettings } from "@/lib/admin/queries";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Importar inventario" };
 
 export default async function ImportPage() {
@@ -16,7 +19,8 @@ export default async function ImportPage() {
                 title="Importar inventario"
                 description={
                     <>
-                        Subí tu Excel, elegí qué columna es cada dato y revisá la vista previa antes de importar.{" "}
+                        Subí tu Excel, elegí qué columna es cada dato y revisá la vista previa antes
+                        de importar.{" "}
                         <Link href="/admin/inventario" className="text-primary hover:underline">
                             Volver al inventario
                         </Link>

@@ -9,6 +9,9 @@ import { formatDateTime } from "@/lib/admin/dates";
 import { formatARS } from "@/lib/admin/money";
 import { isUuid } from "@/lib/admin/params";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Compra" };
 
 export default async function PurchasePage({ params }: { params: Promise<{ id: string }> }) {
@@ -53,15 +56,22 @@ export default async function PurchasePage({ params }: { params: Promise<{ id: s
                                 return (
                                     <Tr key={i.id}>
                                         <Td>
-                                            <Link href={`/admin/inventario/${i.product_id}`} className="hover:underline">
+                                            <Link
+                                                href={`/admin/inventario/${i.product_id}`}
+                                                className="hover:underline"
+                                            >
                                                 {i.description}
                                             </Link>
                                         </Td>
                                         <Td className="text-right tabular-nums">{i.quantity}</Td>
                                         <Td className="text-right tabular-nums text-muted">
-                                            {i.previous_cost === null ? "—" : formatARS(i.previous_cost)}
+                                            {i.previous_cost === null
+                                                ? "—"
+                                                : formatARS(i.previous_cost)}
                                         </Td>
-                                        <Td className="text-right tabular-nums">{formatARS(i.unit_cost)}</Td>
+                                        <Td className="text-right tabular-nums">
+                                            {formatARS(i.unit_cost)}
+                                        </Td>
                                         <Td className="text-right font-semibold tabular-nums">
                                             {formatARS(i.quantity * Number(i.unit_cost))}
                                         </Td>
@@ -72,7 +82,9 @@ export default async function PurchasePage({ params }: { params: Promise<{ id: s
                                 <Td colSpan={4} className="text-right font-bold">
                                     Total
                                 </Td>
-                                <Td className="text-right text-base font-bold tabular-nums">{formatARS(p.total)}</Td>
+                                <Td className="text-right text-base font-bold tabular-nums">
+                                    {formatARS(p.total)}
+                                </Td>
                             </Tr>
                         </tbody>
                     </Table>

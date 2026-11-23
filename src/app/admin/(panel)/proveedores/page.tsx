@@ -9,6 +9,9 @@ import { getDb } from "@/lib/admin/auth";
 import { SUPPLIER_FIELDS } from "@/lib/admin/forms";
 import { formatARS } from "@/lib/admin/money";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Proveedores" };
 
 export default async function SuppliersPage() {
@@ -43,16 +46,17 @@ export default async function SuppliersPage() {
                             triggerLabel="Proveedor"
                             fields={SUPPLIER_FIELDS}
                             onSave={saveSupplier}
-                            redirectTo={function (id) {
-                                return `/admin/proveedores/${id}`;
-                            }}
+                            redirectBase="/admin/proveedores/"
                         />
                     </>
                 }
             />
             <Card>
                 {(suppliers ?? []).length === 0 ? (
-                    <EmptyState title="Todavía no hay proveedores" description="Se crean solos al importar el Excel, o cargalos acá." />
+                    <EmptyState
+                        title="Todavía no hay proveedores"
+                        description="Se crean solos al importar el Excel, o cargalos acá."
+                    />
                 ) : (
                     <TableWrap>
                         <Table>
@@ -71,22 +75,40 @@ export default async function SuppliersPage() {
                                     const st = stats.get(s.id);
                                     const lowCount = lowBy.get(s.id) ?? 0;
                                     return (
-                                        <Tr key={s.id} className={s.active ? undefined : "opacity-50"}>
+                                        <Tr
+                                            key={s.id}
+                                            className={s.active ? undefined : "opacity-50"}
+                                        >
                                             <Td>
-                                                <Link href={`/admin/proveedores/${s.id}`} className="font-semibold text-primary hover:underline">
+                                                <Link
+                                                    href={`/admin/proveedores/${s.id}`}
+                                                    className="font-semibold text-primary hover:underline"
+                                                >
                                                     {s.name}
                                                 </Link>
-                                                {!s.active ? <Badge className="ml-1">inactivo</Badge> : null}
+                                                {!s.active ? (
+                                                    <Badge className="ml-1">inactivo</Badge>
+                                                ) : null}
                                             </Td>
                                             <Td className="text-sm">
                                                 {s.contact_name ?? "—"}
                                                 <div className="text-xs text-muted">{s.phone}</div>
                                             </Td>
-                                            <Td className="max-w-64 truncate text-sm text-muted">{s.terms ?? "—"}</Td>
-                                            <Td className="text-right tabular-nums">{st?.count ?? 0}</Td>
-                                            <Td className="text-right tabular-nums">{formatARS(st?.value ?? 0)}</Td>
+                                            <Td className="max-w-64 truncate text-sm text-muted">
+                                                {s.terms ?? "—"}
+                                            </Td>
+                                            <Td className="text-right tabular-nums">
+                                                {st?.count ?? 0}
+                                            </Td>
+                                            <Td className="text-right tabular-nums">
+                                                {formatARS(st?.value ?? 0)}
+                                            </Td>
                                             <Td className="text-right">
-                                                {lowCount ? <Badge tone="warning">{lowCount}</Badge> : <span className="text-muted">—</span>}
+                                                {lowCount ? (
+                                                    <Badge tone="warning">{lowCount}</Badge>
+                                                ) : (
+                                                    <span className="text-muted">—</span>
+                                                )}
                                             </Td>
                                         </Tr>
                                     );

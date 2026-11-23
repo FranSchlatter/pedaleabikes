@@ -54,7 +54,9 @@ export async function voidTransaction(input: z.infer<typeof voidSchema>) {
                 .single(),
         );
         if (tx.sale_id || tx.purchase_id || tx.work_order_id) {
-            throw new DbError("Este movimiento viene de una venta, compra u orden: anulalo desde ahí.");
+            throw new DbError(
+                "Este movimiento viene de una venta, compra u orden: anulalo desde ahí.",
+            );
         }
         if (tx.voided_at) {
             throw new DbError("El movimiento ya está anulado.");

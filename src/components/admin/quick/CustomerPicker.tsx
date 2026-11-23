@@ -10,16 +10,23 @@ export function CustomerPicker({
     value,
     onChange,
     placeholder = "Buscar por nombre o teléfono…",
+    autoFocus = false,
 }: {
     customers: CustomerOption[];
     value: string | null;
     onChange: (id: string | null) => void;
     placeholder?: string;
+    autoFocus?: boolean;
 }) {
     const options = useMemo(
         function () {
             return customers.map(function (c) {
-                return { key: c.id, label: c.name, keywords: c.phone ?? "", sublabel: c.phone ?? undefined };
+                return {
+                    key: c.id,
+                    label: c.name,
+                    keywords: c.phone ?? "",
+                    sublabel: c.phone ?? undefined,
+                };
             });
         },
         [customers],
@@ -33,7 +40,9 @@ export function CustomerPicker({
             <div className="flex h-10 items-center justify-between gap-2 rounded-md border border-primary/40 bg-info-soft px-3 text-sm">
                 <span className="truncate">
                     <span className="font-semibold">{selected.name}</span>
-                    {selected.phone ? <span className="text-muted"> · {selected.phone}</span> : null}
+                    {selected.phone ? (
+                        <span className="text-muted"> · {selected.phone}</span>
+                    ) : null}
                 </span>
                 <button
                     type="button"
@@ -53,6 +62,7 @@ export function CustomerPicker({
         <SearchSelect
             options={options}
             placeholder={placeholder}
+            autoFocus={autoFocus}
             onSelect={function (o) {
                 onChange(o.key);
             }}

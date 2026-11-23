@@ -6,9 +6,21 @@ import { adjustStock } from "@/app/admin/actions/inventory";
 import { Button } from "@/components/admin/ui/button";
 import { Field, Input } from "@/components/admin/ui/input";
 
-const REASONS = ["Conteo físico", "Rotura / defecto", "Pérdida", "Uso interno del taller", "Devolución a proveedor"];
+const REASONS = [
+    "Conteo físico",
+    "Rotura / defecto",
+    "Pérdida",
+    "Uso interno del taller",
+    "Devolución a proveedor",
+];
 
-export function AdjustStockForm({ productId, currentStock }: { productId: string; currentStock: number }) {
+export function AdjustStockForm({
+    productId,
+    currentStock,
+}: {
+    productId: string;
+    currentStock: number;
+}) {
     const [value, setValue] = useState(String(currentStock));
     const [reason, setReason] = useState("");
     const [pending, startTransition] = useTransition();
@@ -38,7 +50,13 @@ export function AdjustStockForm({ productId, currentStock }: { productId: string
 
     return (
         <form onSubmit={submit} className="space-y-3 p-4">
-            <Field label="Stock real" htmlFor="adj-stock" hint={diff ? `Diferencia: ${diff > 0 ? "+" : ""}${diff}` : `Actual: ${currentStock}`}>
+            <Field
+                label="Stock real"
+                htmlFor="adj-stock"
+                hint={
+                    diff ? `Diferencia: ${diff > 0 ? "+" : ""}${diff}` : `Actual: ${currentStock}`
+                }
+            >
                 <Input
                     id="adj-stock"
                     type="number"

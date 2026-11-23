@@ -11,19 +11,26 @@ import { addDays, dayBounds, formatDate, isValidDate, todayAR } from "@/lib/admi
 import { formatARS } from "@/lib/admin/money";
 import { isUuid, param, type SearchParams } from "@/lib/admin/params";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Compras" };
 
 export default async function PurchasesPage({ searchParams }: { searchParams: SearchParams }) {
     const params = await searchParams;
     const db = await getDb();
     const today = todayAR();
-    const fromDate = isValidDate(param(params, "desde")) ? param(params, "desde")! : addDays(today, -90);
+    const fromDate = isValidDate(param(params, "desde"))
+        ? param(params, "desde")!
+        : addDays(today, -90);
     const toDate = isValidDate(param(params, "hasta")) ? param(params, "hasta")! : today;
     const supplier = param(params, "proveedor");
 
     let query = db
         .from("purchases")
-        .select("id, number, occurred_at, total, invoice_ref, voided_at, suppliers(id, name), accounts(name), purchase_items(id)")
+        .select(
+            "id, number, occurred_at, total, invoice_ref, voided_at, suppliers(id, name), accounts(name), purchase_items(id)",
+        )
         .gte("occurred_at", dayBounds(fromDate).from)
         .lt("occurred_at", dayBounds(toDate).to)
         .order("occurred_at", { ascending: false })
@@ -80,7 +87,14 @@ export default async function PurchasesPage({ searchParams }: { searchParams: Se
             </Filters>
             <div className="mb-3 grid grid-cols-2 gap-3 md:w-1/2">
                 <Stat label="Comprado en el período" value={formatARS(total)} />
-                <Stat label="Compras" value={rows.filter(function (p) { return !p.voided_at; }).length} />
+                <Stat
+                    label="Compras"
+                    value={
+                        rows.filter(function (p) {
+                            return !p.voided_at;
+                        }).length
+                    }
+                />
             </div>
             <Card>
                 {rows.length === 0 ? (
@@ -105,19 +119,33 @@ export default async function PurchasesPage({ searchParams }: { searchParams: Se
                             <tbody>
                                 {rows.map(function (p) {
                                     return (
-                                        <Tr key={p.id} className={p.voided_at ? "text-muted" : undefined}>
+                                        <Tr
+                                            key={p.id}
+                                            className={p.voided_at ? "text-muted" : undefined}
+                                        >
                                             <Td>
-                                                <Link href={`/admin/compras/${p.id}`} className="font-semibold text-primary hover:underline">
+                                                <Link
+                                                    href={`/admin/compras/${p.id}`}
+                                                    className="font-semibold text-primary hover:underline"
+                                                >
                                                     #{p.number}
                                                 </Link>{" "}
-                                                {p.voided_at ? <Badge tone="danger">Anulada</Badge> : null}
+                                                {p.voided_at ? (
+                                                    <Badge tone="danger">Anulada</Badge>
+                                                ) : null}
                                             </Td>
-                                            <Td className="tabular-nums">{formatDate(p.occurred_at)}</Td>
+                                            <Td className="tabular-nums">
+                                                {formatDate(p.occurred_at)}
+                                            </Td>
                                             <Td>{p.suppliers?.name ?? "—"}</Td>
                                             <Td className="text-muted">{p.invoice_ref ?? "—"}</Td>
-                                            <Td className="tabular-nums">{p.purchase_items.length}</Td>
+                                            <Td className="tabular-nums">
+                                                {p.purchase_items.length}
+                                            </Td>
                                             <Td>{p.accounts?.name}</Td>
-                                            <Td className="text-right font-semibold tabular-nums">{formatARS(p.total)}</Td>
+                                            <Td className="text-right font-semibold tabular-nums">
+                                                {formatARS(p.total)}
+                                            </Td>
                                         </Tr>
                                     );
                                 })}

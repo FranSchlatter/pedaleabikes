@@ -31,14 +31,25 @@ type Props = {
     onDone: () => void;
 };
 
-export function WorkOrderDialog({ catalog, customerId: initialCustomer, onOpenChange, onDone }: Props) {
+export function WorkOrderDialog({
+    catalog,
+    customerId: initialCustomer,
+    onOpenChange,
+    onDone,
+}: Props) {
     const router = useRouter();
     const [mode, setMode] = useState<"existing" | "new">("existing");
     const [customerId, setCustomerId] = useState<string | null>(initialCustomer ?? null);
     const [newCustomer, setNewCustomer] = useState({ name: "", phone: "" });
     const [bikes, setBikes] = useState<Bike[]>([]);
     const [bikeId, setBikeId] = useState<string | "new">("new");
-    const [newBike, setNewBike] = useState({ brand: "", model: "", wheel_size: "", bike_type: "", color: "" });
+    const [newBike, setNewBike] = useState({
+        brand: "",
+        model: "",
+        wheel_size: "",
+        bike_type: "",
+        color: "",
+    });
     const [problem, setProblem] = useState("");
     const [promisedAt, setPromisedAt] = useState("");
     const [budget, setBudget] = useState<number | null>(null);
@@ -100,7 +111,9 @@ export function WorkOrderDialog({ catalog, customerId: initialCustomer, onOpenCh
             <DialogContent size="md">
                 <DialogHeader>
                     <DialogTitle>Nueva orden de trabajo</DialogTitle>
-                    <DialogDescription>Después de crearla cargás repuestos y servicios.</DialogDescription>
+                    <DialogDescription>
+                        Después de crearla cargás repuestos y servicios.
+                    </DialogDescription>
                 </DialogHeader>
                 <DialogBody className="space-y-4">
                     <div>
@@ -117,7 +130,9 @@ export function WorkOrderDialog({ catalog, customerId: initialCustomer, onOpenCh
                                             }}
                                             className={cn(
                                                 "rounded px-2 py-1",
-                                                mode === m ? "bg-ink text-chalk" : "text-muted hover:text-ink",
+                                                mode === m
+                                                    ? "bg-ink text-chalk"
+                                                    : "text-muted hover:text-ink",
                                             )}
                                         >
                                             {m === "existing" ? "Existente" : "Nuevo"}
@@ -131,6 +146,7 @@ export function WorkOrderDialog({ catalog, customerId: initialCustomer, onOpenCh
                                 customers={catalog?.customers ?? []}
                                 value={customerId}
                                 onChange={setCustomerId}
+                                autoFocus
                             />
                         ) : (
                             <div className="grid gap-2 sm:grid-cols-2">
@@ -258,7 +274,10 @@ export function WorkOrderDialog({ catalog, customerId: initialCustomer, onOpenCh
                     </div>
 
                     {error ? (
-                        <p role="alert" className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
+                        <p
+                            role="alert"
+                            className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger"
+                        >
                             {error}
                         </p>
                     ) : null}

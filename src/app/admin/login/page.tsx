@@ -9,7 +9,10 @@ export const metadata: Metadata = { title: "Ingresar" };
 export default function LoginPage() {
     const configured = isSupabaseConfigured();
     return (
-        <main id="contenido" className="flex min-h-dvh items-center justify-center bg-ink px-4 py-10">
+        <main
+            id="contenido"
+            className="flex min-h-dvh items-center justify-center bg-ink px-4 py-10"
+        >
             <div className="w-full max-w-sm">
                 <div className="mb-6 flex flex-col items-center gap-3 text-center">
                     <Image src="/logo.png" alt="Pedalea Bikes" width={120} height={108} priority />
@@ -29,7 +32,8 @@ export default function LoginPage() {
                                 No hay credenciales en <code>.env.local</code>. Seguí los pasos de{" "}
                                 <code>SETUP.md</code>: crear el proyecto, correr las migraciones,
                                 cargar <code>NEXT_PUBLIC_SUPABASE_URL</code> y{" "}
-                                <code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code> y crear el usuario.
+                                <code>NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY</code> y crear el
+                                usuario.
                             </p>
                         </div>
                     )}

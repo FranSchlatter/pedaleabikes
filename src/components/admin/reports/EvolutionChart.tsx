@@ -26,7 +26,9 @@ const SERIES = [
 
 function compact(value: number) {
     if (Math.abs(value) >= 1_000_000) {
-        return "$" + (value / 1_000_000).toLocaleString("es-AR", { maximumFractionDigits: 1 }) + " M";
+        return (
+            "$" + (value / 1_000_000).toLocaleString("es-AR", { maximumFractionDigits: 1 }) + " M"
+        );
     }
     if (Math.abs(value) >= 1000) return "$" + Math.round(value / 1000) + " k";
     return "$" + value;
@@ -67,9 +69,15 @@ export function EvolutionChart({ data }: { data: EvolutionPoint[] }) {
                                 return (
                                     <tr key={d.month} className="border-b border-line">
                                         <td className="py-1.5">{formatMonth(d.month)}</td>
-                                        <td className="py-1.5 text-right tabular-nums">{formatARS(d.income)}</td>
-                                        <td className="py-1.5 text-right tabular-nums">{formatARS(d.expenses)}</td>
-                                        <td className="py-1.5 text-right tabular-nums">{formatARS(d.result)}</td>
+                                        <td className="py-1.5 text-right tabular-nums">
+                                            {formatARS(d.income)}
+                                        </td>
+                                        <td className="py-1.5 text-right tabular-nums">
+                                            {formatARS(d.expenses)}
+                                        </td>
+                                        <td className="py-1.5 text-right tabular-nums">
+                                            {formatARS(d.result)}
+                                        </td>
                                     </tr>
                                 );
                             })}
@@ -105,7 +113,11 @@ export function EvolutionChart({ data }: { data: EvolutionPoint[] }) {
                                 labelFormatter={function (m) {
                                     return formatMonth(String(m));
                                 }}
-                                contentStyle={{ borderRadius: 6, borderColor: "#dbe0de", fontSize: 12 }}
+                                contentStyle={{
+                                    borderRadius: 6,
+                                    borderColor: "#dbe0de",
+                                    fontSize: 12,
+                                }}
                             />
                             <Legend wrapperStyle={{ fontSize: 12 }} iconType="plainline" />
                             {SERIES.map(function (s) {

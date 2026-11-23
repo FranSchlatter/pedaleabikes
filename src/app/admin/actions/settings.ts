@@ -73,13 +73,34 @@ const txCategorySchema = z.object({
 
 export async function saveTxCategory(input: z.infer<typeof txCategorySchema>) {
     return runAction(txCategorySchema, input, async function ({ id, ...fields }, db) {
-        const group = fields.type === "income" ? "revenue" : fields.report_group === "revenue" ? "operating" : fields.report_group;
+        const group =
+            fields.type === "income"
+                ? "revenue"
+                : fields.report_group === "revenue"
+                  ? "operating"
+                  : fields.report_group;
         if (id) {
             // Las categorías del sistema (con código) mantienen tipo y grupo.
-            check(await db.from("transaction_categories").update({ name: fields.name, active: fields.active }).eq("id", id).not("code", "is", null));
-            check(await db.from("transaction_categories").update({ ...fields, report_group: group }).eq("id", id).is("code", null));
+            check(
+                await db
+                    .from("transaction_categories")
+                    .update({ name: fields.name, active: fields.active })
+                    .eq("id", id)
+                    .not("code", "is", null),
+            );
+            check(
+                await db
+                    .from("transaction_categories")
+                    .update({ ...fields, report_group: group })
+                    .eq("id", id)
+                    .is("code", null),
+            );
         } else {
-            check(await db.from("transaction_categories").insert({ ...fields, report_group: group, sort_order: 500 }));
+            check(
+                await db
+                    .from("transaction_categories")
+                    .insert({ ...fields, report_group: group, sort_order: 500 }),
+            );
         }
         return null;
     });
@@ -102,7 +123,9 @@ export async function saveService(input: z.input<typeof serviceSchema>) {
     });
 }
 
-const resetSchema = z.object({ confirm: z.literal("BORRAR", { error: "Escribí BORRAR para confirmar." }) });
+const resetSchema = z.object({
+    confirm: z.literal("BORRAR", { error: "Escribí BORRAR para confirmar." }),
+});
 
 export async function resetBusinessData(input: z.infer<typeof resetSchema>) {
     return runAction(resetSchema, input, async function (data, db) {

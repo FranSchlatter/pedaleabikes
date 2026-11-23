@@ -1,4 +1,13 @@
-export const BIKE_TYPES = ["MTB", "Urbana", "Ruta", "Paseo", "Gravel", "Infantil", "Eléctrica", "Otra"];
+export const BIKE_TYPES = [
+    "MTB",
+    "Urbana",
+    "Ruta",
+    "Paseo",
+    "Gravel",
+    "Infantil",
+    "Eléctrica",
+    "Otra",
+];
 
 type BikeLike = {
     brand?: string | null;

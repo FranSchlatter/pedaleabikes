@@ -9,6 +9,9 @@ import { formatDateTime } from "@/lib/admin/dates";
 import { formatARS, formatPct } from "@/lib/admin/money";
 import { isUuid } from "@/lib/admin/params";
 
+// Depende de la sesión: siempre por request.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Venta" };
 
 const KIND_LABEL: Record<string, string> = {
@@ -69,19 +72,29 @@ export default async function SalePage({ params }: { params: Promise<{ id: strin
                                         <Tr key={i.id}>
                                             <Td>
                                                 {i.product_id ? (
-                                                    <Link href={`/admin/inventario/${i.product_id}`} className="hover:underline">
+                                                    <Link
+                                                        href={`/admin/inventario/${i.product_id}`}
+                                                        className="hover:underline"
+                                                    >
                                                         {i.description}
                                                     </Link>
                                                 ) : (
                                                     i.description
                                                 )}
                                                 <div className="text-xs text-muted">
-                                                    {KIND_LABEL[i.kind]} · {i.transaction_categories?.name}
+                                                    {KIND_LABEL[i.kind]} ·{" "}
+                                                    {i.transaction_categories?.name}
                                                 </div>
                                             </Td>
-                                            <Td className="text-right tabular-nums">{i.quantity}</Td>
-                                            <Td className="text-right tabular-nums">{formatARS(i.unit_price)}</Td>
-                                            <Td className="text-right tabular-nums text-muted">{formatARS(i.unit_cost)}</Td>
+                                            <Td className="text-right tabular-nums">
+                                                {i.quantity}
+                                            </Td>
+                                            <Td className="text-right tabular-nums">
+                                                {formatARS(i.unit_price)}
+                                            </Td>
+                                            <Td className="text-right tabular-nums text-muted">
+                                                {formatARS(i.unit_cost)}
+                                            </Td>
                                             <Td className="text-right font-semibold tabular-nums">
                                                 {formatARS(i.quantity * Number(i.unit_price))}
                                             </Td>
@@ -97,7 +110,9 @@ export default async function SalePage({ params }: { params: Promise<{ id: strin
                     <dl className="space-y-2 px-4 py-3 text-sm">
                         <div className="flex justify-between">
                             <dt className="text-muted">Total</dt>
-                            <dd className="text-lg font-bold tabular-nums">{formatARS(sale.total)}</dd>
+                            <dd className="text-lg font-bold tabular-nums">
+                                {formatARS(sale.total)}
+                            </dd>
                         </div>
                         <div className="flex justify-between">
                             <dt className="text-muted">Costo (congelado)</dt>
@@ -106,7 +121,9 @@ export default async function SalePage({ params }: { params: Promise<{ id: strin
                         <div className="flex justify-between">
                             <dt className="text-muted">Margen bruto</dt>
                             <dd className="tabular-nums">
-                                {formatARS(margin)} ({formatPct(Number(sale.total) ? margin / Number(sale.total) : null)})
+                                {formatARS(margin)} (
+                                {formatPct(Number(sale.total) ? margin / Number(sale.total) : null)}
+                                )
                             </dd>
                         </div>
                         <div className="flex justify-between">
@@ -117,7 +134,10 @@ export default async function SalePage({ params }: { params: Promise<{ id: strin
                             <dt className="text-muted">Cliente</dt>
                             <dd>
                                 {sale.customers ? (
-                                    <Link href={`/admin/clientes/${sale.customers.id}`} className="text-primary hover:underline">
+                                    <Link
+                                        href={`/admin/clientes/${sale.customers.id}`}
+                                        className="text-primary hover:underline"
+                                    >
                                         {sale.customers.name}
                                     </Link>
                                 ) : (
@@ -127,14 +147,18 @@ export default async function SalePage({ params }: { params: Promise<{ id: strin
                         </div>
                     </dl>
                     <div className="border-t border-line px-4 py-3">
-                        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">Ingresos en caja</p>
+                        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-muted">
+                            Ingresos en caja
+                        </p>
                         <ul className="space-y-1 text-sm">
                             {sale.transactions.map(function (t) {
                                 return (
                                     <li key={t.id} className="flex justify-between">
                                         <span>
                                             {t.transaction_categories?.name}{" "}
-                                            {t.voided_at ? <Badge tone="danger">anulado</Badge> : null}
+                                            {t.voided_at ? (
+                                                <Badge tone="danger">anulado</Badge>
+                                            ) : null}
                                         </span>
                                         <span className="tabular-nums">{formatARS(t.amount)}</span>
                                     </li>

@@ -81,7 +81,9 @@ export function WorkOrderEditor({
     const { catalog, reloadCatalog } = useQuickActions();
     const [pending, startTransition] = useTransition();
     const [deliverOpen, setDeliverOpen] = useState(openDeliver);
-    const [freeLine, setFreeLine] = useState<{ description: string; price: number | null } | null>(null);
+    const [freeLine, setFreeLine] = useState<{ description: string; price: number | null } | null>(
+        null,
+    );
     const isOpen = OPEN_STATUSES.includes(order.status);
     const [labor, setLabor] = useState<number | null>(order.labor_amount);
     const [budget, setBudget] = useState<number | null>(order.budget_amount);
@@ -158,7 +160,12 @@ export function WorkOrderEditor({
         startTransition(async function () {
             const result = await addWorkOrderItem({
                 work_order_id: order.id,
-                item: { kind: "free", description: freeLine.description, quantity: 1, unit_price: freeLine.price ?? 0 },
+                item: {
+                    kind: "free",
+                    description: freeLine.description,
+                    quantity: 1,
+                    unit_price: freeLine.price ?? 0,
+                },
             });
             if (!result.ok) {
                 toast.error(result.error);
@@ -198,12 +205,16 @@ export function WorkOrderEditor({
             <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <div className="flex items-center gap-2">
-                        <h1 className="font-display text-2xl font-extrabold uppercase leading-none">Orden #{order.number}</h1>
+                        <h1 className="font-display text-2xl font-extrabold uppercase leading-none">
+                            Orden #{order.number}
+                        </h1>
                         <StatusBadge status={order.status} />
                     </div>
                     <p className="mt-1 text-sm text-muted">
                         Ingresó {formatDateTime(order.received_at)}
-                        {order.delivered_at ? ` · Entregada ${formatDateTime(order.delivered_at)}` : ""}
+                        {order.delivered_at
+                            ? ` · Entregada ${formatDateTime(order.delivered_at)}`
+                            : ""}
                     </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -217,7 +228,10 @@ export function WorkOrderEditor({
                     </a>
                     <a
                         className={buttonVariants({ variant: "secondary" })}
-                        href={whatsAppUrl(customer.phone, readyMessage(messageData, businessName, businessAddress))}
+                        href={whatsAppUrl(
+                            customer.phone,
+                            readyMessage(messageData, businessName, businessAddress),
+                        )}
                         target="_blank"
                         rel="noreferrer"
                     >
@@ -231,20 +245,25 @@ export function WorkOrderEditor({
                     >
                         <PrinterIcon /> Comprobante
                     </a>
-                    {order.status !== "cancelada" ? <VoidButton kind="workOrder" id={order.id} /> : null}
+                    {order.status !== "cancelada" ? (
+                        <VoidButton kind="workOrder" id={order.id} />
+                    ) : null}
                 </div>
             </div>
 
             {order.status === "cancelada" ? (
                 <p className="rounded-md bg-danger-soft px-3 py-2 text-sm text-danger">
-                    Orden cancelada{order.void_reason ? ` · ${order.void_reason}` : ""}. Los repuestos volvieron al stock.
+                    Orden cancelada{order.void_reason ? ` · ${order.void_reason}` : ""}. Los
+                    repuestos volvieron al stock.
                 </p>
             ) : null}
 
             {isOpen ? (
                 <Card className="p-3">
                     <div className="flex flex-wrap items-center gap-2">
-                        <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-muted">Estado</span>
+                        <span className="mr-1 text-xs font-semibold uppercase tracking-wide text-muted">
+                            Estado
+                        </span>
                         {OPEN_STATUSES.map(function (s) {
                             return (
                                 <Button
@@ -276,7 +295,10 @@ export function WorkOrderEditor({
             <div className="grid gap-4 lg:grid-cols-3">
                 <div className="space-y-4 lg:col-span-2">
                     <Card>
-                        <CardHeader title="Repuestos y servicios" description="Los repuestos descuentan stock al agregarlos." />
+                        <CardHeader
+                            title="Repuestos y servicios"
+                            description="Los repuestos descuentan stock al agregarlos."
+                        />
                         <div className="space-y-3 p-3">
                             {isOpen ? (
                                 <div className="flex flex-wrap gap-2">
@@ -284,7 +306,11 @@ export function WorkOrderEditor({
                                         options={options}
                                         onSelect={addOption}
                                         className="min-w-64 flex-1"
-                                        placeholder={catalog ? "Agregar repuesto o servicio…" : "Cargando catálogo…"}
+                                        placeholder={
+                                            catalog
+                                                ? "Agregar repuesto o servicio…"
+                                                : "Cargando catálogo…"
+                                        }
                                     />
                                     <Button
                                         variant="secondary"
@@ -305,7 +331,10 @@ export function WorkOrderEditor({
                                             autoFocus
                                             value={freeLine.description}
                                             onChange={function (e) {
-                                                setFreeLine({ ...freeLine, description: e.target.value });
+                                                setFreeLine({
+                                                    ...freeLine,
+                                                    description: e.target.value,
+                                                });
                                             }}
                                         />
                                     </div>
@@ -332,7 +361,9 @@ export function WorkOrderEditor({
                                 </div>
                             ) : null}
                             {items.length === 0 ? (
-                                <p className="py-4 text-center text-sm text-muted">Todavía no hay repuestos ni servicios.</p>
+                                <p className="py-4 text-center text-sm text-muted">
+                                    Todavía no hay repuestos ni servicios.
+                                </p>
                             ) : (
                                 <table className="w-full text-sm">
                                     <thead className="text-left text-[11px] font-bold uppercase tracking-wide text-muted">
@@ -351,11 +382,19 @@ export function WorkOrderEditor({
                                                     <td className="py-1.5">
                                                         {i.description}
                                                         <span className="ml-1.5 text-xs text-muted">
-                                                            {i.kind === "product" ? "repuesto" : i.kind === "service" ? "servicio" : "libre"}
+                                                            {i.kind === "product"
+                                                                ? "repuesto"
+                                                                : i.kind === "service"
+                                                                  ? "servicio"
+                                                                  : "libre"}
                                                         </span>
                                                     </td>
-                                                    <td className="py-1.5 text-right tabular-nums">{i.quantity}</td>
-                                                    <td className="py-1.5 text-right tabular-nums">{formatARS(i.unit_price)}</td>
+                                                    <td className="py-1.5 text-right tabular-nums">
+                                                        {i.quantity}
+                                                    </td>
+                                                    <td className="py-1.5 text-right tabular-nums">
+                                                        {formatARS(i.unit_price)}
+                                                    </td>
                                                     <td className="py-1.5 text-right font-semibold tabular-nums">
                                                         {formatARS(i.quantity * i.unit_price)}
                                                     </td>
@@ -384,7 +423,10 @@ export function WorkOrderEditor({
                     </Card>
 
                     <Card>
-                        <CardHeader title="Trabajo" description="Se guarda al salir de cada campo." />
+                        <CardHeader
+                            title="Trabajo"
+                            description="Se guarda al salir de cada campo."
+                        />
                         <div className="grid gap-3 p-3 md:grid-cols-2">
                             <TextField
                                 label="Problema / pedido"
@@ -422,7 +464,10 @@ export function WorkOrderEditor({
                     <Card>
                         <CardHeader title="Cliente y bici" />
                         <div className="space-y-2 p-3 text-sm">
-                            <Link href={`/admin/clientes/${customer.id}`} className="flex items-center gap-1.5 font-semibold text-primary hover:underline">
+                            <Link
+                                href={`/admin/clientes/${customer.id}`}
+                                className="flex items-center gap-1.5 font-semibold text-primary hover:underline"
+                            >
                                 <UserIcon className="size-4" />
                                 {customer.name}
                             </Link>
@@ -503,7 +548,10 @@ export function WorkOrderEditor({
                                     disabled={!isOpen}
                                     onBlur={function (e) {
                                         if ((e.target.value || null) !== order.promised_at) {
-                                            save({ id: order.id, promised_at: e.target.value || null });
+                                            save({
+                                                id: order.id,
+                                                promised_at: e.target.value || null,
+                                            });
                                         }
                                     }}
                                 />
@@ -515,7 +563,9 @@ export function WorkOrderEditor({
                                 </div>
                                 <div className="flex justify-between">
                                     <dt className="text-muted">Mano de obra</dt>
-                                    <dd className="tabular-nums">{formatARS(order.labor_amount)}</dd>
+                                    <dd className="tabular-nums">
+                                        {formatARS(order.labor_amount)}
+                                    </dd>
                                 </div>
                                 <div className="flex justify-between text-base font-bold">
                                     <dt>Total calculado</dt>
@@ -524,12 +574,16 @@ export function WorkOrderEditor({
                                 {order.final_price !== null ? (
                                     <div className="flex justify-between text-base font-bold text-success">
                                         <dt>Cobrado ({order.account_name})</dt>
-                                        <dd className="tabular-nums">{formatARS(order.final_price)}</dd>
+                                        <dd className="tabular-nums">
+                                            {formatARS(order.final_price)}
+                                        </dd>
                                     </div>
                                 ) : null}
                             </dl>
                             {order.promised_at ? (
-                                <p className="text-xs text-muted">Prometida para el {formatDate(order.promised_at)}</p>
+                                <p className="text-xs text-muted">
+                                    Prometida para el {formatDate(order.promised_at)}
+                                </p>
                             ) : null}
                         </div>
                     </Card>
@@ -542,9 +596,14 @@ export function WorkOrderEditor({
                                     return (
                                         <li key={t.id} className="flex justify-between">
                                             <span>
-                                                {t.category} {t.voided ? <Badge tone="danger">anulado</Badge> : null}
+                                                {t.category}{" "}
+                                                {t.voided ? (
+                                                    <Badge tone="danger">anulado</Badge>
+                                                ) : null}
                                             </span>
-                                            <span className="tabular-nums">{formatARS(t.amount)}</span>
+                                            <span className="tabular-nums">
+                                                {formatARS(t.amount)}
+                                            </span>
                                         </li>
                                     );
                                 })}
@@ -572,7 +631,15 @@ export function WorkOrderEditor({
     );
 }
 
-function TextField({ label, value, onSave }: { label: string; value: string; onSave: (v: string) => void }) {
+function TextField({
+    label,
+    value,
+    onSave,
+}: {
+    label: string;
+    value: string;
+    onSave: (v: string) => void;
+}) {
     return (
         <div>
             <Label>{label}</Label>

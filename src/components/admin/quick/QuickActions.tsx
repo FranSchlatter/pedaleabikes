@@ -82,7 +82,10 @@ export function QuickActionsProvider({ children }: { children: ReactNode }) {
         function () {
             function onKey(e: KeyboardEvent) {
                 if (e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented) return;
-                if (isTyping(e.target) || document.querySelector("[role=dialog], [role=alertdialog]")) {
+                if (
+                    isTyping(e.target) ||
+                    document.querySelector("[role=dialog], [role=alertdialog]")
+                ) {
                     return;
                 }
                 const kind = SHORTCUTS[e.key.toLowerCase()];

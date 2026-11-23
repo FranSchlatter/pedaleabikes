@@ -4,11 +4,24 @@ import { z } from "zod";
 import { check, runAction } from "@/lib/admin/action";
 
 const money = z.number({ error: "Monto inválido." }).min(0, "Los montos no pueden ser negativos.");
-const qty = z.number().int("La cantidad tiene que ser entera.").positive("La cantidad tiene que ser mayor a cero.");
+const qty = z
+    .number()
+    .int("La cantidad tiene que ser entera.")
+    .positive("La cantidad tiene que ser mayor a cero.");
 
 const saleItem = z.discriminatedUnion("kind", [
-    z.object({ kind: z.literal("product"), product_id: z.uuid(), quantity: qty, unit_price: money }),
-    z.object({ kind: z.literal("service"), service_id: z.uuid(), quantity: qty, unit_price: money }),
+    z.object({
+        kind: z.literal("product"),
+        product_id: z.uuid(),
+        quantity: qty,
+        unit_price: money,
+    }),
+    z.object({
+        kind: z.literal("service"),
+        service_id: z.uuid(),
+        quantity: qty,
+        unit_price: money,
+    }),
     z.object({
         kind: z.literal("free"),
         description: z.string().trim().min(1, "La línea libre necesita descripción."),
