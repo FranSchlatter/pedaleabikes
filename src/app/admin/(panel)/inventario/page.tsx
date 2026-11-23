@@ -2,6 +2,7 @@ import { UploadIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExportLink } from "@/components/admin/ExportLink";
+import { ShowMore } from "@/components/admin/ShowMore";
 import { Filters } from "@/components/admin/Filters";
 import { BulkPriceDialog } from "@/components/admin/inventory/BulkPriceDialog";
 import { InventoryTable } from "@/components/admin/inventory/InventoryTable";
@@ -12,7 +13,7 @@ import { Card, CardHeader, EmptyState, PageHeader, Stat } from "@/components/adm
 import { getDb } from "@/lib/admin/auth";
 import { isLowStock } from "@/lib/admin/calc";
 import { formatARS, formatNumber } from "@/lib/admin/money";
-import { isUuid, param, type SearchParams } from "@/lib/admin/params";
+import { isUuid, limitParam, param, type SearchParams } from "@/lib/admin/params";
 import { fetchAll, getSettings } from "@/lib/admin/queries";
 import { matches } from "@/lib/admin/search";
 
@@ -29,6 +30,7 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
     const supplier = param(params, "proveedor");
     const stock = param(params, "stock");
     const inactive = param(params, "inactivos") === "1";
+    const limit = limitParam(params, 200);
 
     const [products, { data: categories }, { data: suppliers }, { data: value }, settings] =
         await Promise.all([
@@ -199,7 +201,7 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
                     />
                 ) : (
                     <InventoryTable
-                        rows={rows.map(function (p) {
+                        rows={rows.slice(0, limit).map(function (p) {
                             return {
                                 id: p.id,
                                 sku: p.sku,
@@ -220,6 +222,13 @@ export default async function InventoryPage({ searchParams }: { searchParams: Se
                         defaultMargin={settings.default_margin}
                     />
                 )}
+                <ShowMore
+                    shown={Math.min(limit, rows.length)}
+                    total={rows.length}
+                    step={200}
+                    basePath="/admin/inventario"
+                    params={params}
+                />
             </Card>
             <p className="mt-2 text-xs text-muted">
                 {rows.length} productos. Margen = recargo sobre el costo (vacío ={" "}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExportLink } from "@/components/admin/ExportLink";
+import { ShowMore } from "@/components/admin/ShowMore";
 import { Filters } from "@/components/admin/Filters";
 import { OpenQuickButton } from "@/components/admin/OpenQuickButton";
 import { VoidButton } from "@/components/admin/VoidButton";
@@ -12,7 +13,7 @@ import { accountBalance } from "@/lib/admin/calc";
 import { cn } from "@/lib/admin/cn";
 import { addDays, dayBounds, formatDateTime, isValidDate, todayAR } from "@/lib/admin/dates";
 import { formatARS } from "@/lib/admin/money";
-import { isUuid, param, type SearchParams } from "@/lib/admin/params";
+import { isUuid, limitParam, param, type SearchParams } from "@/lib/admin/params";
 import { fetchAll } from "@/lib/admin/queries";
 
 // Depende de la sesión: siempre por request.
@@ -38,6 +39,7 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
     const category = param(params, "categoria");
     const account = param(params, "cuenta");
     const showVoided = param(params, "anulados") === "1";
+    const limit = limitParam(params, 300);
 
     const [{ data: balances }, { data: categories }, transactions] = await Promise.all([
         db.from("v_account_balances").select("*").order("sort_order"),
@@ -244,7 +246,7 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                                 </tr>
                             </thead>
                             <tbody>
-                                {transactions.map(function (t) {
+                                {transactions.slice(0, limit).map(function (t) {
                                     const o = origin(t);
                                     return (
                                         <Tr
@@ -322,6 +324,13 @@ export default async function CashPage({ searchParams }: { searchParams: SearchP
                         </Table>
                     </TableWrap>
                 )}
+                <ShowMore
+                    shown={Math.min(limit, transactions.length)}
+                    total={transactions.length}
+                    step={300}
+                    basePath="/admin/caja"
+                    params={params}
+                />
             </Card>
         </div>
     );

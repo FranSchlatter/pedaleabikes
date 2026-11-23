@@ -246,9 +246,15 @@ export function PurchaseDialog({
                                 <thead className="bg-canvas text-left text-[11px] font-bold uppercase tracking-wide text-muted">
                                     <tr>
                                         <th className="px-2 py-1.5">Producto</th>
-                                        <th className="w-16 px-1.5 py-1.5 sm:w-20 sm:px-2">Cant.</th>
-                                        <th className="w-28 px-1.5 py-1.5 sm:w-36 sm:px-2">Costo unit.</th>
-                                        <th className="hidden w-28 px-2 py-1.5 text-right sm:table-cell">Subtotal</th>
+                                        <th className="w-16 px-1.5 py-1.5 sm:w-20 sm:px-2">
+                                            Cant.
+                                        </th>
+                                        <th className="w-28 px-1.5 py-1.5 sm:w-36 sm:px-2">
+                                            Costo unit.
+                                        </th>
+                                        <th className="hidden w-28 px-2 py-1.5 text-right sm:table-cell">
+                                            Subtotal
+                                        </th>
                                         <th className="w-10" />
                                     </tr>
                                 </thead>
