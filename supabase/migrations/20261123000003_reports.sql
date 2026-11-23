@@ -255,6 +255,23 @@ where p.active and p.min_stock > 0 and p.stock <= p.min_stock;
 -- Permisos: nada para anon; todo para authenticated (RLS hace el resto).
 -- ---------------------------------------------------------------------------------------------
 
+-- search_path fijo en todas las funciones (recomendación de seguridad de Supabase: evita que un
+-- objeto con el mismo nombre en otro schema se use en lugar del de public).
+do $$
+declare
+    f record;
+begin
+    for f in
+        select p.oid::regprocedure as sig
+        from pg_proc p
+        join pg_namespace n on n.oid = p.pronamespace
+        where n.nspname = 'public' and p.prokind = 'f'
+    loop
+        execute format('alter function %s set search_path = public, pg_temp', f.sig);
+    end loop;
+end;
+$$;
+
 revoke all on public.v_account_balances, public.v_revenue_lines, public.v_low_stock from anon;
 revoke execute on all functions in schema public from public, anon;
 grant execute on all functions in schema public to authenticated;

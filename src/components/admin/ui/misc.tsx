@@ -66,15 +66,25 @@ export function PageHeader({
     title,
     description,
     actions,
+    plain = false,
 }: {
     title: string;
     description?: ReactNode;
     actions?: ReactNode;
+    // Nombres propios (productos, clientes): sin mayúsculas forzadas para no alterar "29x2.10".
+    plain?: boolean;
 }) {
     return (
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
             <div>
-                <h1 className="font-display text-2xl font-extrabold uppercase leading-none tracking-tight text-ink">
+                <h1
+                    className={cn(
+                        "text-ink",
+                        plain
+                            ? "text-2xl font-bold leading-tight"
+                            : "font-display text-2xl font-extrabold uppercase leading-none tracking-tight",
+                    )}
+                >
                     {title}
                 </h1>
                 {description ? <p className="mt-1 text-sm text-muted">{description}</p> : null}

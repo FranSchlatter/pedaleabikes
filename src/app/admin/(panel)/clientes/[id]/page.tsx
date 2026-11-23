@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { saveBike, saveCustomer } from "@/app/admin/actions/contacts";
+import { DeleteCustomerButton } from "@/components/admin/DeleteCustomerButton";
 import { EntityForm } from "@/components/admin/EntityForm";
 import { OpenQuickButton } from "@/components/admin/OpenQuickButton";
 import { StatusBadge } from "@/components/admin/StatusBadge";
@@ -54,6 +55,7 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
     return (
         <div className="space-y-4">
             <PageHeader
+                plain
                 title={c.name}
                 description={
                     [c.phone, c.email].filter(Boolean).join(" · ") || "Sin datos de contacto"
@@ -96,6 +98,9 @@ export default async function CustomerPage({ params }: { params: Promise<{ id: s
                             extra={{ id: c.id }}
                             onSave={saveCustomer}
                         />
+                        {(orders ?? []).length === 0 ? (
+                            <DeleteCustomerButton id={c.id} name={c.name} />
+                        ) : null}
                     </>
                 }
             />

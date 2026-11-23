@@ -617,6 +617,7 @@ declare
     v_taller uuid := public._tx_category('taller');
     v_total numeric := public.work_order_total(p_id);
     v_final numeric := round(coalesce(p_final_price, public.work_order_total(p_id)), 2);
+    v_alloc jsonb := '{}'::jsonb;
     v_diff numeric;
     v_cut numeric;
     r record;
@@ -628,32 +629,35 @@ begin
         raise exception 'El precio final no puede ser negativo.';
     end if;
 
-    create temp table if not exists _wo_alloc (category_id uuid primary key, amount numeric)
-        on commit drop;
-    -- "where true": Supabase exige WHERE en DELETE (pg-safeupdate).
-    delete from _wo_alloc where true;
-
-    insert into _wo_alloc (category_id, amount)
-    select income_category_id, sum(quantity * unit_price)
-    from public.work_order_items
-    where work_order_id = p_id
-    group by income_category_id;
-
-    insert into _wo_alloc (category_id, amount) values (v_taller, v_wo.labor_amount)
-    on conflict (category_id) do update set amount = _wo_alloc.amount + excluded.amount;
+    -- Reparto por categoría de ingreso como mapa { category_id: monto }.
+    for r in
+        select income_category_id::text as k, sum(quantity * unit_price) as a
+        from public.work_order_items
+        where work_order_id = p_id
+        group by income_category_id
+    loop
+        v_alloc := v_alloc || jsonb_build_object(r.k, r.a);
+    end loop;
+    v_alloc := v_alloc || jsonb_build_object(
+        v_taller::text,
+        coalesce((v_alloc ->> v_taller::text)::numeric, 0) + v_wo.labor_amount
+    );
 
     v_diff := v_final - v_total;
     if v_diff >= 0 then
-        update _wo_alloc set amount = amount + v_diff where category_id = v_taller;
+        v_alloc := v_alloc || jsonb_build_object(
+            v_taller::text, (v_alloc ->> v_taller::text)::numeric + v_diff
+        );
     else
         v_diff := -v_diff;
         for r in
-            select category_id, amount from _wo_alloc
-            order by (category_id = v_taller) desc, amount desc
+            select key as k, value::numeric as a
+            from jsonb_each_text(v_alloc)
+            order by (key = v_taller::text) desc, value::numeric desc
         loop
             exit when v_diff <= 0;
-            v_cut := least(r.amount, v_diff);
-            update _wo_alloc set amount = amount - v_cut where category_id = r.category_id;
+            v_cut := least(r.a, v_diff);
+            v_alloc := v_alloc || jsonb_build_object(r.k, r.a - v_cut);
             v_diff := v_diff - v_cut;
         end loop;
     end if;
@@ -662,10 +666,10 @@ begin
         occurred_at, type, category_id, account_id, amount, description, customer_id,
         work_order_id
     )
-    select v_at, 'income', category_id, p_account_id, amount, 'OT #' || v_wo.number,
+    select v_at, 'income', key::uuid, p_account_id, value::numeric, 'OT #' || v_wo.number,
         v_wo.customer_id, p_id
-    from _wo_alloc
-    where amount > 0;
+    from jsonb_each_text(v_alloc)
+    where value::numeric > 0;
 
     update public.work_orders
         set status = 'entregada',

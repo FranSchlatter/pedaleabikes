@@ -6,6 +6,7 @@ import { Card, CardHeader, EmptyState, PageHeader, Stat } from "@/components/adm
 import { Table, TableWrap, Td, Th, Tr } from "@/components/admin/ui/table";
 import { getDb } from "@/lib/admin/auth";
 import { dayBounds, daysSince, formatDate, formatTime, todayAR } from "@/lib/admin/dates";
+import { plural } from "@/lib/admin/labels";
 import { formatARS } from "@/lib/admin/money";
 import { OPEN_STATUSES, WORK_ORDER_STATUSES } from "@/lib/admin/types";
 
@@ -108,12 +109,12 @@ export default async function TodayPage() {
                 <Stat
                     label="Ventas de mostrador"
                     value={formatARS(salesTotal)}
-                    hint={`${sales.length} ventas`}
+                    hint={plural(sales.length, "venta", "ventas")}
                 />
                 <Stat
                     label="Entregadas hoy"
                     value={formatARS(deliveredTotal)}
-                    hint={`${delivered.length} órdenes`}
+                    hint={plural(delivered.length, "orden", "órdenes")}
                 />
                 <Stat
                     label="Gastos de hoy"

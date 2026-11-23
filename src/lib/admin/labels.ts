@@ -25,3 +25,8 @@ export function bikeLabel(bike: BikeLike | null | undefined) {
         .join(" · ");
     return [parts || "Bici", extra].filter(Boolean).join(" — ");
 }
+
+// "1 orden", "3 órdenes".
+export function plural(n: number, singular: string, pluralForm: string) {
+    return `${n} ${n === 1 ? singular : pluralForm}`;
+}

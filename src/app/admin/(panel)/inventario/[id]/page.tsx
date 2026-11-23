@@ -58,6 +58,7 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     return (
         <div className="space-y-4">
             <PageHeader
+                plain
                 title={p.name}
                 description={
                     <>

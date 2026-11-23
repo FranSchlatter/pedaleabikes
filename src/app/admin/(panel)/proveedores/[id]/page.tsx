@@ -68,6 +68,7 @@ export default async function SupplierPage({ params }: { params: Promise<{ id: s
     return (
         <div className="space-y-4">
             <PageHeader
+                plain
                 title={s.name}
                 description={
                     [s.contact_name, s.phone, s.email].filter(Boolean).join(" · ") ||

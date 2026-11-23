@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { check, runAction } from "@/lib/admin/action";
+import { check, DbError, runAction } from "@/lib/admin/action";
 
 const text = z
     .string()
@@ -79,5 +79,25 @@ export async function saveBike(input: BikeInput) {
         }
         const row = check(await db.from("bikes").insert(fields).select("id").single());
         return { id: row.id };
+    });
+}
+
+const deleteSchema = z.object({ id: z.uuid() });
+
+// Solo clientes sin órdenes (las órdenes son historial del taller). Sus ventas quedan sin cliente
+// y sus bicis se borran con él.
+export async function deleteCustomer(input: z.infer<typeof deleteSchema>) {
+    return runAction(deleteSchema, input, async function (data, db) {
+        const { count } = await db
+            .from("work_orders")
+            .select("id", { count: "exact", head: true })
+            .eq("customer_id", data.id);
+        if (count) {
+            throw new DbError(
+                `No se puede eliminar: tiene ${count} órdenes de trabajo en su historial.`,
+            );
+        }
+        check(await db.from("customers").delete().eq("id", data.id));
+        return null;
     });
 }
