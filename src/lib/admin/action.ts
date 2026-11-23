@@ -4,7 +4,8 @@ import { refresh } from "next/cache";
 import { z } from "zod";
 import { getDb } from "./auth";
 
-export type ActionResult<T = null> = { ok: true; data: T } | { ok: false; error: string };
+export type { ActionResult } from "./action-types";
+import type { ActionResult } from "./action-types";
 
 export function ok<T>(data: T): ActionResult<T> {
     return { ok: true, data };

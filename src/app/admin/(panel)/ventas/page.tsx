@@ -83,7 +83,7 @@ export default async function SalesPage({ searchParams }: { searchParams: Search
             <div className="mb-3 grid grid-cols-2 gap-3 md:grid-cols-3">
                 <Stat label="Total del período" value={formatARS(total)} />
                 <Stat label="Cantidad" value={valid.length} />
-                <Stat label="Ticket promedio" value={formatARS(valid.length ? total / valid.length : 0)} />
+                <Stat label="Ticket promedio" value={formatARS(valid.length ? Math.round(total / valid.length) : 0)} />
             </div>
 
             <Card>
