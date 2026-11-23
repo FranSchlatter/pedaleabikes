@@ -1,0 +1,52 @@
+name: CI
+
+on:
+    push:
+        branches: [master]
+    pull_request:
+
+concurrency:
+    group: ci-${{ github.ref }}
+    cancel-in-progress: true
+
+jobs:
+    checks:
+        name: Lint, tipos, tests y build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+            - run: npm ci
+            - run: npm run lint
+            - run: npx next typegen
+            - run: npm run typecheck
+            - run: npm test
+            # Sin credenciales: el build tiene que pasar igual (la landing no depende de Supabase).
+            - run: npm run build
+
+    database:
+        name: Base de datos (migraciones, seed y tests de integración)
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: npm
+            - run: npm ci
+            - name: Levantar Supabase local
+              run: npx supabase start
+            - name: Migraciones + seed desde cero
+              run: npx supabase db reset
+            - name: Linter de la base
+              run: npx supabase db lint --level warning --fail-on error
+            - name: Variables de entorno
+              run: |
+                  npx supabase status -o json > /tmp/sb.json
+                  echo "NEXT_PUBLIC_SUPABASE_URL=$(jq -r .API_URL /tmp/sb.json)" >> "$GITHUB_ENV"
+                  echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$(jq -r .PUBLISHABLE_KEY /tmp/sb.json)" >> "$GITHUB_ENV"
+                  echo "SUPABASE_SECRET_KEY=$(jq -r .SECRET_KEY /tmp/sb.json)" >> "$GITHUB_ENV"
+            - run: npm run test:db

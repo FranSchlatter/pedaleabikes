@@ -47,3 +47,13 @@ Plan del landing (terminado): `docs/PLAN-landing.md`. Decisiones: `DECISIONS.md`
 - [x] Prueba del flujo completo: alta de producto → compra → venta → OT → panel con números correctos
 - [x] La landing sigue buildeando y viéndose igual
 - [x] SETUP.md (Supabase, usuario, importar Excel, limpiar seed, deploy Vercel) + README
+
+## 4. Segunda tanda (pulido sin depender del cliente)
+
+- [x] Mobile/tablet: barra superior con íconos en celular, modales de venta/compra y tabla de la OT sin columnas apretadas
+- [x] Tests de integración contra Supabase (`npm run test:db`): precios, guarda de stock, compra, venta, anulación, OT con descuento y cancelación, ajustes, precios masivos, importación, transferencias, RLS
+- [x] Build y arranque sin credenciales (aviso en `/admin/login`, landing intacta)
+- [x] Rendimiento con 3.000 productos: paginación en inventario y caja; producción responde en 25–190 ms
+- [x] Linter de Supabase sin hallazgos: `search_path` fijo en las funciones, reparto de la OT sin tabla temporal
+- [x] Baja de clientes sin órdenes, página 404 del panel, títulos de productos/clientes sin mayúsculas forzadas
+- [x] CI en GitHub Actions (checks + base de datos)

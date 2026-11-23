@@ -21,6 +21,8 @@ Proyecto de **Pedalea Bikes** (bicicletería y taller, Mitre 4701, Santa Fe Capi
 
 Atajos: **V** venta · **O** orden · **C** compra · **G** gasto. En la venta, Enter agrega y con el buscador vacío cobra.
 
+Tests: `npm test` (cálculos) y `npm run test:db` (integración contra Supabase local). CI en `.github/workflows/ci.yml`.
+
 Código: páginas en `src/app/admin`, componentes en `src/components/admin`, lógica en `src/lib/admin` (cálculos puros con tests en `calc.test.ts`), base de datos en `supabase/migrations` (las operaciones que mueven stock y plata son funciones de Postgres transaccionales). Plan en `PLAN.md`, decisiones en `DECISIONS.md`.
 
 **Marca:** teal `#2C7D7B` del logo sobre negro, títulos en Rokkitt (slab). Ver `DECISIONS.md`.

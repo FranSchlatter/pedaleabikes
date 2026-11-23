@@ -44,12 +44,13 @@ npm run dev                 # http://localhost:3000/admin
 
 Otros comandos:
 
-| Comando                    | Qué hace                                                          |
-| -------------------------- | ----------------------------------------------------------------- |
-| `npm run db:stop`          | Apaga Supabase local                                              |
-| `npm run db:types`         | Regenera `src/lib/supabase/database.types.ts` desde la base local |
-| `npm test`                 | Tests de cálculos (Vitest)                                        |
-| `npm run inventory:sample` | Regenera `data/inventario-ejemplo.xlsx` para probar el importador |
+| Comando                    | Qué hace                                                                                                          |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `npm run test:db`          | Tests de integración contra la base local (venta, compra, OT, anulaciones, RLS); crean y borran sus propios datos |
+| `npm run db:stop`          | Apaga Supabase local                                                                                              |
+| `npm run db:types`         | Regenera `src/lib/supabase/database.types.ts` desde la base local                                                 |
+| `npm test`                 | Tests de cálculos (Vitest)                                                                                        |
+| `npm run inventory:sample` | Regenera `data/inventario-ejemplo.xlsx` para probar el importador                                                 |
 
 Studio (admin visual de la base): http://127.0.0.1:54323
 
@@ -162,3 +163,12 @@ Para listas nuevas de un proveedor: **Inventario → Actualizar precios** (+X % 
 - **Configuración → Tus datos → Descargar backup**: un Excel con una hoja por tabla (todas las columnas). Recomendado una vez por semana.
 - Cada pantalla tiene su botón **Excel** para exportar lo que se ve (ventas, compras, órdenes, caja, inventario, proveedores, clientes, reposición).
 - Supabase además hace backups diarios automáticos en los planes pagos.
+
+---
+
+## CI (GitHub Actions)
+
+`.github/workflows/ci.yml` corre en cada push a `master` y en cada PR:
+
+- **Lint, tipos, tests y build** (sin credenciales: confirma que la landing buildea sin Supabase).
+- **Base de datos**: levanta Supabase en el runner, aplica migraciones + seed desde cero, corre el linter de la base y los tests de integración (`npm run test:db`).
