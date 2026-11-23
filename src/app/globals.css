@@ -21,6 +21,22 @@
     --color-steel: #9aa3a3;
     --color-graphite: #4a5252;
 
+    /* Sistema de gestión (/admin): tokens propios para no tocar los de la landing. */
+    --color-canvas: #f4f5f4;
+    --color-surface: #ffffff;
+    --color-line: #dbe0de;
+    --color-line-strong: #b9c2bf;
+    --color-muted: #56605e;
+    --color-primary: #1e5f5d;
+    --color-primary-hover: #174b49;
+    --color-danger: #b42318;
+    --color-danger-soft: #fdecea;
+    --color-success: #067647;
+    --color-success-soft: #e6f4ec;
+    --color-warning: #a15c07;
+    --color-warning-soft: #fdf3e2;
+    --color-info-soft: #e7f3f2;
+
     --font-display: var(--font-rokkitt), "Rockwell", Georgia, serif;
     --font-sans: var(--font-archivo), system-ui, sans-serif;
 

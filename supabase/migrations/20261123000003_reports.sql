@@ -228,10 +228,33 @@ as $$
     order by 4 desc
 $$;
 
+-- Productos activos en o por debajo del mínimo, con la cantidad sugerida para reponer
+-- (mínimo × 2 − stock).
+create or replace view public.v_low_stock
+with (security_invoker = true)
+as
+select
+    p.id,
+    p.sku,
+    p.name,
+    p.stock,
+    p.min_stock,
+    p.cost,
+    p.location,
+    p.supplier_id,
+    s.name as supplier_name,
+    p.category_id,
+    c.name as category_name,
+    greatest(p.min_stock * 2 - p.stock, 0) as suggested_quantity
+from public.products p
+left join public.suppliers s on s.id = p.supplier_id
+left join public.categories c on c.id = p.category_id
+where p.active and p.min_stock > 0 and p.stock <= p.min_stock;
+
 -- ---------------------------------------------------------------------------------------------
 -- Permisos: nada para anon; todo para authenticated (RLS hace el resto).
 -- ---------------------------------------------------------------------------------------------
 
-revoke all on public.v_account_balances, public.v_revenue_lines from anon;
+revoke all on public.v_account_balances, public.v_revenue_lines, public.v_low_stock from anon;
 revoke execute on all functions in schema public from public, anon;
 grant execute on all functions in schema public to authenticated;
