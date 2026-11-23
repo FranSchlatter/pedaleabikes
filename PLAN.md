@@ -1,58 +1,49 @@
-# PLAN — Landing Pedalea Bikes
+# PLAN — Sistema de gestión Pedalea Bikes (v1, `/admin`)
 
-## 1. Setup
+Plan del landing (terminado): `docs/PLAN-landing.md`. Decisiones: `DECISIONS.md`.
 
-- [x] Scaffold Next.js (App Router) + TypeScript + Tailwind 4
-- [x] `.npmrc` (save-exact, min-release-age), `engines`, versiones exactas
-- [x] Prettier (4 espacios) + reglas ESLint de estilo
-- [x] Dependencias: motion, zod, react-hook-form, @hookform/resolvers
-- [x] PLAN.md, DECISIONS.md, PENDIENTES.md
+## 0. Base
 
-## 2. Identidad y base
+- [x] Explorar repo (tokens, logo, tipografías, `/src/data`) y crear PLAN.md / DECISIONS.md
+- [x] Dependencias: supabase-js + ssr, radix-ui (shadcn), lucide, sonner, recharts, xlsx (SheetJS), vitest, supabase CLI
+- [x] Supabase local (Docker) para desarrollo y pruebas
+- [x] Migración 1: esquema (settings, categorías, proveedores, productos, servicios, clientes, bicis, OTs, ventas, compras, stock, cuentas, transacciones) + RLS
+- [x] Migración 2: funciones transaccionales (venta, compra, OT, anulaciones, ajustes, importación, precios masivos)
+- [x] Migración 3: vistas de reporte (saldos, líneas de ingreso con costo congelado, resumen mensual)
+- [x] Seed: catálogo base + servicios de la landing + 3 meses de datos coherentes
+- [ ] Limpieza de datos de ejemplo (función + botón con confirmación + SQL)
+- [x] Cálculos puros en TS (precio, margen, resultado, saldos) + tests Vitest
 
-- [x] Paleta como tokens Tailwind (`@theme`) + tipografías (display condensada + sans)
-- [x] Logo placeholder en `/public/logo.png` (no vino en el repo)
-- [x] Script de imágenes placeholder (bicis, accesorios, hero, nosotros, videos, OG)
-- [x] MotionProvider (LazyMotion + `reducedMotion="user"`) y primitivas (Reveal, Stagger, SectionHeading, iconos)
+## 1. Shell del admin
 
-## 3. Datos
+- [ ] Tokens "herramienta" (sin tocar los de la landing) + componentes estilo shadcn
+- [ ] Cliente Supabase (server/browser) + proxy que protege `/admin`
+- [ ] Login / logout
+- [ ] Layout: sidebar, botones rápidos (+ Venta, + Orden, + Compra, + Gasto) y atajos de teclado
+- [ ] Estados vacíos, loading y errores
 
-- [x] Tipos en `/src/types`
-- [x] Datos en `/src/data` (negocio, horarios, servicios, pasos, 8 bicis, 12 accesorios en 4 categorías, testimonios, videos, nosotros, stats, marquee)
-- [x] Capa `/src/lib/data.ts` (getProducts, getBikes, getAccessories, getServices, ...)
-- [x] `buildWhatsAppLink(message)` centralizado
-- [x] Lógica de horarios (abierto ahora con hora de Argentina, días hábiles)
+## 2. Módulos
 
-## 4. Secciones
+- [ ] Hoy: ventas/cobros del día por medio, entregados hoy, OTs abiertas por estado, stock bajo
+- [ ] Venta rápida (modal): autocompletado, precio editable, línea libre y comisión, medio de pago, Enter confirma
+- [ ] Ventas: listado con filtros, detalle, anular
+- [ ] Órdenes de trabajo: kanban + lista, alta con cliente/bici al vuelo, repuestos/servicios, cambio de estado, entregar y cobrar, anular
+- [ ] OT: WhatsApp (presupuesto / lista) + comprobante imprimible
+- [ ] Inventario: tabla con filtros, edición inline, valor del inventario (total y por categoría), alta/edición de producto
+- [ ] Inventario: ajuste manual con motivo + historial de movimientos
+- [ ] Inventario: importar Excel (mapeo de columnas + vista previa, crea categorías/proveedores)
+- [ ] Inventario: actualización masiva de precios por proveedor/categoría
+- [ ] Compras: modal + listado + anular
+- [ ] Proveedores: ABM, productos, lista de reposición (copiar para WhatsApp + exportar)
+- [ ] Clientes: ABM, bicis, historial de OTs y compras
+- [ ] Caja: movimientos con filtros, gasto/ingreso manual, transferencias, saldos por cuenta
+- [ ] Reportes: mes elegible vs. anterior, facturación, CMV, margen bruto, gastos, resultado, retiros, ingresos por categoría, 12 meses, tops, ticket promedio
+- [ ] Configuración: margen, redondeo, negocio, cuentas, categorías, servicios
+- [ ] Exportar cada tabla a Excel + backup completo
 
-- [x] Header sticky (transparente → sólido con blur), menú mobile, botón "Escribinos"
-- [x] Hero: video con poster/fallback, overlay degradé, título escalonado, CTAs, abierto/cerrado, scroll indicator
-- [x] Marquee infinito
-- [x] Contadores animados
-- [x] Servicios del taller (cards con precio)
-- [x] Flujo del taller: 4 pasos con camino que se dibuja al scrollear
-- [x] Turno para el taller (Zod + react-hook-form → WhatsApp)
-- [x] Bicis: grilla con filtros (layout animation) + banner "por encargo"
-- [x] Accesorios: grilla con filtros
-- [x] Videos (carga diferida) + "Seguinos en Instagram"
-- [x] Nosotros (placeholders + parallax)
-- [x] Testimonios
-- [x] Ubicación y horarios (mapa, tabla, "Cómo llegar")
-- [x] Footer
-- [x] Botón flotante de WhatsApp con pulso
+## 3. Cierre
 
-## 5. Técnico
-
-- [x] Metadata + Open Graph (imagen 1200x630) + Twitter
-- [x] sitemap.ts, robots.ts, manifest
-- [x] JSON-LD BicycleStore con dirección y horarios
-- [x] prefers-reduced-motion en todo
-- [x] Accesibilidad: contraste AA, alt, foco visible, skip link, teclado
-- [x] Performance: next/image, videos preload="none" + poster, animaciones solo transform/opacity
-
-## 6. Cierre
-
-- [x] README (correr, editar datos, reemplazar media, deploy Vercel)
-- [x] Revisión visual mobile + desktop (¿se ve premium?)
-- [x] Lighthouse mobile
-- [x] `npm run build` + `npm run lint` + typecheck en verde, commit final
+- [ ] `npm run build` + `npm run lint` + tests al cerrar cada módulo, con commit
+- [ ] Prueba del flujo completo: alta de producto → compra → venta → OT → panel con números correctos
+- [ ] La landing sigue buildeando y viéndose igual
+- [ ] SETUP.md (Supabase, usuario, importar Excel, limpiar seed, deploy Vercel) + README
