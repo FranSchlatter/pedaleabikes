@@ -65,6 +65,7 @@ Decisiones tomadas ante ambigüedades, para revisar. Primero el sistema de gesti
 - El seed genera ~3 meses de actividad usando las mismas funciones que la app, así stock, caja y reportes cierran. Fechas relativas a hoy, para que el panel siempre se vea vivo.
 - Servicios base = los 4 de la landing; "Reparaciones puntuales" con precio 0 (se carga el monto en cada orden).
 - **Limpieza**: Configuración → "Borrar datos de ejemplo" (pide escribir BORRAR), o `select reset_business_data('BORRAR');`. Conserva configuración, cuentas (con saldo inicial en 0), categorías y servicios.
+- `reset_business_data` es SECURITY DEFINER a propósito (necesita TRUNCATE, que `authenticated` no tiene). El advisor de Supabase lo marca como WARN: es esperado, porque el botón de Configuración la llama y la protege la confirmación "BORRAR".
 
 ## Bugs encontrados en la prueba de punta a punta
 
